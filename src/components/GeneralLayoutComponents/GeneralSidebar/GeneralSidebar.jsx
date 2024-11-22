@@ -72,13 +72,13 @@ function GeneralSidebar () {
     <div className='sidebar' data-background-color='dark'>
       <div className='sidebar-logo'>
         {/* Logo Header  */}
-        <div className='logo-header' data-background-color='dark'>
+        <div className='logo-header py-5 pe-5 mt-5' data-background-color='dark'>
           <a href='index.html' className='logo'>
             <img
-              src='src/assets/img/logo/logo_light.svg'
+              src='src/assets/img/logo/LOGO.png'
               alt='navbar brand'
               className='navbar-brand'
-              height='25'
+              height='75'
             />
           </a>
         </div>

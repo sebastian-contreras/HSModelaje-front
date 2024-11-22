@@ -8560,6 +8560,7 @@ label.error {
   }
   .logo-header {
     line-height: 57px;
+    text-align: center;
   }
   .nav-toggle .sidenav-toggler {
     display: none;

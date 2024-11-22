@@ -1,4 +1,4 @@
-function Button({type='button',estilo='primary',onClick=()=>{},children}) {
+function Button({type='button',estilo='primary',sm=false,onClick=()=>{},children}) {
     const buttonClasses = {
         primary: 'btn btn-primary',
         secondary: 'btn btn-secondary',
@@ -12,7 +12,7 @@ function Button({type='button',estilo='primary',onClick=()=>{},children}) {
     };
 
   return (
-    <button type={type} onClick={onClick}  className={buttonClasses[estilo]}>{children}</button>
+    <button type={type} onClick={onClick}  className={`${buttonClasses[estilo]} ${sm ? 'btn-sm' : ''}`}>{children}</button>
 
   )
 }

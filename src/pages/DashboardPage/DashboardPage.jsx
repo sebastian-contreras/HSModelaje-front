@@ -5,9 +5,14 @@ import InputForm from '../../components/InputForm/InputForm'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import ModalModificado from '../../components/Modal/ModalModificado'
+import { useState } from 'react'
+import GenerateInputs from '../../components/GenerateInputs/GenerateInputs'
+import InputPersonas from '../../components/Formularios/FormPersonas/InputPersonas'
 
 const schema = z.object({
-  name: z.string().min(5, 'El nombre es obligatorio.')
+  name: z.string().min(5, 'El nombre tiene que tener mas de 5 caracteres.').nonempty({ message: 'El nombre es requerido.' }),
+  test: z.string().min(5, 'El nombre tiene que tener mas de 5 caracteres.').nonempty({ message: 'El test es requerido.' }),
 })
 function DashboardPage () {
   const {
@@ -16,15 +21,19 @@ function DashboardPage () {
     formState: { errors }
   } = useForm({ resolver: zodResolver(schema), mode: 'onBlur' })
 
-  console.log(errors)
+
+
+const [Modal, setModal] = useState(false)
   return (
+    <>
     <div>
       <HeaderPageComponent
         title='Dashboard'
         items={[{ name: 'Dashboard', link: '/' }]}
       />
-      <SectionPage header={'Personas'}>
+      <SectionPage header={'Dashboard'}>
         <h3>Hola mundo</h3>
+        <InputPersonas control={control} errors={errors}/>
         <InputForm
           control={control}
           error={errors?.name}
@@ -35,12 +44,16 @@ function DashboardPage () {
         <Button
           estilo='success'
           type='submit'
-          onClick={() => console.log('test')}
+          onClick={() => setModal(true)}
         >
           Test
         </Button>
       </SectionPage>
     </div>
+    <ModalModificado show={Modal} handleClose={()=>setModal(false)} >
+      <InputPersonas onlyView={true}/>
+    </ModalModificado>
+    </>
   )
 }
 

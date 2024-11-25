@@ -9,15 +9,16 @@ function GeneralSidebar () {
     { name: 'Dashboard', link: '/', icon: 'fa-home' },
     { name: 'Secciones', separador: true },
     { name: 'Personas', link: '/personas', icon: 'fa-user' },
-    {
-      name: 'Cajas',
-      icon: 'fa-box',
-      link:'/cajas',
-      subruta: [
-        { name: 'test1', link: '/cajas/test1' },
-        { name: 'test2', link: '/cajas/test2' }
-      ]
-    }
+    { name: 'Cajas', link: '/cajas', icon: 'fa-box' },
+    // {
+    //   name: 'Cajas',
+    //   icon: 'fa-box',
+    //   link:'/cajas',
+    //   subruta: [
+    //     { name: 'Lisrado', link: '/cajas' },
+    //     { name: 'test2', link: '/cajas/test2' }
+    //   ]
+    // }
   ]
 
   const TiposItemsNav = ({ name='', link='', separador=false, subruta=null, icon='' }) => {
@@ -72,7 +73,7 @@ function GeneralSidebar () {
     <div className='sidebar' data-background-color='dark'>
       <div className='sidebar-logo'>
         {/* Logo Header  */}
-        <div className='logo-header py-5 pe-5 mt-5' data-background-color='dark'>
+        <div className='logo-header py-5 d-flex w-100 justify-content-center mt-5' data-background-color='dark'>
           <a href='index.html' className='logo'>
             <img
               src='src/assets/img/logo/LOGO.png'

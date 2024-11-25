@@ -4,26 +4,29 @@ import GeneralNavbar from '../../components/GeneralLayoutComponents/GeneralNavba
 import GeneralSidebar from '../../components/GeneralLayoutComponents/GeneralSidebar/GeneralSidebar'
 import { useHandlerSidebar } from '../../context/SidebarContext/SidebarContext'
 import { Collapse } from 'react-bootstrap'
+import ProtectedRoute from '../../security/ProtectedRoutes/ProtectedRoutes'
 
 function GeneralLayout () {
   const { openSidebar } = useHandlerSidebar()
   return (
-    <body>
-      <div className='wrapper'>
-        <Collapse dimension="width" in={openSidebar}>
-          <GeneralSidebar />
-        </Collapse>
-        <div className='main-panel'>
-          <GeneralNavbar />
-          <div className='container'>
-            <div className='page-inner'>
-              <Outlet />
+    <ProtectedRoute>
+      <body>
+        <div className='wrapper'>
+          <Collapse dimension='width' in={openSidebar}>
+            <GeneralSidebar />
+          </Collapse>
+          <div className='main-panel'>
+            <GeneralNavbar />
+            <div className='container'>
+              <div className='page-inner'>
+                <Outlet />
+              </div>
             </div>
+            <GeneralFooter />
           </div>
-          <GeneralFooter />
         </div>
-      </div>
-    </body>
+      </body>
+    </ProtectedRoute>
   )
 }
 

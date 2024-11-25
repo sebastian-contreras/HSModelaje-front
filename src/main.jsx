@@ -8,11 +8,14 @@ import './assets/js/fontIcons.js'
 import './assets/css/fonts.css'
 import { BackdropProvider } from './context/Backdrop/Backdrop.jsx'
 import { SidebarProvider } from './context/SidebarContext/SidebarContext.jsx'
+import { AuthProvider } from './context/Auth/AuthContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BackdropProvider>
       <SidebarProvider>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </SidebarProvider>
     </BackdropProvider>
   </StrictMode>

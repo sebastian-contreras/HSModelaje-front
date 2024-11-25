@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { useHandlerSidebar } from '../../../context/SidebarContext/SidebarContext'
+import { useAuth } from '../../../context/Auth/AuthContext'
 
 function GeneralNavbar () {
   const [usuario, setUsuario] = useState('Sebastian Contreras')
+  const { token,  user, logout } = useAuth()
+  console.log(user)
   const  {toggle} = useHandlerSidebar()
   return (
     
@@ -70,7 +73,7 @@ function GeneralNavbar () {
                   />
                 </div>
                 <span className='profile-username'>
-                  <span className='fw-bold'>{usuario}</span>
+                  <span className='fw-bold'>{user?.name}</span>
                 </span>
               </a>
               <ul className='dropdown-menu dropdown-user animated fadeIn'>
@@ -85,14 +88,14 @@ function GeneralNavbar () {
                         />
                       </div>
                       <div className='u-text'>
-                        <h4>{usuario}</h4>
-                        {/* <p className="text-muted">hello@example.com</p> */}
-                        <a
+                        <h4>{user?.name}</h4>
+                        <p className="text-muted">{user?.email}</p>
+                        {/* <a
                           href='profile.html'
                           className='btn btn-xs btn-secondary btn-sm'
                         >
                           View Profile
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   </li>
@@ -104,7 +107,7 @@ function GeneralNavbar () {
                         <div className="dropdown-divider"></div>
                         <a className="dropdown-item" href="#">Account Setting</a>
                         <div className="dropdown-divider"></div> */}
-                    <a className='dropdown-item' href='#'>
+                    <a className='dropdown-item' onClick={logout}>
                       Logout
                     </a>
                   </li>

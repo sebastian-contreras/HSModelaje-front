@@ -85,6 +85,12 @@ danger-color : #f3545d
 
 -------------------------------------------------------------------
 */
+input[readonly] {
+  background-color: white !important; /* Cambia el color de fondo */
+  color: black;            /* Cambia el color del texto */
+  border: 1px solid #ccc; /* Ajusta el borde si es necesario */
+}
+
 .alert,
 .brand,
 .btn-simple,
@@ -4859,12 +4865,12 @@ label {
 }
 .form-control:disabled,
 .form-control[readonly] {
-  background: #e8e8e8 !important;
-  border-color: #e8e8e8 !important;
+  background: #f8f8f8 !important;
+  /* border-color: #e8e8e8 !important; */
 }
 .form-control:disabled,
 .form-control[readonly] {
-  opacity: 0.6 !important;
+  /* opacity: 0.6 !important; */
 }
 .input-group-text {
   font-size: 1rem;
@@ -8718,8 +8724,8 @@ label.error {
     margin-left: auto;
   }
   .logo-header .navbar-brand {
-    position: unset !important;
-    margin-right: 0;
+    position: center !important;
+    
   }
   .topbar_open .logo-header {
     border-bottom: 2px solid rgba(255, 255, 255, 0.1);

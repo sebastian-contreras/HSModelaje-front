@@ -41,7 +41,7 @@ function TablaMaterial({data=[],columns=[],loading,pagination,sorting,columnFilt
         muiPaginationProps: {
           color: 'primary',
           shape: 'rounded',
-          showRowsPerPage: false,
+          showRowsPerPage: true,
           variant: 'outlined'
         },
         paginationDisplayMode: 'pages',

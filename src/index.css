@@ -426,14 +426,22 @@ body {
 }
 .main-panel {
   position: relative;
-  width: calc(100% - 265px);
   height: 100vh;
   min-height: 100%;
   float: right;
   transition: all 0.3s;
 }
+.transition-main-panel{
+  width: calc(100% - 265px);
+
+}
+
+.transition-main-panel-full{
+  width: calc(100%);
+
+}
 .main-panel > .container {
-  min-height: calc(100% - 123px);
+  min-height: calc(100%);
   margin-top: 69px;
   overflow: hidden;
   width: 100%;
@@ -442,7 +450,7 @@ body {
 }
 .main-panel > .container-full {
   padding: 0 !important;
-  min-height: calc(100% - 123px);
+  min-height: calc(100% );
   margin-top: 70px;
   overflow: hidden;
   width: 100%;
@@ -497,7 +505,7 @@ body {
   position: relative;
 }
 .page-wrapper.has-sidebar .page-inner {
-  margin-left: 22.5rem;
+  /* margin-left: 22.5rem; */
 }
 .page-navs {
   position: relative;
@@ -679,7 +687,6 @@ body {
   left: 0;
   width: 265px;
   display: block;
-  z-index: 1002;
   color: #fff;
   font-weight: 200;
   background: #fff;
@@ -1378,20 +1385,18 @@ body {
   background: rgba(0, 0, 0, 0.16);
 }
 .logo-header {
-  float: left;
+  float: center;
   width: 265px;
   height: 70px;
   line-height: 60px;
   color: #333;
-  z-index: 1001;
   font-size: 17px;
   font-weight: 400;
   padding-left: 25px;
   padding-right: 25px;
-  z-index: 1001;
   display: flex;
   align-items: center;
-  position: relative;
+  position: block;
   transition: all 0.3s;
 }
 .logo-header .big-logo {

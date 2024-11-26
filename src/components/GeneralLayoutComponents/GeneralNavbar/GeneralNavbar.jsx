@@ -14,7 +14,7 @@ function GeneralNavbar () {
         <div className='logo-header' data-background-color='dark'>
           <a href='index.html' className='logo'>
             <img
-              src='src/assets/img/logo/logo_light.svg'
+              src='/img/logo/logo_light.svg'
               alt='navbar brand'
               className='navbar-brand'
               height='20'
@@ -67,7 +67,7 @@ function GeneralNavbar () {
               >
                 <div className='avatar-sm'>
                   <img
-                    src='src/assets/img/profile.jpg'
+                    src='/img/profile.jpg'
                     alt='...'
                     className='avatar-img rounded-circle'
                   />
@@ -82,7 +82,7 @@ function GeneralNavbar () {
                     <div className='user-box'>
                       <div className='avatar-lg'>
                         <img
-                          src='src/assets/img/profile.jpg'
+                          src='/img/profile.jpg'
                           alt='image profile'
                           className='avatar-img rounded'
                         />

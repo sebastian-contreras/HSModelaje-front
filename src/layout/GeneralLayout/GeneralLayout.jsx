@@ -3,8 +3,8 @@ import GeneralFooter from '../../components/GeneralLayoutComponents/GeneralFoote
 import GeneralNavbar from '../../components/GeneralLayoutComponents/GeneralNavbar/GeneralNavbar'
 import GeneralSidebar from '../../components/GeneralLayoutComponents/GeneralSidebar/GeneralSidebar'
 import { useHandlerSidebar } from '../../context/SidebarContext/SidebarContext'
-import { Collapse } from 'react-bootstrap'
 import ProtectedRoute from '../../security/ProtectedRoutes/ProtectedRoutes'
+import { Collapse } from '@mui/material'
 
 function GeneralLayout () {
   const { openSidebar } = useHandlerSidebar()
@@ -12,17 +12,17 @@ function GeneralLayout () {
     <ProtectedRoute>
       <body>
         <div className='wrapper'>
-          <Collapse dimension='width' in={openSidebar}>
+        <Collapse in={openSidebar}  orientation="horizontal">
             <GeneralSidebar />
           </Collapse>
-          <div className='main-panel'>
+          <div className={openSidebar ? 'main-panel transition-main-panel':`main-panel transition-main-panel-full`}>
             <GeneralNavbar />
             <div className='container'>
               <div className='page-inner'>
                 <Outlet />
               </div>
-            </div>
             <GeneralFooter />
+            </div>
           </div>
         </div>
       </body>

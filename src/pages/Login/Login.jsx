@@ -62,7 +62,7 @@ function Login () {
                 <div className='card-body p-md-5 mx-md-4'>
                   <div className='text-center'>
                     <img
-                      src='/src/assets/img/logo/LOGO.png'
+                      src='/img/logo/LOGO.png'
                       alt=''
                       height={'150'}
                       className='logo-login mb-5'

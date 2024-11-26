@@ -1,11 +1,11 @@
 import { Collapse } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useHandlerSidebar } from '../../../context/SidebarContext/SidebarContext'
 import { Link, useLocation } from 'react-router-dom'
 
 function GeneralSidebar () {
   const {pathname} = useLocation();
-  const rutas = [
+  const rutas = useMemo(()=>[
     { name: 'Dashboard', link: '/', icon: 'fa-home' },
     { name: 'Secciones', separador: true },
     { name: 'Personas', link: '/personas', icon: 'fa-user' },
@@ -19,7 +19,7 @@ function GeneralSidebar () {
     //     { name: 'test2', link: '/cajas/test2' }
     //   ]
     // }
-  ]
+  ],[])
 
   const TiposItemsNav = ({ name='', link='', separador=false, subruta=null, icon='' }) => {
     const isActive = pathname == link;
@@ -49,7 +49,7 @@ function GeneralSidebar () {
     if (subruta) {
       return (
         <li className='nav-item'>
-          <a data-bs-toggle='collapse' aria-expanded={subSectionActive} href={`#${name}`}>
+          <a aria-expanded={subSectionActive} href={`#${name}`}>
             <i className={`fas ${icon}`}></i>
             <p>{name}</p>
             <span className='caret'></span>
@@ -70,13 +70,13 @@ function GeneralSidebar () {
     }
   }
   return (
-    <div className='sidebar' data-background-color='dark'>
-      <div className='sidebar-logo'>
+    <aside className='sidebar' data-background-color='dark'>
+      <div className='sidebar-logo d-block'>
         {/* Logo Header  */}
         <div className='logo-header py-5 d-flex w-100 justify-content-center mt-5' data-background-color='dark'>
           <a href='index.html' className='logo'>
             <img
-              src='src/assets/img/logo/LOGO.png'
+              src='/img/logo/LOGO.png'
               alt='navbar brand'
               className='navbar-brand'
               height='75'
@@ -85,9 +85,9 @@ function GeneralSidebar () {
         </div>
         {/* End Logo Header */}
       </div>
-      <div className='sidebar-wrapper scrollbar scrollbar-inner'>
-        <div className='sidebar-content'>
-          <ul className='nav nav-secondary'>
+      <div className='scrollbar scrollbar-inner d-block'>
+        <div className=' sidebar-content'>
+          <ul className='pt-5 nav nav-secondary'>
             {rutas.map((item, index) => (
               <TiposItemsNav key={index} {...item} />
             ))}
@@ -154,7 +154,7 @@ function GeneralSidebar () {
           </ul>
         </div>
       </div>
-    </div>
+    </aside>
   )
 }
 

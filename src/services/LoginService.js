@@ -9,7 +9,7 @@ export async function login(usuario, clave, twofa='') {
       "password": clave,
       // "2fa_code": twofa
     };
-    const response = await axios.post(`${API_URL}api/login`, body);
+    const response = await axios.post(`${API_URL}/api/login`, body);
     console.log(response);
     return response.data;
   } catch (error) {

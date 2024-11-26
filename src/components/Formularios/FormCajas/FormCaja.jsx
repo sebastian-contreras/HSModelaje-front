@@ -2,8 +2,8 @@ import { useForm } from 'react-hook-form'
 import InputForm from '../../InputForm/InputForm'
 import Button from '../../Button/Button'
 import InputCaja from './InputCaja'
-import { useEffect } from 'react'
-import { storeCajasApi } from '../../../services/CajasService'
+import { useEffect, useMemo } from 'react'
+import { storeCajasApi, updateCajasApi } from '../../../services/CajasService'
 import { Alerta } from '../../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../../Fixes/messages'
 
@@ -15,9 +15,9 @@ function FormCaja ({ dataform, soloVer, modificar, closeModal, refresh }) {
   }, [reset, dataform])
 
   function onSubmit (data) {
-    console.log(data)
-    storeCajasApi(data)
+    (modificar ? updateCajasApi(data,dataform.IdCaja) :storeCajasApi(data))
       .then(response => {
+        console.log(data)
         if(closeModal) closeModal()
           if(refresh) refresh()
         Alerta()
@@ -26,7 +26,7 @@ function FormCaja ({ dataform, soloVer, modificar, closeModal, refresh }) {
           .withTitulo(
             response.message
               ? response.message
-              : 'Credencial generada correctamente.'
+              : 'Caja creada correctamente.'
           )
           .build()
       })
@@ -40,6 +40,7 @@ function FormCaja ({ dataform, soloVer, modificar, closeModal, refresh }) {
           .build()
       })
   }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <InputCaja control={control} errors={errors} onlyView={soloVer} />

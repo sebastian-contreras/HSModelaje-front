@@ -21,7 +21,7 @@ function GeneralLayout () {
               <div className='page-inner'>
                 <Outlet />
               </div>
-            <GeneralFooter />
+            {/* <GeneralFooter /> */}
             </div>
           </div>
         </div>

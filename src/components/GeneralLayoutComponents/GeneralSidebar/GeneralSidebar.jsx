@@ -76,10 +76,10 @@ function GeneralSidebar () {
         <div className='logo-header py-5 d-flex w-100 justify-content-center mt-5' data-background-color='dark'>
           <a href='index.html' className='logo'>
             <img
-              src='/img/logo/LOGO.png'
+              src='/img/logo/logo_light.png'
               alt='navbar brand'
               className='navbar-brand'
-              height='75'
+              height='110'
             />
           </a>
         </div>
@@ -87,7 +87,7 @@ function GeneralSidebar () {
       </div>
       <div className='scrollbar scrollbar-inner d-block'>
         <div className=' sidebar-content'>
-          <ul className='pt-5 nav nav-secondary'>
+          <ul className='pt-3 nav nav-secondary'>
             {rutas.map((item, index) => (
               <TiposItemsNav key={index} {...item} />
             ))}

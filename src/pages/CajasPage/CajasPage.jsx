@@ -26,6 +26,7 @@ function CajasPage () {
 
   const columns = useMemo(
     () => [
+      { accessorKey: 'IdCaja', header: '#',size:30 },
       { accessorKey: 'NumeroCaja', header: 'NumeroCaja' },
       { accessorKey: 'Tamaño', header: 'Tamaño' },
       { accessorKey: 'Fila', header: 'Fila' },
@@ -67,6 +68,9 @@ function CajasPage () {
         items={[{ name: 'Cajas', link: '/cajas' }]}
       />
       <SectionPage header={'Listado de cajas registradas'}>
+        <div className="d-flex justify-content-end">
+          <Button lg>Crear Caja</Button>
+        </div>
         <TablaMaterial
           columnFilters={columnFilters}
           loading={loading}

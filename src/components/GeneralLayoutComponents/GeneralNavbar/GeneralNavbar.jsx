@@ -108,7 +108,7 @@ function GeneralNavbar () {
                         <a className="dropdown-item" href="#">Account Setting</a>
                         <div className="dropdown-divider"></div> */}
                     <a className='dropdown-item' onClick={logout}>
-                      Logout
+                      Cerrar sesion
                     </a>
                   </li>
                 </div>

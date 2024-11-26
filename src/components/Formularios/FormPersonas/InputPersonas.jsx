@@ -1,7 +1,7 @@
 import { EstadosOptions, NacionalidadesOptions, PepOptions, SituacionFiscalOptions } from "../../../Fixes/fixes"
 import GenerateInputs from "../../GenerateInputs/GenerateInputs"
 
-function InputPersonas({control,errors={}, onlyView=true}) {
+function InputPersonas({control,errors={}, onlyView=false}) {
     const inputsTest = [
         { name:'CUIT', control:control, label:'CUIT', type:'text', error:errors.CUIT,estilos:'col-2' , readOnly:onlyView},
         { name:'Apellido', control:control, label:'Apellidos', type:'text', error:errors.Apellidos,estilos:'col-2' , readOnly:onlyView},

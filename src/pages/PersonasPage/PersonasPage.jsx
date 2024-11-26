@@ -10,6 +10,7 @@ import ModalModificado from '../../components/Modal/ModalModificado'
 import InputPersonas from '../../components/Formularios/FormPersonas/InputPersonas'
 import { useForm } from 'react-hook-form'
 import { API_URL } from '../../Fixes/API_URL.JS'
+import { formatearFechayHora } from '../../Fixes/formatter'
 
 function PersonasPage () {
   const [ModalVerPersona, setModalVerPersona] = useState(false)
@@ -58,7 +59,9 @@ function PersonasPage () {
       // { accessorKey: 'CodPostal', header: 'Código Postal' },
       // { accessorKey: 'PEP', header: 'PEP' },
       // { accessorKey: 'EstadoPersona', header: 'Estado Persona' },
-      // { accessorKey: 'created_at', header: 'Creado el' },
+      { accessorKey: 'created_at', header: 'Creado el' ,
+        Cell: ({ cell }) => formatearFechayHora(cell.getValue())
+      },
       // { accessorKey: 'updated_at', header: 'Actualizado el' },
       // { accessorKey: 'deleted_at', header: 'Eliminado el' },
       {
@@ -117,7 +120,7 @@ function PersonasPage () {
         title={`Detalle de ${ModalVerPersona.Apellido}, ${ModalVerPersona.Nombre}`}
       >
         <Modal.Body>
-          <InputPersonas control={control} errors={errors} />
+          <InputPersonas control={control} errors={errors} onlyView/>
         </Modal.Body>
         <Modal.Footer>
           <Button estilo='secondary' onClick={closeModalVerPersona}>Cerrar</Button>

@@ -1,0 +1,1 @@
+export const MENSAJE_DEFAULT ='Contacte con el adminitrador.'

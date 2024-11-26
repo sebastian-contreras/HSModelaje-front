@@ -1,4 +1,9 @@
 export const EstadosOptions = [{ value:'A', label:'Activo' }, { value:'I', label:'Inactivo' }]
+export const getLabelByValueEstados = (value) => {
+  const option = EstadosOptions.find(option => option.value === value);
+  return option ? option.label : null; // Devuelve el label o null si no se encuentra
+};
+
 export const SituacionFiscalOptions = [
   {value:null,label:'XXX'},
   {value:'Responsable incripto',label:'Responsable incripto'},

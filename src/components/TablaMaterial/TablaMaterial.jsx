@@ -49,6 +49,7 @@ function TablaMaterial({data=[],columns=[],loading,pagination,sorting,columnFilt
         rowCount: data?.ultimo_registro,
         initialState: {
           columnPinning: {right: ['acciones'] },
+          density:'compact'
         },
         manualSorting:true,
         onSortingChange: setSorting,

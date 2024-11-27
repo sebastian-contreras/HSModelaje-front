@@ -39,10 +39,10 @@ function CajasPage () {
     setSorting
   } = useFetch(`${API_URL}/api/cajas`, 'get')
 
-  function openForm (e = null, { soloVer = false, modificar = false }) {
+  function openForm (e = null, { soloVer = false, modificar = false, titulo='Crear caja' }) {
     reset(e?.original)
     setCajaSeleccionada(e?.original)
-    setModalCaja({ soloVer, modificar })
+    setModalCaja({ soloVer, modificar, titulo })
   }
 
   function closeForm () {
@@ -116,13 +116,13 @@ function CajasPage () {
           >
             <Button
               estilo='primary'
-              onClick={() => openForm(row, { soloVer: true })}
+              onClick={() => openForm(row, { soloVer: true, titulo: `Caja ${row.original?.NumeroCaja}` })}
             >
               Ver
             </Button>
             <Button
               estilo='secondary'
-              onClick={() => openForm(row, { modificar: true })}
+              onClick={() => openForm(row, { modificar: true ,titulo: `Modificar Caja ${row.original?.NumeroCaja}` })}
             >
               Modificar
             </Button>
@@ -173,7 +173,7 @@ function CajasPage () {
         show={ModalCaja}
         handleClose={closeForm}
         size={50}
-        title='Nueva caja'
+        title={ModalCaja.titulo}
         // title={`Detalle de ${CajaSeleccionada?.NumeroCaja ||''}, Fila: ${CajaSeleccionada?.Fila ||''}, Columna: ${CajaSeleccionada?.Columna ||''}`}
       >
         <FormCaja

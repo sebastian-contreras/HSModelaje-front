@@ -4,27 +4,28 @@ import { useHandlerSidebar } from '../../../context/SidebarContext/SidebarContex
 import { Link, useLocation } from 'react-router-dom'
 
 function GeneralSidebar () {
-  const {pathname} = useLocation();
+  const location = useLocation();
   const rutas = useMemo(()=>[
     { name: 'Dashboard', link: '/', icon: 'fa-home' },
     { name: 'Secciones', separador: true },
     { name: 'Personas', link: '/personas', icon: 'fa-user' },
     { name: 'Cajas', link: '/cajas', icon: 'fa-box' },
-    // {
-    //   name: 'Cajas',
-    //   icon: 'fa-box',
-    //   link:'/cajas',
-    //   subruta: [
-    //     { name: 'Lisrado', link: '/cajas' },
-    //     { name: 'test2', link: '/cajas/test2' }
-    //   ]
-    // }
+    {
+      name: 'Contratos',
+      icon: 'fa-file-contract',
+      link:'/contratos',
+      subruta: [
+        { name: 'Listado', link: '/contratos' },
+        { name: 'Nuevo Contrato', link: '/contratos/nuevo' }
+      ]
+    }
   ],[])
 
   const TiposItemsNav = ({ name='', link='', separador=false, subruta=null, icon='' }) => {
-    const isActive = pathname == link;
-    const firstRoute = pathname.split('/')
+    const isActive = location.pathname == link;
+    const firstRoute = location.pathname.split('/')
     const test = link.split('/')
+
     const subSectionActive = firstRoute[1] == test[1]
     if (separador) {
       return (
@@ -49,7 +50,7 @@ function GeneralSidebar () {
     if (subruta) {
       return (
         <li className='nav-item'>
-          <a aria-expanded={subSectionActive} href={`#${name}`}>
+          <a data-bs-toggle="collapse" aria-expanded={subSectionActive} href={`#${name}`}>
             <i className={`fas ${icon}`}></i>
             <p>{name}</p>
             <span className='caret'></span>
@@ -57,7 +58,7 @@ function GeneralSidebar () {
           <div className={`collapse ${subSectionActive ? 'show':''}`} id={name}>
             <ul className='nav nav-collapse'>
               {subruta.map((subitem, index) => (
-                <li key={index}  className={`${isActive ?'active':'' }`}>
+                <li key={index}  className={`${location.pathname==subitem.link ?'active':'' }`}>
                   <Link to={subitem.link}>
                     <span className='sub-item'>{subitem.name}</span>
                   </Link>

@@ -4,10 +4,10 @@ import SectionPage from '../../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../../components/TablaMaterial/TablaMaterial'
 import Button from '../../../components/Button/Button'
 import { formatearFechayHora } from '../../../Fixes/formatter'
-import { EstadosOptions, getLabelByValueEstados } from '../../../Fixes/fixes'
+import { ESTADO_CONTRATO_CHOICE, EstadosOptions, getLabelByValue, getLabelByValueEstados, TIPO_ASOCIACION_CHOICE } from '../../../Fixes/fixes'
 import { useMemo, useState } from 'react'
 import { useFetch } from '../../../hooks/useFetch'
-import { API_URL } from '../../../Fixes/API_URL.JS'
+import { API_URL } from '../../../Fixes/API_URL.js'
 
 function ListadoContratoPage () {
   const [Modal, setModal] = useState(false)
@@ -46,25 +46,27 @@ function ListadoContratoPage () {
     () => [
       { accessorKey: 'IdContrato', header: '#' },
       {
-        accessorFn: row => row.asociados[0]?.persona.CUIT, // Usar accessorFn para acceder al primer elemento de asociados
+        accessorFn: row => row?.asociados[0]?.persona?.CUIT || '-', // Usar accessorFn para acceder al primer elemento de asociados
         id: 'CUIT',
         header: 'CUIT'
       },
       {
-        accessorFn: row => `${row.asociados[0]?.persona.Apellido}, ${row.asociados[0]?.persona.Nombre}`, // Usar accessorFn para acceder al primer elemento de asociados
+        accessorFn: row => `${row?.asociados[0]?.persona?.Apellido || '-'}, ${row?.asociados[0]?.persona?.Nombre || '-'}`, // Usar accessorFn para acceder al primer elemento de asociados
         id: 'apelname',
         header: 'Titular'
       },
       {
         accessorFn: row => row.asociados[0]?.TipoAsociacion, // Usar accessorFn para acceder al primer elemento de asociados
         id: 'TipoAsociacion',
-        header: 'Tipo de asociacion'
+        header: 'Tipo de asociacion',
+        Cell: ({ cell }) => getLabelByValue(TIPO_ASOCIACION_CHOICE,cell.getValue())
+
       },
       { accessorKey: 'caja.NumeroCaja', header: 'Caja' },
       { accessorKey: 'caja.Fila', header: 'Fila' },
       { accessorKey: 'caja.Columna', header: 'Columna' },
       { accessorKey: 'EstadoContrato', header: 'Estado'
-        ,Cell: ({ cell }) => getLabelByValueEstados(cell.getValue())
+        ,Cell: ({ cell }) => getLabelByValue(ESTADO_CONTRATO_CHOICE,cell.getValue())
 
        },
 
@@ -119,6 +121,7 @@ function ListadoContratoPage () {
     ],
     []
   )
+  console.log(data)
   return (
     <div>
       <HeaderPageComponent

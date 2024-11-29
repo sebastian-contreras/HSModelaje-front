@@ -1,22 +1,19 @@
 import { useMemo, useState } from 'react'
-import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
-import SectionPage from '../../components/SectionPage/SectionPage'
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
-import { ButtonGroup, Modal } from 'react-bootstrap'
-import Button from '../../components/Button/Button'
-import { useFetch } from '../../hooks/useFetch'
-import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
-import ModalModificado from '../../components/Modal/ModalModificado'
-import InputPersonas from '../../components/Formularios/FormPersonas/InputPersonas'
+import { ButtonGroup } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
-import { API_URL } from '../../Fixes/API_URL.JS'
-import { formatearFechayHora } from '../../Fixes/formatter'
-import { getLabelByValueEstados } from '../../Fixes/fixes'
-import FormPersonas from '../../components/Formularios/FormPersonas/FormPersona'
-import FormPersona from '../../components/Formularios/FormPersonas/FormPersona'
-import { deletePersonasApi } from '../../services/PersonaService'
-import { Alerta } from '../../functions/alerts'
 import Swal from 'sweetalert2'
+import { API_URL } from '../../Fixes/API_URL.js'
+import { ESTADO_PERSONA_CHOICE, getLabelByValue } from '../../Fixes/fixes'
+import { formatearFechayHora } from '../../Fixes/formatter'
+import Button from '../../components/Button/Button'
+import FormPersona from '../../components/Formularios/FormPersonas/FormPersona'
+import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
+import ModalModificado from '../../components/Modal/ModalModificado'
+import SectionPage from '../../components/SectionPage/SectionPage'
+import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
+import { Alerta } from '../../functions/alerts'
+import { useFetch } from '../../hooks/useFetch'
+import { deletePersonasApi } from '../../services/PersonaService'
 
 function PersonasPage () {
   const [ModalVerPersona, setModalVerPersona] = useState(false)
@@ -104,8 +101,8 @@ function PersonasPage () {
       // { accessorKey: 'PEP', header: 'PEP' },
       {
         accessorKey: 'EstadoPersona',
-        header: 'Estado Persona',
-        Cell: ({ cell }) => getLabelByValueEstados(cell.getValue())
+        header: 'Estado',
+        Cell: ({ cell }) => getLabelByValue(ESTADO_PERSONA_CHOICE,cell.getValue())
       },
       {
         accessorKey: 'created_at',

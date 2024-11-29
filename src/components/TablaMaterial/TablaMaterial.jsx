@@ -1,6 +1,6 @@
 import { MaterialReactTable, useMaterialReactTable } from "material-react-table"
 
-function TablaMaterial({data=[],columns=[],loading,pagination,sorting,columnFilters,setSorting,setColumnFilters,setPagination}) {
+function TablaMaterial({select=false,DefaultId='id',rowSelection, setRowSelection,data=[],columns=[],loading,pagination,sorting,columnFilters,setSorting,setColumnFilters,setPagination}) {
     
     const table = useMaterialReactTable({
         columns,
@@ -51,12 +51,15 @@ function TablaMaterial({data=[],columns=[],loading,pagination,sorting,columnFilt
           columnPinning: {right: ['acciones'] },
           density:'compact'
         },
-        manualSorting:true,
+        manualSorting:true, enableRowSelection: select,
         onSortingChange: setSorting,
+        onRowSelectionChange: setRowSelection || null,
+      
         onPaginationChange: setPagination,
-        state: { pagination, isLoading: loading, columnFilters, sorting }, //pass the pagination state to the table
+        state: { pagination, isLoading: loading, columnFilters, sorting,rowSelection:rowSelection||{} }, //pass the pagination state to the table
         manualFiltering: true, //turn off client-side filtering
-        onColumnFiltersChange: setColumnFilters //hoist internal columnFilters state to your state
+        onColumnFiltersChange: setColumnFilters, //hoist internal columnFilters state to your state
+        getRowId: (originalRow) => originalRow[DefaultId],
       })
 
   return (

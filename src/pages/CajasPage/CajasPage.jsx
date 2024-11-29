@@ -1,21 +1,20 @@
 import { useMemo, useState } from 'react'
-import { API_URL } from '../../Fixes/API_URL.JS'
-import { useFetch } from '../../hooks/useFetch'
-import { ButtonGroup, Modal } from 'react-bootstrap'
+import { ButtonGroup } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import Swal from 'sweetalert2'
 import Button from '../../components/Button/Button'
+import FormCaja from '../../components/Formularios/FormCajas/FormCaja'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
+import ModalModificado from '../../components/Modal/ModalModificado'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
+import { API_URL } from '../../Fixes/API_URL.js'
+import { ESTADO_CAJA_CHOICE, getLabelByValue } from '../../Fixes/fixes'
 import { formatearFechayHora } from '../../Fixes/formatter'
-import ModalModificado from '../../components/Modal/ModalModificado'
-import { useForm } from 'react-hook-form'
-import InputCaja from '../../components/Formularios/FormCajas/InputCaja'
-import { getLabelByValueEstados } from '../../Fixes/fixes'
-import FormCaja from '../../components/Formularios/FormCajas/FormCaja'
-import Swal from 'sweetalert2'
-import { deleteCajaApi } from '../../services/CajasService'
-import { Alerta } from '../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../Fixes/messages'
+import { Alerta } from '../../functions/alerts'
+import { useFetch } from '../../hooks/useFetch'
+import { deleteCajaApi } from '../../services/CajasService'
 
 function CajasPage () {
   const [ModalVerCaja, setModalVerCaja] = useState(false)
@@ -88,7 +87,7 @@ function CajasPage () {
     () => [
       { accessorKey: 'IdCaja', header: '#', size: 30 },
       { accessorKey: 'Ubicacion', header: 'Ubicacion' },
-      { accessorKey: 'NumeroCaja', header: 'NumeroCaja', size: 60 },
+      { accessorKey: 'NumeroCaja', header: 'Numero de caja', size: 70 },
       { accessorKey: 'Tamaño', header: 'Tamaño' },
       { accessorKey: 'Fila', header: 'Fila' },
       { accessorKey: 'Columna', header: 'Columna' },
@@ -99,8 +98,8 @@ function CajasPage () {
       },
       {
         accessorKey: 'EstadoCaja',
-        header: 'EstadoCaja',
-        Cell: ({ cell }) => getLabelByValueEstados(cell.getValue())
+        header: 'Estado',
+        Cell: ({ cell }) => getLabelByValue(ESTADO_CAJA_CHOICE,cell.getValue())
       },
       {
         accessorKey: 'acciones',

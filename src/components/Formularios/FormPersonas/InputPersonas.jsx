@@ -1,4 +1,4 @@
-import { EstadosOptions, NacionalidadesOptions, PepOptions, SituacionFiscalOptions } from "../../../Fixes/fixes"
+import { ESTADO_PERSONA_CHOICE, EstadosOptions, NacionalidadesOptions, PEP_CHOICES, SITUACION_FISCAL_CHOICE } from "../../../Fixes/fixes"
 import GenerateInputs from "../../GenerateInputs/GenerateInputs"
 
 function InputPersonas({control,errors={}, onlyView=false}) {
@@ -12,13 +12,13 @@ function InputPersonas({control,errors={}, onlyView=false}) {
         { name:'Email', control:control, label:'Email', type:'text', error:errors.Email,estilos:'col-3' , readOnly:onlyView},
         { name:'Telefono', control:control, label:'Telefono', type:'text', error:errors.Telefonos,estilos:'col-2' , readOnly:onlyView},
         { name:'Movil', control:control, label:'Movil', type:'text', error:errors.Movil,estilos:'col-2' , readOnly:onlyView},
-        { name:'SituacionFiscal', control:control, label:'Situacion Fiscal', type:'select', error:errors.select,estilos:'col-2',options:SituacionFiscalOptions,readOnly:onlyView},
-        { name:'PEP', control:control, label:'Persona expuesta politicamente', type:'select', error:errors.select,estilos:'col-3',options:PepOptions , defaultValue:'No',readOnly:onlyView},
+        { name:'SituacionFiscal', control:control, label:'Situacion Fiscal', type:'select', error:errors.select,estilos:'col-2',options:SITUACION_FISCAL_CHOICE,readOnly:onlyView},
+        { name:'PEP', control:control, label:'Persona expuesta politicamente', type:'select', error:errors.select,estilos:'col-3',options:PEP_CHOICES , defaultValue:'No',readOnly:onlyView},
         { name:'Actividad', control:control, label:'Actividad', type:'text', error:errors.Direccion,estilos:'col-12' , readOnly:onlyView},
           { name:'Nacionalidad', control:control, label:'Nacionalidad', type:'select', error:errors.select,estilos:'col-2',options:NacionalidadesOptions, defaultValue:'Argentina' , readOnly:onlyView},
         { name:'Domicilio', control:control, label:'Domicilio', type:'text', error:errors.Direccion,estilos:'col-8' , readOnly:onlyView},
         { name:'CodPostal', control:control, label:'Codigo postal', type:'text', error:errors.Direccion,estilos:'col-2' , readOnly:onlyView},
-          { name:'EstadoPersona', control:control, label:'Estado', type:'select', error:errors.select,estilos:'col-3',options:EstadosOptions, defaultValue:'A' , readOnly:onlyView},
+          { name:'EstadoPersona', control:control, label:'Estado', type:'select', error:errors.select,estilos:'col-3',options:ESTADO_PERSONA_CHOICE, defaultValue:'A' , readOnly:onlyView},
       ]
   return (
     <GenerateInputs inputs={inputsTest}/>

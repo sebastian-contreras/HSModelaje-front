@@ -85,6 +85,10 @@ danger-color : #f3545d
 
 -------------------------------------------------------------------
 */
+.accordion-body {
+  background-color: #f0f0f0 !important; /* Color gris claro */
+}
+
 input[readonly] {
   background-color: white !important; /* Cambia el color de fondo */
   color: black;            /* Cambia el color del texto */

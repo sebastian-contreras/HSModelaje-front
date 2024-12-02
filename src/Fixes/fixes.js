@@ -1,7 +1,7 @@
 export const getLabelByValue = (choices, value) => {
-  const choice = choices.find(choice => choice.value === value);
-  return choice ? choice.label : null; // Devuelve null si no se encuentra el value
-};
+  const choice = choices.find(choice => choice.value === value)
+  return choice ? choice.label : null // Devuelve null si no se encuentra el value
+}
 
 export const EstadosOptions = [
   { value: 'A', label: 'Activo' },
@@ -12,6 +12,12 @@ export const getLabelByValueEstados = value => {
   return option ? option.label : null // Devuelve el label o null si no se encuentra
 }
 
+const toValueLabelArray = (choices) => {
+  return choices.map((label) => ({
+    value: label,
+    label: label
+  }));
+};
 
 export const NacionalidadesOptions = [
   { value: 'Afganistán', label: 'Afganistán' },
@@ -243,29 +249,29 @@ export const TIPO_TITULARIDAD_CHOICES = [
   { value: 'I', label: 'Indistinta' },
   { value: 'C', label: 'Conjunta' },
   { value: '-', label: 'No especifica' }
-];
+]
 
 export const TIPO_APERTURA_CHOICES = [
   { value: 'S', label: 'Simple' },
   { value: 'C', label: 'Conjunta' },
   { value: '-', label: 'No especifica' }
-];
+]
 
 export const TIPO_USO_CHOICES = [
   { value: 'P', label: 'Personal' },
   { value: 'C', label: 'Comercial' },
   { value: '-', label: 'No especifica' }
-];
+]
 
 export const AVISO_INGRESO_CHOICES = [
   { value: 'S', label: 'Si' },
   { value: 'N', label: 'No' }
-];
+]
 
 export const UPGRADE_SEGURO_CHOICES = [
   { value: 'S', label: 'Si' },
   { value: 'N', label: 'No' }
-];
+]
 export const ESTADO_CONTRATO_CHOICE = [
   { value: 'A', label: 'Activo' },
   { value: 'I', label: 'Inactivo' }
@@ -274,10 +280,56 @@ export const ESTADO_CONTRATO_CHOICE = [
 export const ESTADO_ASOCIADO_CHOICE = [
   { value: 'A', label: 'Activo' },
   { value: 'I', label: 'Inactivo' }
-];
+]
 
 export const TIPO_ASOCIACION_CHOICE = [
   { value: 'T', label: 'Titular' },
   { value: 'A', label: 'Autorizado' },
   { value: 'O', label: 'Otro' }
-];
+]
+
+//FORMAS DE PAGO
+ const TIPO_FORMAS_PAGO_BACK = [
+  '-',
+  'Efectivo',
+  'Cheque',
+  'Tarjeta Credito',
+  'Tarjeta Debito',
+  'Deb automatico Tarj/Credito',
+  'Deb automatico Tarj/Debito',
+  'Deb automatico Cta Cte',
+  'Deb automatico Cuenta de ahorro',
+  'Transferencia'
+]
+// I: Indistinta, C: Conjunta, - 'No especifica'
+const TIPO_MARCAS_TARJETAS_BACK = [
+  '-',
+  'Visa',
+  'MasterCard',
+  'American Express',
+  'aMEX',
+  'Naranja',
+  'Cabal',
+  'Tarjeta Shopping',
+  'CitiBank',
+  'Banco Francés',
+  'Banco Nación',
+  'Banco Santander',
+  'Mercado Pago',
+  'Presto',
+  'Visa Electron',
+  'MasterCard Debit',
+  'Cabal Debit',
+  'Link Card',
+  'Argencard'
+]
+
+export const TIPO_FORMAS_PAGO_CHOICES = TIPO_FORMAS_PAGO_BACK.map((label) => ({
+  value: label,
+  label: label
+}));
+
+export const TIPO_MARCAS_TARJETAS_CHOICES = TIPO_MARCAS_TARJETAS_BACK.map((label) => ({
+  value: label,
+  label: label
+}));

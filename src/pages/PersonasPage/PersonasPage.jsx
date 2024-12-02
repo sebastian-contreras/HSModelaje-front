@@ -102,6 +102,8 @@ function PersonasPage () {
       {
         accessorKey: 'EstadoPersona',
         header: 'Estado',
+        filterVariant: 'select',
+        filterSelectOptions: ESTADO_PERSONA_CHOICE,
         Cell: ({ cell }) => getLabelByValue(ESTADO_PERSONA_CHOICE,cell.getValue())
       },
       {

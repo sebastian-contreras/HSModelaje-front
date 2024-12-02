@@ -99,6 +99,8 @@ function CajasPage () {
       {
         accessorKey: 'EstadoCaja',
         header: 'Estado',
+        filterVariant: 'select',
+        filterSelectOptions: ESTADO_CAJA_CHOICE,
         Cell: ({ cell }) => getLabelByValue(ESTADO_CAJA_CHOICE,cell.getValue())
       },
       {

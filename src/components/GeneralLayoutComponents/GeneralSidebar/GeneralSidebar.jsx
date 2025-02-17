@@ -9,16 +9,7 @@ function GeneralSidebar () {
     { name: 'Dashboard', link: '/', icon: 'fa-home' },
     { name: 'Secciones', separador: true },
     { name: 'Personas', link: '/personas', icon: 'fa-user' },
-    { name: 'Cajas', link: '/cajas', icon: 'fa-box' },
-    {
-      name: 'Contratos',
-      icon: 'fa-file-contract',
-      link:'/contratos',
-      subruta: [
-        { name: 'Listado', link: '/contratos' },
-        { name: 'Nuevo Contrato', link: '/contratos/nuevo' }
-      ]
-    }
+   
   ],[])
 
   const TiposItemsNav = ({ name='', link='', separador=false, subruta=null, icon='' }) => {
@@ -77,10 +68,10 @@ function GeneralSidebar () {
         <div className='logo-header py-5 d-flex w-100 justify-content-center mt-5' data-background-color='dark'>
           <a href='index.html' className='logo'>
             <img
-              src='/img/logo/logo_light.png'
+              src='/img/logo/logo_white.png'
               alt='navbar brand'
               className='navbar-brand'
-              height='110'
+              height='100'
             />
           </a>
         </div>

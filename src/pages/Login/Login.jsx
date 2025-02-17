@@ -62,12 +62,11 @@ function Login () {
                 <div className='card-body p-md-5 mx-md-4'>
                   <div className='text-center'>
                     <img
-                      src='/img/logo/LOGO.png'
+                      src='/img/logo/logo_light.png'
                       alt=''
-                      height={'150'}
-                      className='logo-login mb-5'
+                      className='logo-login'
                     />
-                    <h4 className='mt-1 mb-3'>Inicio de sesion</h4>
+                    <h4 className='mb-3'>Inicio de sesion</h4>
                     <h5 className='mb-5 pb-1 fw-light'>
                       Ingrese sus credenciales para iniciar sesión
                     </h5>
@@ -108,31 +107,7 @@ function Login () {
                       />
                     </div>
 
-                    <div data-mdb-input-init className='form-outline mb-3'>
-                      <label className='form-label fw-semibold mt-1 ms-1'>
-                        Codigo 2FA
-                      </label>
-                      <Form.Control
-                        type='text'
-                        id='form2Example11'
-                        className='form-control'
-                        placeholder='2FA'
-                        value={codigo2fa}
-                        onChange={e => setCodigo2fa(e.target.value)}
-                      />
-                      <div
-                        style={{
-                          display: 'flex',
-                          width: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <p className='btn-text mt-3'>
-                          ¿No tienes tu código 2FA? Click aquí.
-                        </p>
-                      </div>
-                    </div>
+                   
                     <Alert
                       show={badCredentials}
                       className='text-center'

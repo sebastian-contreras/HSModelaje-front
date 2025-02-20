@@ -8,7 +8,8 @@ function GeneralSidebar () {
   const rutas = useMemo(()=>[
     { name: 'Dashboard', link: '/', icon: 'fa-home' },
     { name: 'Secciones', separador: true },
-    { name: 'Personas', link: '/personas', icon: 'fa-user' },
+    // { name: 'Personas', link: '/personas', icon: 'fa-user' },
+    { name: 'Usuarios', link: '/usuarios', icon: 'fa-user-circle' },
    
   ],[])
 

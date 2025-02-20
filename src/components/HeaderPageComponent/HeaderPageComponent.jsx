@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 
 function HeaderPageComponent ({ title = '', items = [] }) {
-  console.log(items.length)
   return (
     <div className='page-header'>
       <h3 className='fw-bold mb-3'>{title}</h3>

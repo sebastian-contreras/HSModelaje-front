@@ -1,46 +1,57 @@
-import { useEffect, useMemo, useState } from 'react'
-import { ButtonGroup } from 'react-bootstrap'
-import { useForm } from 'react-hook-form'
+import { useMemo, useState } from 'react'
+import { useFetch } from '../../hooks/useFetch'
+import { API_URL } from '../../Fixes/API_URL'
 import Swal from 'sweetalert2'
-import { API_URL } from '../../Fixes/API_URL.js'
-import { getLabelByValue } from '../../Fixes/fixes'
+import { Alerta } from '../../functions/alerts'
+import { MENSAJE_DEFAULT } from '../../Fixes/messages'
 import { formatearFechayHora } from '../../Fixes/formatter'
+import { ButtonGroup } from 'react-bootstrap'
 import Button from '../../components/Button/Button'
-import FormPersona from '../../components/Formularios/FormPersonas/FormPersona'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
-import ModalModificado from '../../components/Modal/ModalModificado'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
-import { Alerta } from '../../functions/alerts'
-import { useFetch } from '../../hooks/useFetch'
-import { deletePersonasApi } from '../../services/PersonaService'
-import { listarUsuarioApi } from '../../services/UserService.js'
+import ModalModificado from '../../components/Modal/ModalModificado'
+import FormUsers from '../../components/Formularios/FormUsers/FormUsers'
+import { getLabelByValue, ROLES_CHOICES } from '../../Fixes/fixes'
+import { deleteUsuarioApi } from '../../services/UserService'
 
-function PersonasPage () {
-  const [ModalVerPersona, setModalVerPersona] = useState(false)
+function UsuariosPage () {
   const [Modal, setModal] = useState(false)
   const [Seleccionado, setSeleccionado] = useState(null)
-  const { control, errors, reset } = useForm()
-  const [Data, setData] = useState([])
-  useEffect(() => {
-    listarUsuarioApi(res => {
-      console.log(res)
-      setData(res.data)
-    })
-  }, [])
+  const {
+    data,
+    loading,
+    error,
+    params,
+    response,
+    body,
+    handlePagination,
+    pagination,
+    setPagination,
+    columnFilters,
+    refresh,
+    setColumnFilters,
+    sorting,
+    setSorting
+  } = useFetch(`${API_URL}/api/usuarios`, 'get')
+  console.log(data)
+  function closeForm () {
+    setSeleccionado(null)
+    setModal(false)
+  }
 
   function openForm (
     e = null,
     { soloVer = false, modificar = false, titulo = 'No hay titulo' }
   ) {
-    reset(e?.original)
+    console.log(e?.original)
     setSeleccionado(e?.original)
     setModal({ soloVer, modificar, titulo })
   }
 
   const deleteItem = item => {
     Swal.fire({
-      title: `¿Estas seguro de eliminar la persona ${item.CUIT} - ${item.Apellido}, ${item.Nombre}?`,
+      title: `¿Estas seguro de eliminar el usuario ${item.Username}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -49,11 +60,11 @@ function PersonasPage () {
     })
       .then(result => {
         if (result.isConfirmed) {
-          deletePersonasApi(item.IdPersona).then(response => {
+          deleteUsuarioApi(item.IdUsuario).then(response => {
             Alerta()
               .withMini(true)
               .withTipo('success')
-              .withTitulo('Se elimino la caja correctamente')
+              .withTitulo('Se elimino el usuario correctamente')
               .withMensaje(response.message)
               .build()
             refresh()
@@ -64,7 +75,7 @@ function PersonasPage () {
         Alerta()
           .withMini(true)
           .withTipo('error')
-          .withTitulo('No se elimino la caja.')
+          .withTitulo('No se elimino el usuario.')
           .withMensaje(
             err?.response?.data?.message
               ? err.response.data.message
@@ -73,37 +84,22 @@ function PersonasPage () {
           .build()
       })
   }
-
   const columns = useMemo(
     () => [
-      { accessorKey: 'IdPersona', header: 'ID Persona' },
-      { accessorKey: 'CUIT', header: 'CUIT' },
-      { accessorKey: 'Apellido', header: 'Apellido' },
-      { accessorKey: 'Nombre', header: 'Nombre' },
-      // { accessorKey: 'Nacionalidad', header: 'Nacionalidad' },
-      // { accessorKey: 'Actividad', header: 'Actividad' },
-      // { accessorKey: 'Domicilio', header: 'Domicilio' },
+      { accessorKey: 'IdUsuario', header: '#' },
+      { accessorKey: 'Username', header: 'Usuario' },
+      { accessorKey: 'Apellidos', header: 'Apellidos' },
+      { accessorKey: 'Nombres', header: 'Nombres' },
+      { accessorKey: 'FechaNacimiento', header: 'FechaNacimiento' },
+      { accessorKey: 'Telefono', header: 'Telefono' },
       { accessorKey: 'Email', header: 'Email' },
-      { accessorKey: 'Telefono', header: 'Teléfono' },
-      { accessorKey: 'Movil', header: 'Móvil' },
-      // { accessorKey: 'SituacionFiscal', header: 'Situación Fiscal' },
-      // { accessorKey: 'FNacimiento', header: 'Fecha de Nacimiento' },
-      // { accessorKey: 'DNI', header: 'DNI' },
-      // { accessorKey: 'Alias', header: 'Alias' },
-      // { accessorKey: 'CodPostal', header: 'Código Postal' },
-      // { accessorKey: 'PEP', header: 'PEP' },
+      { accessorKey: 'FechaCreado', header: 'FechaCreado' },
+      { accessorKey: 'EstadoUsuario', header: 'EstadoUsuario' },
       {
-        accessorKey: 'EstadoPersona',
-        header: 'Estado',
-        filterVariant: 'select'
+        accessorKey: 'Rol',
+        header: 'Rol',
+        Cell: ({ cell }) => getLabelByValue(ROLES_CHOICES, cell.getValue())
       },
-      {
-        accessorKey: 'created_at',
-        header: 'Creado el',
-        Cell: ({ cell }) => formatearFechayHora(cell.getValue())
-      },
-      // { accessorKey: 'updated_at', header: 'Actualizado el' },
-      // { accessorKey: 'deleted_at', header: 'Eliminado el' },
       {
         accessorKey: 'acciones',
         header: 'Acciones',
@@ -121,7 +117,7 @@ function PersonasPage () {
               onClick={() =>
                 openForm(row, {
                   soloVer: true,
-                  titulo: `Detalle de ${row.original.CUIT} - ${row.original.Apellido}, ${row.original.Nombre}`
+                  titulo: `Usuario ${row.original.name}`
                 })
               }
             >
@@ -132,7 +128,7 @@ function PersonasPage () {
               onClick={() =>
                 openForm(row, {
                   modificar: true,
-                  titulo: `Modificar a ${row.original.CUIT} - ${row.original.Apellido}, ${row.original.Nombre}`
+                  titulo: `Modificar a ${row.original.name}`
                 })
               }
             >
@@ -148,15 +144,14 @@ function PersonasPage () {
     ],
     []
   )
-
   return (
     <>
       <div>
         <HeaderPageComponent
-          title='Personas'
-          items={[{ name: 'Personas', link: '/personas' }]}
+          title='Usuarios'
+          items={[{ name: 'Usuarios', link: '/usuarios' }]}
         />
-        <SectionPage header={'Listado de personas registradas'}>
+        <SectionPage header={'Listado de usuarios registradas'}>
           <div className='d-flex justify-content-start'>
             <Button
               lg
@@ -164,42 +159,38 @@ function PersonasPage () {
                 openForm(null, {
                   soloVer: false,
                   modificar: false,
-                  titulo: 'Registrar Persona'
+                  titulo: 'Registrar Usuario'
                 })
               }
             >
-              Crear Persona
+              Registrar Usuarios
             </Button>
           </div>
           <TablaMaterial
-            // columnFilters={columnFilters}
-            // loading={loading}
-            // pagination={pagination}
-            // setPagination={setPagination}
-            // setSorting={setSorting}
-            // sorting={sorting}
+            loading={loading}
+            pagination={pagination}
             columns={columns}
-            data={Data}
+            data={data}
           />
         </SectionPage>
       </div>
-      {/* <ModalModificado
+      <ModalModificado
         show={Modal}
         handleClose={closeForm}
-        size={80}
+        size={40}
         title={Modal.titulo}
         // title={`Detalle de ${CajaSeleccionada?.NumeroCaja ||''}, Fila: ${CajaSeleccionada?.Fila ||''}, Columna: ${CajaSeleccionada?.Columna ||''}`}
       >
-        <FormPersona
+        <FormUsers
           closeModal={closeForm}
-          soloVer={Modal.soloVer}
+          onlyView={Modal.soloVer}
           modificar={Modal.modificar}
           dataform={Seleccionado}
           refresh={refresh}
         />
-      </ModalModificado> */}
+      </ModalModificado>
     </>
   )
 }
 
-export default PersonasPage
+export default UsuariosPage

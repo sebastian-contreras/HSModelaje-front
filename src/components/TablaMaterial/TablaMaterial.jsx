@@ -34,10 +34,10 @@ function TablaMaterial({select=false,DefaultId='id',rowSelection, setRowSelectio
             backgroundColor:'#6861ce'
           }
         },
-        data: data?.data || [], //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+        data: data || [], //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
         // enableRowSelection: true, //enable some features
         // enableColumnOrdering: true, //enable a feature for all columns
-        enableGlobalFilter: true, //turn off a feature
+        // enableGlobalFilter: true, //turn off a feature
         muiPaginationProps: {
           color: 'primary',
           shape: 'rounded',
@@ -46,19 +46,11 @@ function TablaMaterial({select=false,DefaultId='id',rowSelection, setRowSelectio
         },
         paginationDisplayMode: 'pages',
         manualPagination: true,
-        rowCount: data?.ultimo_registro,
         initialState: {
           columnPinning: {right: ['acciones'] },
           density:'compact'
         },
-        manualSorting:true, enableRowSelection: select,
-        onSortingChange: setSorting,
-        onRowSelectionChange: setRowSelection || null,
-      
-        onPaginationChange: setPagination,
-        state: { pagination, isLoading: loading, columnFilters, sorting,rowSelection:rowSelection||{} }, //pass the pagination state to the table
-        manualFiltering: true, //turn off client-side filtering
-        onColumnFiltersChange: setColumnFilters, //hoist internal columnFilters state to your state
+     
         getRowId: (originalRow) => originalRow[DefaultId],
       })
 

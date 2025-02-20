@@ -223,113 +223,11 @@ export const NacionalidadesOptions = [
   { value: 'Zimbabue', label: 'Zimbabue' }
 ]
 
-//PERSONAS
+//USUARIOS
 
-export const PEP_CHOICES = [
-  { label: 'Si', value: 'Si' },
-  { value: 'No', label: 'No' }
+export const ROLES_CHOICES = [
+  { value: 'A', label: 'Administrador' },
+  { value: 'G', label: 'Guardia' },
+  { value: 'O', label: 'Organizador' },
+  { value: 'M', label: 'Moderador' },
 ]
-export const ESTADO_PERSONA_CHOICE = [
-  { value: 'A', label: 'Activo' },
-  { value: 'I', label: 'Inactivo' }
-] // A: Activo, I: Inactivo
-export const SITUACION_FISCAL_CHOICE = [
-  { value: '-', label: '-' },
-  { value: 'Resp.Inscripto', label: 'Resp.Inscripto' },
-  { value: 'Cons.Final', label: 'Cons.Final' }
-]
-
-//CAJAS
-export const ESTADO_CAJA_CHOICE = [
-  { value: 'A', label: 'Activo' },
-  { value: 'I', label: 'Inactivo' }
-]
-//CONTRATOS
-export const TIPO_TITULARIDAD_CHOICES = [
-  { value: 'I', label: 'Indistinta' },
-  { value: 'C', label: 'Conjunta' },
-  { value: '-', label: 'No especifica' }
-]
-
-export const TIPO_APERTURA_CHOICES = [
-  { value: 'S', label: 'Simple' },
-  { value: 'C', label: 'Conjunta' },
-  { value: '-', label: 'No especifica' }
-]
-
-export const TIPO_USO_CHOICES = [
-  { value: 'P', label: 'Personal' },
-  { value: 'C', label: 'Comercial' },
-  { value: '-', label: 'No especifica' }
-]
-
-export const AVISO_INGRESO_CHOICES = [
-  { value: 'S', label: 'Si' },
-  { value: 'N', label: 'No' }
-]
-
-export const UPGRADE_SEGURO_CHOICES = [
-  { value: 'S', label: 'Si' },
-  { value: 'N', label: 'No' }
-]
-export const ESTADO_CONTRATO_CHOICE = [
-  { value: 'A', label: 'Activo' },
-  { value: 'I', label: 'Inactivo' }
-] // A: Activo, I: Inactivo
-//ASOCIADOS
-export const ESTADO_ASOCIADO_CHOICE = [
-  { value: 'A', label: 'Activo' },
-  { value: 'I', label: 'Inactivo' }
-]
-
-export const TIPO_ASOCIACION_CHOICE = [
-  { value: 'T', label: 'Titular' },
-  { value: 'A', label: 'Autorizado' },
-  { value: 'O', label: 'Otro' }
-]
-
-//FORMAS DE PAGO
- const TIPO_FORMAS_PAGO_BACK = [
-  '-',
-  'Efectivo',
-  'Cheque',
-  'Tarjeta Credito',
-  'Tarjeta Debito',
-  'Deb automatico Tarj/Credito',
-  'Deb automatico Tarj/Debito',
-  'Deb automatico Cta Cte',
-  'Deb automatico Cuenta de ahorro',
-  'Transferencia'
-]
-// I: Indistinta, C: Conjunta, - 'No especifica'
-const TIPO_MARCAS_TARJETAS_BACK = [
-  '-',
-  'Visa',
-  'MasterCard',
-  'American Express',
-  'aMEX',
-  'Naranja',
-  'Cabal',
-  'Tarjeta Shopping',
-  'CitiBank',
-  'Banco Francés',
-  'Banco Nación',
-  'Banco Santander',
-  'Mercado Pago',
-  'Presto',
-  'Visa Electron',
-  'MasterCard Debit',
-  'Cabal Debit',
-  'Link Card',
-  'Argencard'
-]
-
-export const TIPO_FORMAS_PAGO_CHOICES = TIPO_FORMAS_PAGO_BACK.map((label) => ({
-  value: label,
-  label: label
-}));
-
-export const TIPO_MARCAS_TARJETAS_CHOICES = TIPO_MARCAS_TARJETAS_BACK.map((label) => ({
-  value: label,
-  label: label
-}));

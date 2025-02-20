@@ -32,3 +32,13 @@ export async function deleteUsuarioApi (id) {
   console.log(response)
   return response.data
 }
+
+
+export async function darBajaUsuarioApi (id) {
+  const response = await axios.post(`${API_URL}/api/usuarios/darbaja/` + id)
+  return response.data
+}
+export async function activarUsuarioApi (id) {
+  const response = await axios.post(`${API_URL}/api/usuarios/activar/` + id)
+  return response.data
+}

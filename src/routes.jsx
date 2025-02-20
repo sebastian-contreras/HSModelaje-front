@@ -4,6 +4,7 @@ import DashboardPage from './pages/DashboardPage/DashboardPage'
 import Login from './pages/Login/Login'
 import PersonasPage from './pages/PersonasPage/PersonasPage'
 import UsuariosPage from './pages/UsuariosPage/UsuariosPage'
+import EventosPage from './pages/EventosPage/EventosPage'
 
 const RoutesComponent = () => (
   <Routes>
@@ -13,6 +14,7 @@ const RoutesComponent = () => (
       <Route path='/' element={<DashboardPage />} />
       <Route path='/personas' element={<PersonasPage />} />
       <Route path='/usuarios' element={<UsuariosPage />} />
+      <Route path='/eventos' element={<EventosPage />} />
       {/* <Route path='/cajas' element={<CajasPage />} />
       <Route path='/contratos' element={<ListadoContratoPage />} />
       <Route path='/contratos/nuevo' element={<NuevoContratoPage />} /> */}

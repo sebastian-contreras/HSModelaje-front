@@ -13,15 +13,10 @@ import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import ModalModificado from '../../components/Modal/ModalModificado'
 import FormUsers from '../../components/Formularios/FormUsers/FormUsers'
 import { getLabelByValue, ROLES_CHOICES } from '../../Fixes/fixes'
-import {
-  activarUsuarioApi,
-  darBajaUsuarioApi,
-  deleteUsuarioApi
-} from '../../services/UserService'
+import { deleteUsuarioApi } from '../../services/UserService'
 
-function UsuariosPage () {
+function EventosPage () {
   const [Modal, setModal] = useState(false)
-  const [pIncluyeBajascheck, setpIncluyeBajascheck] = useState('N')
   const [Seleccionado, setSeleccionado] = useState(null)
   const {
     data,
@@ -35,13 +30,10 @@ function UsuariosPage () {
     setPagination,
     columnFilters,
     refresh,
-    handleFilterParams,
     setColumnFilters,
     sorting,
     setSorting
-  } = useFetch(`${API_URL}/api/usuarios`, 'get', {
-    pIncluyeBajas: pIncluyeBajascheck
-  })
+  } = useFetch(`${API_URL}/api/usuarios`, 'get')
 
   function closeForm () {
     setSeleccionado(null)
@@ -59,7 +51,7 @@ function UsuariosPage () {
 
   const deleteItem = item => {
     Swal.fire({
-      title: `¿Estas seguro de eliminar el usuario ${item.Username}?`,
+      title: `¿Estas seguro de eliminar el evento ${item.Username}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -72,20 +64,18 @@ function UsuariosPage () {
             Alerta()
               .withMini(true)
               .withTipo('success')
-              .withTitulo('Se elimino el usuario correctamente')
+              .withTitulo('Se elimino el evento correctamente')
               .withMensaje(response.message)
               .build()
-              if (refresh) {
-                refresh()
-                setpIncluyeBajascheck('N')
-              }          })
+            refresh()
+          })
         }
       })
       .catch(err => {
         Alerta()
           .withMini(true)
           .withTipo('error')
-          .withTitulo('No se elimino el usuario.')
+          .withTitulo('No se elimino el evento.')
           .withMensaje(
             err?.response?.data?.message
               ? err.response.data.message
@@ -94,84 +84,6 @@ function UsuariosPage () {
           .build()
       })
   }
-
-  function darBaja (item) {
-    Swal.fire({
-      title: `¿Estas seguro de dar de baja el usuario ${item.Username}?`,
-      icon: 'info',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        darBajaUsuarioApi(item.IdUsuario)
-          .then(response => {
-            Alerta()
-              .withMini(false)
-              .withTipo('success')
-              .withTitulo('Se dio de baja correctamente')
-              .build()
-              if (refresh) {
-                refresh()
-                setpIncluyeBajascheck('N')
-              }            if (close) close()
-          })
-          .catch(err => {
-            Alerta()
-              .withMini(false)
-              .withTipo('error')
-              .withTitulo('No se pudo dar de baja el usuario.')
-              .withMensaje(
-                err?.response?.data?.message
-                  ? err.response.data.message
-                  : MENSAJE_DEFAULT
-              )
-              .build()
-          })
-      }
-    })
-  }
-
-  function activar (item) {
-    Swal.fire({
-      title: `¿Estas seguro de activar el usuario ${item.Username}?`,
-      icon: 'info',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        activarUsuarioApi(item.IdUsuario)
-          .then(response => {
-            Alerta()
-              .withMini(false)
-              .withTipo('success')
-              .withTitulo('Se activo el usuario correctamente')
-              .build()
-            if (refresh) {
-              refresh()
-              setpIncluyeBajascheck('N')
-            }
-            if (close) close()
-          })
-          .catch(err => {
-            Alerta()
-              .withMini(false)
-              .withTipo('error')
-              .withTitulo('No se pudo activar el usuario.')
-              .withMensaje(
-                err?.response?.data?.message
-                  ? err.response.data.message
-                  : MENSAJE_DEFAULT
-              )
-              .build()
-          })
-      }
-    })
-  }
-
   const columns = useMemo(
     () => [
       { accessorKey: 'IdUsuario', header: '#' },
@@ -193,7 +105,7 @@ function UsuariosPage () {
         header: 'Acciones',
         enableSorting: false,
         enableHiding: false,
-        size: '300',
+        size: '220',
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
           <ButtonGroup
@@ -226,28 +138,6 @@ function UsuariosPage () {
             <Button estilo='danger' onClick={() => deleteItem(row.original)}>
               Borrar
             </Button>
-            {row.original.EstadoUsuario == 'A' ? (
-              <Button
-                estilo='warning'
-                onClick={() => darBaja(row.original)}
-                disabled={row.original.EstadoUsuario == 'B'}
-              >
-                Dar Baja
-              </Button>
-            ) : (
-              ''
-            )}
-            {row.original.EstadoUsuario == 'B' ? (
-              <Button
-                estilo='success'
-                onClick={() => activar(row.original)}
-                disabled={row.original.EstadoUsuario == 'A'}
-              >
-                Activar
-              </Button>
-            ) : (
-              ''
-            )}
           </ButtonGroup>
         )
       }
@@ -258,10 +148,10 @@ function UsuariosPage () {
     <>
       <div>
         <HeaderPageComponent
-          title='Usuarios'
-          items={[{ name: 'Usuarios', link: '/usuarios' }]}
+          title='Eventos'
+          items={[{ name: 'eventos', link: '/eventos' }]}
         />
-        <SectionPage header={'Listado de usuarios registradas'}>
+        <SectionPage header={'Listado de eventos registradas'}>
           <div className='d-flex justify-content-start'>
             <Button
               lg
@@ -269,29 +159,13 @@ function UsuariosPage () {
                 openForm(null, {
                   soloVer: false,
                   modificar: false,
-                  titulo: 'Registrar Usuario'
+                  titulo: 'Registrar evento'
                 })
               }
             >
-              Registrar Usuarios
+              Registrar eventos
             </Button>
           </div>
-
-          <div className='form-check form-check-reverse mb-0 pb-0 mt-3 fs-5'>
-          <label className='form-check-label fw-bold fs-5'>¿Incluye bajas?</label>
-            <input
-              type='checkbox'
-              className='form-check-input'
-              checked={pIncluyeBajascheck == 'S'} // El checkbox está marcado si el estado es "S"
-              onChange={event => {
-                setpIncluyeBajascheck(event.target.checked ? 'S' : 'N')
-                handleFilterParams({
-                  pIncluyeBajas: event.target.checked ? 'S' : 'N'
-                })
-              }} // Llama a handleChange cuando cambia
-            />
-          </div>
-
           <TablaMaterial
             loading={loading}
             pagination={pagination}
@@ -305,7 +179,6 @@ function UsuariosPage () {
         handleClose={closeForm}
         size={40}
         title={Modal.titulo}
-        // title={`Detalle de ${CajaSeleccionada?.NumeroCaja ||''}, Fila: ${CajaSeleccionada?.Fila ||''}, Columna: ${CajaSeleccionada?.Columna ||''}`}
       >
         <FormUsers
           closeModal={closeForm}
@@ -319,4 +192,4 @@ function UsuariosPage () {
   )
 }
 
-export default UsuariosPage
+export default EventosPage

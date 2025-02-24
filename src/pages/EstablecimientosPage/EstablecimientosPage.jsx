@@ -1,23 +1,27 @@
 import { useMemo, useState } from 'react'
-import { useFetch } from '../../hooks/useFetch'
-import { API_URL } from '../../Fixes/API_URL'
-import Swal from 'sweetalert2'
-import { Alerta } from '../../functions/alerts'
-import { MENSAJE_DEFAULT } from '../../Fixes/messages'
-import { formatearFechayHora } from '../../Fixes/formatter'
 import { ButtonGroup } from 'react-bootstrap'
+import Swal from 'sweetalert2'
 import Button from '../../components/Button/Button'
+import FormEstablecimientos from '../../components/Formularios/FormEstablecimientos/FormEstablecimientos'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
+import ModalModificado from '../../components/Modal/ModalModificado'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
-import ModalModificado from '../../components/Modal/ModalModificado'
-import FormUsers from '../../components/Formularios/FormUsers/FormUsers'
-import { getLabelByValue, ROLES_CHOICES } from '../../Fixes/fixes'
-import { deleteUsuarioApi } from '../../services/UserService'
+import { API_URL } from '../../Fixes/API_URL'
+import { MENSAJE_DEFAULT } from '../../Fixes/messages'
+import { Alerta } from '../../functions/alerts'
+import { useFetch } from '../../hooks/useFetch'
+import {
+  activarEstablecimientoApi,
+  darBajaEstablecimientoApi,
+  deleteEstablecimientoApi
+} from '../../services/EstablecimientosService'
 
 function EstablecimientosPage () {
   const [Modal, setModal] = useState(false)
   const [Seleccionado, setSeleccionado] = useState(null)
+  const [pIncluyeBajascheck, setpIncluyeBajascheck] = useState('N')
+
   const {
     data,
     loading,
@@ -27,13 +31,16 @@ function EstablecimientosPage () {
     body,
     handlePagination,
     pagination,
+    handleFilterParams,
     setPagination,
     columnFilters,
     refresh,
     setColumnFilters,
     sorting,
     setSorting
-  } = useFetch(`${API_URL}/api/establecimientos`, 'get')
+  } = useFetch(`${API_URL}/api/establecimientos`, 'get', {
+    pIncluyeBajas: pIncluyeBajascheck
+  })
 
   function closeForm () {
     setSeleccionado(null)
@@ -49,9 +56,87 @@ function EstablecimientosPage () {
     setModal({ soloVer, modificar, titulo })
   }
 
+  function darBaja (item) {
+    Swal.fire({
+      title: `¿Estas seguro de dar de baja el usuario ${item.Establecimiento}?`,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        darBajaEstablecimientoApi(item.IdEstablecimiento)
+          .then(response => {
+            Alerta()
+              .withMini(false)
+              .withTipo('success')
+              .withTitulo('Se dio de baja correctamente')
+              .build()
+            if (refresh) {
+              refresh()
+              setpIncluyeBajascheck('N')
+            }
+            if (close) close()
+          })
+          .catch(err => {
+            Alerta()
+              .withMini(false)
+              .withTipo('error')
+              .withTitulo('No se pudo dar de baja el usuario.')
+              .withMensaje(
+                err?.response?.data?.message
+                  ? err.response.data.message
+                  : MENSAJE_DEFAULT
+              )
+              .build()
+          })
+      }
+    })
+  }
+
+  function activar (item) {
+    Swal.fire({
+      title: `¿Estas seguro de activar el usuario ${item.Establecimiento}?`,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        activarEstablecimientoApi(item.IdEstablecimiento)
+          .then(response => {
+            Alerta()
+              .withMini(false)
+              .withTipo('success')
+              .withTitulo('Se activo el usuario correctamente')
+              .build()
+            if (refresh) {
+              refresh()
+              setpIncluyeBajascheck('N')
+            }
+            if (close) close()
+          })
+          .catch(err => {
+            Alerta()
+              .withMini(false)
+              .withTipo('error')
+              .withTitulo('No se pudo activar el usuario.')
+              .withMensaje(
+                err?.response?.data?.message
+                  ? err.response.data.message
+                  : MENSAJE_DEFAULT
+              )
+              .build()
+          })
+      }
+    })
+  }
+
   const deleteItem = item => {
     Swal.fire({
-      title: `¿Estas seguro de eliminar el establecimiento ${item.Username}?`,
+      title: `¿Estas seguro de eliminar el establecimiento ${item.Establecimiento}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -60,7 +145,7 @@ function EstablecimientosPage () {
     })
       .then(result => {
         if (result.isConfirmed) {
-          deleteUsuarioApi(item.IdUsuario).then(response => {
+          deleteEstablecimientoApi(item.IdEstablecimiento).then(response => {
             Alerta()
               .withMini(true)
               .withTipo('success')
@@ -86,20 +171,11 @@ function EstablecimientosPage () {
   }
   const columns = useMemo(
     () => [
-      { accessorKey: 'IdUsuario', header: '#' },
-      { accessorKey: 'Username', header: 'Usuario' },
-      { accessorKey: 'Apellidos', header: 'Apellidos' },
-      { accessorKey: 'Nombres', header: 'Nombres' },
-      { accessorKey: 'FechaNacimiento', header: 'FechaNacimiento' },
-      { accessorKey: 'Telefono', header: 'Telefono' },
-      { accessorKey: 'Email', header: 'Email' },
-      { accessorKey: 'FechaCreado', header: 'FechaCreado' },
-      { accessorKey: 'EstadoUsuario', header: 'EstadoUsuario' },
-      {
-        accessorKey: 'Rol',
-        header: 'Rol',
-        Cell: ({ cell }) => getLabelByValue(ROLES_CHOICES, cell.getValue())
-      },
+      { accessorKey: 'IdEstablecimiento', header: '#' },
+      { accessorKey: 'Establecimiento', header: 'Establecimiento' },
+      { accessorKey: 'Ubicacion', header: 'Ubicacion' },
+      { accessorKey: 'Capacidad', header: 'Capacidad' },
+      { accessorKey: 'EstadoEstablecimiento', header: 'Estado' },
       {
         accessorKey: 'acciones',
         header: 'Acciones',
@@ -117,7 +193,7 @@ function EstablecimientosPage () {
               onClick={() =>
                 openForm(row, {
                   soloVer: true,
-                  titulo: `Usuario ${row.original.name}`
+                  titulo: `Establecimiento ${row.original.Establecimiento}`
                 })
               }
             >
@@ -128,7 +204,7 @@ function EstablecimientosPage () {
               onClick={() =>
                 openForm(row, {
                   modificar: true,
-                  titulo: `Modificar a ${row.original.name}`
+                  titulo: `Modificar a ${row.original.Establecimiento}`
                 })
               }
             >
@@ -138,6 +214,28 @@ function EstablecimientosPage () {
             <Button estilo='danger' onClick={() => deleteItem(row.original)}>
               Borrar
             </Button>
+            {row.original.EstadoEstablecimiento == 'A' ? (
+              <Button
+                estilo='warning'
+                onClick={() => darBaja(row.original)}
+                disabled={row.original.EstadoEstablecimiento == 'B'}
+              >
+                Dar Baja
+              </Button>
+            ) : (
+              ''
+            )}
+            {row.original.EstadoEstablecimiento == 'B' ? (
+              <Button
+                estilo='success'
+                onClick={() => activar(row.original)}
+                disabled={row.original.EstadoEstablecimiento == 'A'}
+              >
+                Activar
+              </Button>
+            ) : (
+              ''
+            )}
           </ButtonGroup>
         )
       }
@@ -166,6 +264,21 @@ function EstablecimientosPage () {
               Registrar establecimientos
             </Button>
           </div>
+
+          <div className='form-check form-check-reverse mb-0 pb-0 mt-3 fs-5'>
+          <label className='form-check-label fw-bold fs-5'>¿Incluye bajas?</label>
+            <input
+              type='checkbox'
+              className='form-check-input'
+              checked={pIncluyeBajascheck == 'S'} // El checkbox está marcado si el estado es "S"
+              onChange={event => {
+                setpIncluyeBajascheck(event.target.checked ? 'S' : 'N')
+                handleFilterParams({
+                  pIncluyeBajas: event.target.checked ? 'S' : 'N'
+                })
+              }} // Llama a handleChange cuando cambia
+            />
+          </div>
           <TablaMaterial
             loading={loading}
             pagination={pagination}
@@ -180,7 +293,7 @@ function EstablecimientosPage () {
         size={40}
         title={Modal.titulo}
       >
-        <FormUsers
+        <FormEstablecimientos
           closeModal={closeForm}
           onlyView={Modal.soloVer}
           modificar={Modal.modificar}

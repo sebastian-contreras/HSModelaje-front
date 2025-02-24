@@ -205,7 +205,7 @@ function UsuariosPage () {
               onClick={() =>
                 openForm(row, {
                   soloVer: true,
-                  titulo: `Usuario ${row.original.name}`
+                  titulo: `Usuario ${row.original.Username}`
                 })
               }
             >
@@ -216,7 +216,7 @@ function UsuariosPage () {
               onClick={() =>
                 openForm(row, {
                   modificar: true,
-                  titulo: `Modificar a ${row.original.name}`
+                  titulo: `Modificar a ${row.original.Username}`
                 })
               }
             >

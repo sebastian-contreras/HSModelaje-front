@@ -11,6 +11,7 @@ function GeneralSidebar () {
     // { name: 'Personas', link: '/personas', icon: 'fa-user' },
     { name: 'Usuarios', link: '/usuarios', icon: 'fa-user-circle' },
     { name: 'Eventos', link: '/eventos', icon: 'fa-calendar' },
+    { name: 'Establecimientos', link: '/establecimientos', icon: 'fa-house' },
    
   ],[])
 

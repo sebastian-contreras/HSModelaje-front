@@ -21,15 +21,11 @@ function EstablecimientosPage () {
   const [Modal, setModal] = useState(false)
   const [Seleccionado, setSeleccionado] = useState(null)
   const [pIncluyeBajascheck, setpIncluyeBajascheck] = useState('N')
-
+  const [Busqueda, setBusqueda] = useState('')
   const {
     data,
     loading,
     error,
-    params,
-    response,
-    body,
-    handlePagination,
     pagination,
     handleFilterParams,
     setPagination,
@@ -38,8 +34,10 @@ function EstablecimientosPage () {
     setColumnFilters,
     sorting,
     setSorting
-  } = useFetch(`${API_URL}/api/establecimientos`, 'get', {
-    pIncluyeBajas: pIncluyeBajascheck
+  } = useFetch(`${API_URL}/api/establecimientos/busqueda`, 'get', {
+    pIncluyeBajas: pIncluyeBajascheck,
+    pCantidad: 10,
+    pPagina: 1
   })
 
   function closeForm () {
@@ -181,7 +179,7 @@ function EstablecimientosPage () {
         header: 'Acciones',
         enableSorting: false,
         enableHiding: false,
-        size: '220',
+        size: '350',
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
           <ButtonGroup
@@ -242,6 +240,21 @@ function EstablecimientosPage () {
     ],
     []
   )
+  const searchFilter = event => {
+    const value = event.target.value; // Obtener el valor de entrada
+    setBusqueda(value); // Actualizar el estado de búsqueda
+
+    // Filtrar según la longitud de la cadena
+    if (value.length > 3) {
+        handleFilterParams({
+            pCadena: value // Solo si hay más de 3 caracteres
+        });
+    } else {
+        handleFilterParams({
+            pCadena: null // Si hay 3 o menos caracteres, enviar cadena vacía
+        });
+    }
+}
   return (
     <>
       <div>
@@ -266,7 +279,9 @@ function EstablecimientosPage () {
           </div>
 
           <div className='form-check form-check-reverse mb-0 pb-0 mt-3 fs-5'>
-          <label className='form-check-label fw-bold fs-5'>¿Incluye bajas?</label>
+            <label className='form-check-label fw-bold fs-5'>
+              ¿Incluye bajas?
+            </label>
             <input
               type='checkbox'
               className='form-check-input'
@@ -279,12 +294,34 @@ function EstablecimientosPage () {
               }} // Llama a handleChange cuando cambia
             />
           </div>
-          <TablaMaterial
-            loading={loading}
-            pagination={pagination}
-            columns={columns}
-            data={data}
-          />
+          <div className='input-group mb-0'>
+            <span className='input-group-text'>
+              <i className='fas fa-search'></i>
+            </span>
+            <input
+              type='text'
+              value={Busqueda}
+              onChange={searchFilter}
+              className='form-control'
+              placeholder='Busqueda de establecimientos'
+            />
+          </div>
+          {error ? (
+            'Ocurrio un error, contacte con el administrador.'
+          ) : (
+            <TablaMaterial
+              columnFilters={columnFilters}
+              loading={loading}
+              pagination={pagination}
+              setColumnFilters={setColumnFilters}
+              setPagination={setPagination}
+              setSorting={setSorting}
+              rowCount={data?.total_row}
+              sorting={sorting}
+              columns={columns}
+              data={data.data}
+            />
+          )}
         </SectionPage>
       </div>
       <ModalModificado

@@ -28,9 +28,9 @@ export const useFetch = (
         url: endpoint,
         data: body,
         params: {
-          ...initialParams,
-          pagina: pagination.pageIndex + 1,
-          cantidad: pagination.pageSize,
+          ...params,
+          pPagina: pagination.pageIndex + 1,
+          pCantidad: pagination.pageSize,
           sort_by: sorting.length ? sorting[0].id : '',
           sort_direction: sorting.length ? (sorting[0].desc ? 'desc' : 'asc') : '',
           ...columnFilters.reduce((acc, current) => {

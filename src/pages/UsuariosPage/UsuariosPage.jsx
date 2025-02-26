@@ -75,10 +75,11 @@ function UsuariosPage () {
               .withTitulo('Se elimino el usuario correctamente')
               .withMensaje(response.message)
               .build()
-              if (refresh) {
-                refresh()
-                setpIncluyeBajascheck('N')
-              }          })
+            if (refresh) {
+              refresh()
+              setpIncluyeBajascheck('N')
+            }
+          })
         }
       })
       .catch(err => {
@@ -112,10 +113,11 @@ function UsuariosPage () {
               .withTipo('success')
               .withTitulo('Se dio de baja correctamente')
               .build()
-              if (refresh) {
-                refresh()
-                setpIncluyeBajascheck('N')
-              }            if (close) close()
+            if (refresh) {
+              refresh()
+              setpIncluyeBajascheck('N')
+            }
+            if (close) close()
           })
           .catch(err => {
             Alerta()
@@ -278,7 +280,9 @@ function UsuariosPage () {
           </div>
 
           <div className='form-check form-check-reverse mb-0 pb-0 mt-3 fs-5'>
-          <label className='form-check-label fw-bold fs-5'>¿Incluye bajas?</label>
+            <label className='form-check-label fw-bold fs-5'>
+              ¿Incluye bajas?
+            </label>
             <input
               type='checkbox'
               className='form-check-input'
@@ -293,6 +297,7 @@ function UsuariosPage () {
           </div>
 
           <TablaMaterial
+            columnFilters={columnFilters}
             loading={loading}
             pagination={pagination}
             columns={columns}

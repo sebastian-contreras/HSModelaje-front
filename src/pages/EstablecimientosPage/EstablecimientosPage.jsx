@@ -247,11 +247,17 @@ function EstablecimientosPage () {
     // Filtrar según la longitud de la cadena
     if (value.length > 3) {
         handleFilterParams({
-            pCadena: value // Solo si hay más de 3 caracteres
+            pCadena: value, // Si hay 3 o menos caracteres, enviar cadena vacía
+            pCantidad: pagination?.pageSize,
+            pPagina: 1,
+            pIncluyeBajas: pIncluyeBajascheck
         });
     } else {
         handleFilterParams({
-            pCadena: null // Si hay 3 o menos caracteres, enviar cadena vacía
+            pCadena: null, // Si hay 3 o menos caracteres, enviar cadena vacía
+            pCantidad: pagination?.pageSize,
+            pPagina: 1,
+            pIncluyeBajas: pIncluyeBajascheck
         });
     }
 }

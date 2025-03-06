@@ -1,4 +1,5 @@
 import Swal from "sweetalert2";
+import { MENSAJE_DEFAULT } from "../Fixes/messages";
 
 export function AlertaWithConfirmation({title,textMain,textSuccesfull,textError,functionConfirmed}) {
   Swal.fire({
@@ -127,3 +128,60 @@ export function mostrarAlerta(titulo, mensaje, tipo, html=null, mini=false) {
   export function Alerta() {
     return new AlertaBuilder();
   }
+
+
+
+
+
+
+   export const doubleConfirmationAlert = ({textoConfirmacion,textoSuccess,textoError, funcion,refresh}) => {
+        Swal.fire({
+          title: textoConfirmacion,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirmar'
+        })
+          .then(result => {
+            if (result.isConfirmed) {
+              funcion().then(response => {
+                Alerta()
+                  .withMini(true)
+                  .withTipo('success')
+                  .withTitulo(textoSuccess)
+                  .withMensaje(response.message)
+                  .build()
+                  console.log(response)
+                if(refresh) refresh()
+              })
+              .catch(err => {
+                console.log(err)
+                Alerta()
+                  .withMini(true)
+                  .withTipo('error')
+                  .withTitulo(textoError)
+                  .withMensaje(
+                    err?.response?.data?.message
+                      ? err.response.data.message
+                      : MENSAJE_DEFAULT
+                  )
+                  .build()
+              })
+            }
+          })
+          .catch(err => {
+            console.log(err)
+
+            Alerta()
+              .withMini(true)
+              .withTipo('error')
+              .withTitulo(textoError)
+              .withMensaje(
+                err?.response?.data?.message
+                  ? err.response.data.message
+                  : MENSAJE_DEFAULT
+              )
+              .build()
+          })
+      }

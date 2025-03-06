@@ -146,7 +146,7 @@ function Login () {
     </>
   ) : (
     
-    <Navigate to='/personas' replace={true} />
+    <Navigate to='/' replace={true} />
   )
 }
 

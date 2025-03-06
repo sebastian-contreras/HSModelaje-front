@@ -1,46 +1,50 @@
-import { useEffect } from "react"
-import { useForm } from "react-hook-form"
-import { MENSAJE_DEFAULT } from "../../../Fixes/messages"
-import { Alerta } from "../../../functions/alerts"
-import Button from "../../Button/Button"
-import GenerateInputs from "../../GenerateInputs/GenerateInputs"
-import { storeEstablecimientoApi, updateEstablecimientoApi } from "../../../services/EstablecimientosService"
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { MENSAJE_DEFAULT } from '../../../Fixes/messages'
+import { Alerta } from '../../../functions/alerts'
+import Button from '../../Button/Button'
+import GenerateInputs from '../../GenerateInputs/GenerateInputs'
+import {
+  storeEstablecimientoApi,
+  updateEstablecimientoApi
+} from '../../../services/EstablecimientosService'
+import {
+    finalizarEventoApi,
+  storeEventoApi,
+  updateEventoApi
+} from '../../../services/EventosService'
+import { SiONoOptions } from '../../../Fixes/fixes'
+import { API_URL } from '../../../Fixes/API_URL'
+import { useFetch } from '../../../hooks/useFetch'
 
-function FormEstablecimientos ({ dataform, onlyView, modificar, closeModal, refresh }) {
+function FormFinalizarEvento ({ IdEvento,dataform, onlyView, modificar, closeModal, refresh }) {
   const { control, errors, reset, handleSubmit } = useForm()
+
   useEffect(() => {
     if (dataform) reset(dataform)
   }, [reset, dataform])
   const inputsTest = [
     {
-      name: `Establecimiento`,
+      name: `pFechaInicio`,
       control: control,
-      label: 'Establecimiento',
-      type: 'text',
-      error: errors?.Establecimiento,
+      label: 'FechaInicio',
+      type: 'datetime-local',
+      error: errors?.FechaInicio,
       readOnly: onlyView
     },
     {
-      name: `Ubicacion`,
+      name: `pFechaFinal`,
       control: control,
-      label: 'Ubicacion',
-      type: 'text',
-      error: errors?.Ubicacion,
+      label: 'FechaFinal',
+      type: 'datetime-local',
+      error: errors?.FechaFinal,
       readOnly: onlyView
-    },
-    {
-      name: `Capacidad`,
-      control: control,
-      label: 'Capacidad',
-      type: 'text',
-      error: errors?.Capacidad,
-      readOnly: onlyView
-    },
+    }
   ]
+  console.log(dataform)
 
   function onSubmit (data) {
-    ;(modificar ? updateEstablecimientoApi(data, dataform.IdEstablecimiento) : storeEstablecimientoApi(data))
-      .then(response => {
+    finalizarEventoApi({...data,IdEvento:IdEvento}).then(response => {
         console.log(data)
         if (closeModal) closeModal()
         if (refresh) refresh()
@@ -48,9 +52,7 @@ function FormEstablecimientos ({ dataform, onlyView, modificar, closeModal, refr
           .withMini(true)
           .withTipo('success')
           .withTitulo(
-            response.message
-              ? response.message
-              : 'Establecimiento creado correctamente.'
+            response.message ? response.message : 'Evento finalizado correctamente.'
           )
           .build()
       })
@@ -59,7 +61,7 @@ function FormEstablecimientos ({ dataform, onlyView, modificar, closeModal, refr
         Alerta()
           .withMini(true)
           .withTipo('error')
-          .withTitulo(`No se pudo crear el establecimiento.`)
+          .withTitulo(`No se pudo finalizar el evento.`)
           .withMensaje(
             error.response.data.message
               ? error.response.data.message
@@ -92,4 +94,4 @@ function FormEstablecimientos ({ dataform, onlyView, modificar, closeModal, refr
   )
 }
 
-export default FormEstablecimientos
+export default FormFinalizarEvento

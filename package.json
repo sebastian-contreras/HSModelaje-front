@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start":"serve dist -s -n -L"
+    "start": "serve dist -s -n -L"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
@@ -26,6 +26,7 @@
     "material-react-table": "^3.0.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
+    "react-currency-input-field": "^3.10.0",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.2",
     "react-router-dom": "^6.28.0",

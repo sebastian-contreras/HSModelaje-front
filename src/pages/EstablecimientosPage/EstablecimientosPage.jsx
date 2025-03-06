@@ -265,7 +265,7 @@ function EstablecimientosPage () {
     <>
       <div>
         <HeaderPageComponent
-          title='Eventos'
+          title='Establecimientos'
           items={[{ name: 'establecimientos', link: '/establecimientos' }]}
         />
         <SectionPage header={'Listado de establecimientos registradas'}>
@@ -276,7 +276,7 @@ function EstablecimientosPage () {
                 openForm(null, {
                   soloVer: false,
                   modificar: false,
-                  titulo: 'Registrar evento'
+                  titulo: 'Registrar establecimiento'
                 })
               }
             >

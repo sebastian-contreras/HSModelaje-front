@@ -1,43 +1,89 @@
 import { useMemo, useState } from 'react'
-import { useFetch } from '../../hooks/useFetch'
-import { API_URL } from '../../Fixes/API_URL'
-import Swal from 'sweetalert2'
-import { Alerta } from '../../functions/alerts'
-import { MENSAJE_DEFAULT } from '../../Fixes/messages'
-import { formatearFechayHora } from '../../Fixes/formatter'
-import { ButtonGroup } from 'react-bootstrap'
+import { ButtonGroup, Dropdown, Form } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
 import Button from '../../components/Button/Button'
+import GenerateInputs from '../../components/GenerateInputs/GenerateInputs'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
+import { API_URL } from '../../Fixes/API_URL'
+import {
+  EstadosEventosOptions
+} from '../../Fixes/fixes'
+import { doubleConfirmationAlert } from '../../functions/alerts'
+import { useFetch } from '../../hooks/useFetch'
+import { activarEventoApi, darBajaEventoApi, deleteEventoApi, finalizarEventoApi } from '../../services/EventosService'
 import ModalModificado from '../../components/Modal/ModalModificado'
-import FormUsers from '../../components/Formularios/FormUsers/FormUsers'
-import { getLabelByValue, ROLES_CHOICES } from '../../Fixes/fixes'
-import { deleteUsuarioApi } from '../../services/UserService'
+import FormEventos from '../../components/Formularios/FormEventos/FormEventos'
+import FormFinalizarEvento from '../../components/Formularios/FormEventos/FormFinalizarEvento'
 
 function EventosPage () {
+  const { control, errors, reset, handleSubmit } = useForm()
+  const inputsTest = [
+    {
+      name: `pCadena`,
+      control: control,
+      label: 'Evento',
+      type: 'text',
+      error: errors?.pCadena,
+      readOnly: false
+    },
+
+    {
+      name: `pFechaInicio`,
+      control: control,
+      label: 'Fecha Inicio',
+      type: 'date',
+      error: errors?.pFechaInicio,
+      readOnly: false
+    },
+    {
+      name: `pFechaFinal`,
+      control: control,
+      label: 'Fecha Final',
+      type: 'date',
+      error: errors?.pFechaFinal,
+      readOnly: false
+    },
+    {
+      name: `pEstado`,
+      control: control,
+      label: 'Estado',
+      type: 'select',
+      error: errors?.pEstado,
+      options: EstadosEventosOptions,
+      readOnly: false
+    }
+  ]
+
   const [Modal, setModal] = useState(false)
+  const [ModalFinalizar, setModalFinalizar] = useState(false)
   const [Seleccionado, setSeleccionado] = useState(null)
+  const [pEstado, setpEstado] = useState('T')
+  const [pIncluyeVotacion, setpIncluyeVotacion] = useState('S')
+  const [Busqueda, setBusqueda] = useState('')
   const {
     data,
     loading,
     error,
-    params,
-    response,
-    body,
-    handlePagination,
     pagination,
+    handleFilterParams,
     setPagination,
     columnFilters,
     refresh,
     setColumnFilters,
     sorting,
     setSorting
-  } = useFetch(`${API_URL}/api/usuarios`, 'get')
-
+  } = useFetch(`${API_URL}/api/eventos/busqueda`, 'get', {
+    pEstado: pEstado,
+    pCantidad: 10,
+    pPagina: 1
+  })
+  console.log(pagination)
   function closeForm () {
     setSeleccionado(null)
     setModal(false)
+    setModalFinalizar(false)
   }
 
   function openForm (
@@ -49,63 +95,32 @@ function EventosPage () {
     setModal({ soloVer, modificar, titulo })
   }
 
-  const deleteItem = item => {
-    Swal.fire({
-      title: `¿Estas seguro de eliminar el evento ${item.Username}?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar'
-    })
-      .then(result => {
-        if (result.isConfirmed) {
-          deleteUsuarioApi(item.IdUsuario).then(response => {
-            Alerta()
-              .withMini(true)
-              .withTipo('success')
-              .withTitulo('Se elimino el evento correctamente')
-              .withMensaje(response.message)
-              .build()
-            refresh()
-          })
-        }
-      })
-      .catch(err => {
-        Alerta()
-          .withMini(true)
-          .withTipo('error')
-          .withTitulo('No se elimino el evento.')
-          .withMensaje(
-            err?.response?.data?.message
-              ? err.response.data.message
-              : MENSAJE_DEFAULT
-          )
-          .build()
-      })
+
+  function openFormFinalizar(
+    e = null,
+    { soloVer = false, modificar = false, titulo = 'No hay titulo' }
+  ) {
+    console.log(e?.original)
+    setSeleccionado(e?.original)
+    setModalFinalizar({ soloVer, modificar, titulo })
   }
+
   const columns = useMemo(
     () => [
-      { accessorKey: 'IdUsuario', header: '#' },
-      { accessorKey: 'Username', header: 'Usuario' },
-      { accessorKey: 'Apellidos', header: 'Apellidos' },
-      { accessorKey: 'Nombres', header: 'Nombres' },
-      { accessorKey: 'FechaNacimiento', header: 'FechaNacimiento' },
-      { accessorKey: 'Telefono', header: 'Telefono' },
-      { accessorKey: 'Email', header: 'Email' },
-      { accessorKey: 'FechaCreado', header: 'FechaCreado' },
-      { accessorKey: 'EstadoUsuario', header: 'EstadoUsuario' },
-      {
-        accessorKey: 'Rol',
-        header: 'Rol',
-        Cell: ({ cell }) => getLabelByValue(ROLES_CHOICES, cell.getValue())
-      },
+      { accessorKey: 'IdEvento', header: '#' },
+      { accessorKey: 'Evento', header: 'Evento' },
+      { accessorKey: 'FechaProbableInicio', header: 'FechaProbableInicio' },
+      { accessorKey: 'FechaProbableFinal', header: 'FechaProbableFinal' },
+      { accessorKey: 'FechaInicio', header: 'FechaInicio' },
+      { accessorKey: 'FechaFinal', header: 'FechaFinal' },
+      { accessorKey: 'IdEstablecimiento', header: 'Establecimiento' },
+      { accessorKey: 'Votacion', header: '¿Votacion?' },
+      { accessorKey: 'EstadoEvento', header: 'Estado' },
       {
         accessorKey: 'acciones',
         header: 'Acciones',
         enableSorting: false,
-        enableHiding: false,
-        size: '220',
+        size: '400',
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
           <ButtonGroup
@@ -117,7 +132,7 @@ function EventosPage () {
               onClick={() =>
                 openForm(row, {
                   soloVer: true,
-                  titulo: `Usuario ${row.original.name}`
+                  titulo: `Evento ${row.original.Evento}`
                 })
               }
             >
@@ -128,64 +143,205 @@ function EventosPage () {
               onClick={() =>
                 openForm(row, {
                   modificar: true,
-                  titulo: `Modificar a ${row.original.name}`
+                  titulo: `Modificar a ${row.original.Evento}`
                 })
               }
             >
               Modificar
             </Button>
 
-            <Button estilo='danger' onClick={() => deleteItem(row.original)}>
+            <Button
+              estilo='danger'
+              onClick={() => {
+                doubleConfirmationAlert({
+                  textoConfirmacion: `¿Estas seguro de eliminar el evento ${row.original.Evento}?`,
+                  textoSuccess: 'Se elimino el evento correctamente',
+                  textoError: 'No se elimino el evento.',
+                  funcion: () => deleteEventoApi(row.original.IdEvento),
+                  refresh: refresh
+                })
+              }}
+            >
               Borrar
             </Button>
+            {row.original.EstadoEvento == 'A' ? (
+              <Button
+                estilo='warning'
+                onClick={() => {
+                  doubleConfirmationAlert({
+                    textoConfirmacion: `¿Estas seguro de dar de baja el evento ${row.original.Evento}?`,
+                    textoSuccess: 'Se dio de baja el evento correctamente',
+                    textoError: 'No se dio de baja el evento.',
+                    funcion: () => darBajaEventoApi(row.original.IdEvento),
+                    refresh: refresh
+                  })
+                }}                disabled={row.original.EstadoEvento == 'B'}
+              >
+                Dar Baja
+              </Button>
+            ) : (
+              ''
+            )}
+            {row.original.EstadoEvento == 'B' ? (
+              <Button
+                estilo='success'
+                onClick={() => {
+                  doubleConfirmationAlert({
+                    textoConfirmacion: `¿Estas seguro de activar el evento ${row.original.Evento}?`,
+                    textoSuccess: 'Se activo el evento correctamente',
+                    textoError: 'No se activo el evento.',
+                    funcion: () => activarEventoApi(row.original.IdEvento),
+                    refresh: refresh
+                  })
+                }}                disabled={row.original.EstadoEvento == 'A'}
+              >
+                Activar
+              </Button>
+            ) : (
+              ''
+            )}
+            {row.original.EstadoEvento == 'A' ? (
+              <Button
+                estilo='primary'
+                onClick={() =>
+                  openFormFinalizar(row, {
+                    soloVer: false,
+                    modificar: false,
+                    titulo: 'Finalizar evento ' + row.original.Evento
+                  })
+                }    
+                            disabled={row.original.EstadoEvento != 'A'}
+              >
+                Finalizar
+              </Button>
+            ) : (
+              ''
+            )}
           </ButtonGroup>
         )
       }
     ],
-    []
+    [refresh]
   )
+
+  function handlePage (numberPage) {
+    setPagination({ ...pagination, pageIndex: numberPage })
+    console.log({ ...pagination, pageIndex: numberPage })
+  }
+
+  const onSubmit = data => {
+    console.log(data)
+    handleFilterParams({ ...data, pCantidad: 10, pPagina: 1 })
+    // Aquí puedes manejar los datos del formulario
+  }
+
   return (
     <>
-      <div>
-        <HeaderPageComponent
-          title='Eventos'
-          items={[{ name: 'eventos', link: '/eventos' }]}
-        />
-        <SectionPage header={'Listado de eventos registradas'}>
-          <div className='d-flex justify-content-start'>
-            <Button
-              lg
-              onClick={() =>
-                openForm(null, {
-                  soloVer: false,
-                  modificar: false,
-                  titulo: 'Registrar evento'
-                })
-              }
+    <div>
+      <HeaderPageComponent
+        title='Eventos'
+        items={[{ name: 'eventos', link: '/eventos' }]}
+      />
+      <SectionPage header={'Listado de eventos registradas'}>
+        <div className='d-flex justify-content-start'>
+          <Button
+            lg
+            onClick={() =>
+              openForm(null, {
+                soloVer: false,
+                modificar: false,
+                titulo: 'Registrar evento'
+              })
+            }
+          >
+            Registrar eventos
+          </Button>
+        </div>
+
+        <div className='input-group mb-0 mt-5'>
+          <Dropdown className='me-3' style={{ width: '20rem' }}>
+            <Dropdown.Toggle
+              variant='primary'
+              className='w-100'
+              id='dropdown-basic'
             >
-              Registrar eventos
-            </Button>
-          </div>
+              Filtros Avanzado
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu className='w-100'>
+              <Form
+                onSubmit={handleSubmit(onSubmit)}
+                style={{ padding: '10px' }}
+              >
+                <GenerateInputs
+                  inputs={inputsTest}
+                  control={control}
+                  errors={errors}
+                  onlyView={false}
+                />
+                <Button estilo='primary' type='submit'>
+                  Enviar Filtros
+                </Button>
+              </Form>
+            </Dropdown.Menu>
+          </Dropdown>
+          <span className='input-group-text'>
+            <i className='fas fa-search'></i>
+          </span>
+          <input
+            type='text'
+            value={Busqueda}
+            // onChange={searchFilter}
+            className='form-control'
+            placeholder='Busqueda de establecimientos'
+          />
+        </div>
+
+        {error ? (
+          'Ocurrio un error, contacte con el administrador.'
+        ) : (
           <TablaMaterial
+            columnFilters={columnFilters}
             loading={loading}
             pagination={pagination}
+            setColumnFilters={setColumnFilters}
+            setPagination={setPagination}
+            setSorting={setSorting}
+            rowCount={data?.total_row}
+            sorting={sorting}
             columns={columns}
-            data={data}
+            data={data.data}
           />
-        </SectionPage>
-      </div>
-      <ModalModificado
+        )}
+      </SectionPage>
+    </div>
+    <ModalModificado
         show={Modal}
         handleClose={closeForm}
         size={40}
         title={Modal.titulo}
       >
-        <FormUsers
+        <FormEventos
           closeModal={closeForm}
           onlyView={Modal.soloVer}
           modificar={Modal.modificar}
           dataform={Seleccionado}
           refresh={refresh}
+        />
+      </ModalModificado>
+      <ModalModificado
+        show={ModalFinalizar}
+        handleClose={closeForm}
+        size={40}
+        title={ModalFinalizar.titulo}
+      >
+        <FormFinalizarEvento
+          closeModal={closeForm}
+          onlyView={ModalFinalizar.soloVer}
+          modificar={ModalFinalizar.modificar}
+          dataform={Seleccionado}
+          refresh={refresh}
+          IdEvento={Seleccionado?.IdEvento}
         />
       </ModalModificado>
     </>

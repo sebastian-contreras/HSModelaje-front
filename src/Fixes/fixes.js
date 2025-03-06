@@ -231,3 +231,16 @@ export const ROLES_CHOICES = [
   { value: 'O', label: 'Organizador' },
   { value: 'M', label: 'Moderador' },
 ]
+
+//EVENTOS
+
+export const EstadosEventosOptions = [
+  { value: 'A', label: 'Activo' },
+  { value: 'B', label: 'Dado de baja' },
+  { value: 'T', label: 'Todos' },
+]
+
+export const SiONoOptions = [
+  { value: 'S', label: 'Si' },
+  { value: 'N', label: 'No' },
+]

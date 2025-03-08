@@ -1,23 +1,40 @@
-import { Collapse } from '@mui/material'
-import { useMemo, useState } from 'react'
-import { useHandlerSidebar } from '../../../context/SidebarContext/SidebarContext'
+import { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import styles from './EventosLayout.module.css' // Importa el CSS como un módulo
+import { useEvento } from '../../../context/SidebarContext/EventoContext';
+import { formatearFechayHora } from '../../../Fixes/formatter';
+import { ESTADOS_EVENTOS, getLabelByValue } from '../../../Fixes/fixes';
 
-function GeneralSidebar () {
-  const location = useLocation();
-  const rutas = useMemo(()=>[
-    { name: 'Dashboard', link: '/', icon: 'fa-home' },
-    { name: 'Secciones', separador: true },
-    // { name: 'Personas', link: '/personas', icon: 'fa-user' },
-    { name: 'Usuarios', link: '/usuarios', icon: 'fa-user-circle' },
-    { name: 'Eventos', link: '/eventos', icon: 'fa-calendar' },
-    { name: 'Establecimientos', link: '/establecimientos', icon: 'fa-house' },
-    { name: 'Modelos', link: '/modelos', icon: 'fa-person' },
-   
-  ],[])
+function EventoSidebar () {
+  const location = useLocation()
+  const { evento } = useEvento();
+  const BASE_URL = '/eventos/' + evento?.IdEvento
+  const rutas = useMemo(
+    () => [
+      { name: 'Dashboard', link: BASE_URL, icon: 'fa-home' },
+      { name: 'Registros', separador: true },
+      // { name: 'Personas', link: '/personas', icon: 'fa-user' },
+      { name: 'Entradas', link: BASE_URL+'/entradas', icon: 'fa-ticket' },
+      { name: 'Zonas', link: BASE_URL+'/zonas', icon: 'fa-location-dot' },
+      { name: 'Patrocinadores', link: BASE_URL+'/patrocinadores', icon: 'fa-bullhorn' },
+      { name: 'Gastos', link: BASE_URL+'/gastos', icon: 'fa-minus' },
+      { name: 'Votacion', separador: true },
+      { name: 'Votacion', link: BASE_URL+'/votacion', icon: 'fa-comment' },
+      { name: 'Participantes', link: BASE_URL+'/participantes', icon: 'fa-person' },
+      { name: 'Jueces', link: BASE_URL+'/jueces', icon: 'fa-gavel' },
 
-  const TiposItemsNav = ({ name='', link='', separador=false, subruta=null, icon='' }) => {
-    const isActive = location.pathname == link;
+    ],
+    [BASE_URL]
+  )
+
+  const TiposItemsNav = ({
+    name = '',
+    link = '',
+    separador = false,
+    subruta = null,
+    icon = ''
+  }) => {
+    const isActive = location.pathname == link
     const firstRoute = location.pathname.split('/')
     const test = link.split('/')
 
@@ -34,7 +51,11 @@ function GeneralSidebar () {
     }
     if (!subruta) {
       return (
-        <li className={`nav-item ${isActive ?'active':'' }`}>
+        <li
+          className={`${styles['nav-item']} nav-item ${
+            isActive ? 'active' : ''
+          }`}
+        >
           <Link to={link}>
             <i className={`fas ${icon}`}></i>
             <p>{name}</p>
@@ -44,16 +65,28 @@ function GeneralSidebar () {
     }
     if (subruta) {
       return (
-        <li className='nav-item'>
-          <a data-bs-toggle="collapse" aria-expanded={subSectionActive} href={`#${name}`}>
+        <li className={`${styles['nav-item']} nav-item`}>
+          <a
+            data-bs-toggle='collapse'
+            aria-expanded={subSectionActive}
+            href={`#${name}`}
+          >
             <i className={`fas ${icon}`}></i>
             <p>{name}</p>
             <span className='caret'></span>
           </a>
-          <div className={`collapse ${subSectionActive ? 'show':''}`} id={name}>
+          <div
+            className={`collapse ${subSectionActive ? 'show' : ''}`}
+            id={name}
+          >
             <ul className='nav nav-collapse'>
               {subruta.map((subitem, index) => (
-                <li key={index}  className={`${location.pathname==subitem.link ?'active':'' }`}>
+                <li
+                  key={index}
+                  className={`${
+                    location.pathname == subitem.link ? 'active' : ''
+                  }`}
+                >
                   <Link to={subitem.link}>
                     <span className='sub-item'>{subitem.name}</span>
                   </Link>
@@ -66,18 +99,28 @@ function GeneralSidebar () {
     }
   }
   return (
-    <aside className='sidebar' data-background-color='dark'>
+    <aside className={`${styles.sidebar} sidebar`} data-background-color='dark'>
       <div className='sidebar-logo d-block'>
         {/* Logo Header  */}
-        <div className='logo-header py-5 d-flex w-100 justify-content-center mt-5' data-background-color='dark'>
-          <a href='index.html' className='logo'>
-            <img
-              src='/img/logo/logo_white.png'
-              alt='navbar brand'
-              className='navbar-brand'
-              height='100'
-            />
-          </a>
+        <div
+          className={`${styles['logo-header']} text-center  py-5  w-100 justify-content-center mt-5`}
+          data-background-color='dark'
+        >
+          <p className="fw-bold text-white mb-0 fs-5">
+            Evento
+          </p>
+          <p className="fw-bold text-white fs-5">
+            {evento?.Evento}
+          </p>
+          <p className="fw-medium text-white mb-0">
+          Inicio: {formatearFechayHora(evento?.FechaInicio || evento?.FechaProbableInicio)}
+          </p>
+          <p className="fw-medium text-white mb-0">
+            Final: {formatearFechayHora(evento?.FechaFinal || evento?.FechaProbableFinal)}
+          </p>
+          <p className="fw-medium text-white mb-0">
+            Estado: {getLabelByValue(ESTADOS_EVENTOS,evento?.EstadoEvento)}
+          </p>
         </div>
         {/* End Logo Header */}
       </div>
@@ -87,7 +130,7 @@ function GeneralSidebar () {
             {rutas.map((item, index) => (
               <TiposItemsNav key={index} {...item} />
             ))}
-           
+
             {/* <li className="nav-item">
                 <a href="widgets.html">
                   <i className="fas fa-desktop"></i>
@@ -154,4 +197,4 @@ function GeneralSidebar () {
   )
 }
 
-export default GeneralSidebar
+export default EventoSidebar

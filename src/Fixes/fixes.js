@@ -239,8 +239,25 @@ export const EstadosEventosOptions = [
   { value: 'B', label: 'Dado de baja' },
   { value: 'T', label: 'Todos' },
 ]
+export const ESTADOS_EVENTOS = [
+  { value: 'A', label: 'Activo' },
+  { value: 'B', label: 'Dado de baja' },
+  { value: 'F', label: 'Finalizado' },
+]
 
 export const SiONoOptions = [
   { value: 'S', label: 'Si' },
   { value: 'N', label: 'No' },
+]
+
+
+//MODELOS
+export const EstadosModelosOptions = [
+  { value: 'A', label: 'Activo' },
+  { value: 'B', label: 'Dado de baja' },
+]
+export const SexoOptions = [
+  { value: 'F', label: 'Femenino' },
+  { value: 'M', label: 'Masculino' },
+  { value: 'O', label: 'Otro' },
 ]

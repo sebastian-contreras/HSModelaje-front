@@ -6,6 +6,7 @@ import PersonasPage from './pages/PersonasPage/PersonasPage'
 import UsuariosPage from './pages/UsuariosPage/UsuariosPage'
 import EventosPage from './pages/EventosPage/EventosPage'
 import EstablecimientosPage from './pages/EstablecimientosPage/EstablecimientosPage'
+import ModelosPage from './pages/ModelosPage/ModelosPage'
 
 const RoutesComponent = () => (
   <Routes>
@@ -17,9 +18,17 @@ const RoutesComponent = () => (
       <Route path='/usuarios' element={<UsuariosPage />} />
       <Route path='/eventos' element={<EventosPage />} />
       <Route path='/establecimientos' element={<EstablecimientosPage/>} />
-      {/* <Route path='/cajas' element={<CajasPage />} />
-      <Route path='/contratos' element={<ListadoContratoPage />} />
-      <Route path='/contratos/nuevo' element={<NuevoContratoPage />} /> */}
+      <Route path='/modelos' element={<ModelosPage/>} />
+    </Route>
+    <Route element={<GeneralLayout tipo='EVENTO' />}>
+      <Route path='/eventos/:id/' element={<DashboardPage />} />
+      <Route path='/eventos/:id/entradas' element={<DashboardPage />} />
+      <Route path='/eventos/:id/zonas' element={<DashboardPage />} />
+      <Route path='/eventos/:id/gastos' element={<DashboardPage />} />
+      <Route path='/eventos/:id/votacion' element={<DashboardPage />} />
+      <Route path='/eventos/:id/modelos' element={<DashboardPage />} />
+      <Route path='/eventos/:id/jueces' element={<DashboardPage />} />
+      <Route path='/eventos/:id/patrocinadores' element={<DashboardPage />} />
     </Route>
   </Routes>
 )

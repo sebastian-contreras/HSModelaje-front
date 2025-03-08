@@ -2,49 +2,55 @@ import { useMemo, useState } from 'react'
 import { ButtonGroup, Dropdown, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import Button from '../../components/Button/Button'
+import GenerateForms from '../../components/GenerateForms/GenerateForms'
 import GenerateInputs from '../../components/GenerateInputs/GenerateInputs'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
+import ModalModificado from '../../components/Modal/ModalModificado'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
 import {
-  EstadosEventosOptions
+  EstadosModelosOptions,
+  SexoOptions
 } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
-import { activarEventoApi, darBajaEventoApi, deleteEventoApi, finalizarEventoApi } from '../../services/EventosService'
-import ModalModificado from '../../components/Modal/ModalModificado'
-import FormEventos from '../../components/Formularios/FormEventos/FormEventos'
-import FormFinalizarEvento from '../../components/Formularios/FormEventos/FormFinalizarEvento'
-import { useNavigate } from 'react-router-dom'
+import { activarModeloApi, darBajaModeloApi, deleteModeloApi, storeModeloApi, updateModeloApi } from '../../services/ModelosService'
 
-function EventosPage () {
-  const navigate = useNavigate()
+function ModelosPage () {
   const { control, errors, reset, handleSubmit } = useForm()
   const inputsTest = [
     {
-      name: `pCadena`,
+      name: `pDNI`,
       control: control,
-      label: 'Evento',
+      label: 'DNI',
       type: 'text',
-      error: errors?.pCadena,
-      readOnly: false
-    },
-
-    {
-      name: `pFechaInicio`,
-      control: control,
-      label: 'Fecha Inicio',
-      type: 'date',
-      error: errors?.pFechaInicio,
+      error: errors?.pDNI,
       readOnly: false
     },
     {
-      name: `pFechaFinal`,
+      name: `pFechaNacimientoMin`,
       control: control,
-      label: 'Fecha Final',
+      label: 'Fecha Nacimiento Minima',
       type: 'date',
-      error: errors?.pFechaFinal,
+      error: errors?.pFechaNacimientoMin,
+      readOnly: false
+    },
+    {
+      name: `pFechaNacimientoMax`,
+      control: control,
+      label: 'Fecha Nacimiento Maxima',
+      type: 'date',
+      error: errors?.pFechaNacimientoMax,
+      readOnly: false
+    },
+    {
+      name: `pSexo`,
+      control: control,
+      label: 'Sexo',
+      type: 'select',
+      error: errors?.pSexo,
+      options: SexoOptions,
       readOnly: false
     },
     {
@@ -53,7 +59,7 @@ function EventosPage () {
       label: 'Estado',
       type: 'select',
       error: errors?.pEstado,
-      options: EstadosEventosOptions,
+      options: EstadosModelosOptions,
       readOnly: false
     }
   ]
@@ -62,7 +68,6 @@ function EventosPage () {
   const [ModalFinalizar, setModalFinalizar] = useState(false)
   const [Seleccionado, setSeleccionado] = useState(null)
   const [pEstado, setpEstado] = useState('T')
-  const [pIncluyeVotacion, setpIncluyeVotacion] = useState('S')
   const [Busqueda, setBusqueda] = useState('')
   const {
     data,
@@ -76,12 +81,10 @@ function EventosPage () {
     setColumnFilters,
     sorting,
     setSorting
-  } = useFetch(`${API_URL}/api/eventos/busqueda`, 'get', {
-    pEstado: pEstado,
+  } = useFetch(`${API_URL}/api/modelos/busqueda`, 'get', {
     pCantidad: 10,
     pPagina: 1
   })
-  console.log(pagination)
   function closeForm () {
     setSeleccionado(null)
     setModal(false)
@@ -98,26 +101,17 @@ function EventosPage () {
   }
 
 
-  function openFormFinalizar(
-    e = null,
-    { soloVer = false, modificar = false, titulo = 'No hay titulo' }
-  ) {
-    console.log(e?.original)
-    setSeleccionado(e?.original)
-    setModalFinalizar({ soloVer, modificar, titulo })
-  }
 
   const columns = useMemo(
     () => [
-      { accessorKey: 'IdEvento', header: '#' },
-      { accessorKey: 'Evento', header: 'Evento' },
-      { accessorKey: 'FechaProbableInicio', header: 'FechaProbableInicio' },
-      { accessorKey: 'FechaProbableFinal', header: 'FechaProbableFinal' },
-      { accessorKey: 'FechaInicio', header: 'FechaInicio' },
-      { accessorKey: 'FechaFinal', header: 'FechaFinal' },
-      { accessorKey: 'IdEstablecimiento', header: 'Establecimiento' },
-      { accessorKey: 'Votacion', header: '¿Votacion?' },
-      { accessorKey: 'EstadoEvento', header: 'Estado' },
+      { accessorKey: 'IdModelo', header: '#' },
+      { accessorKey: 'DNI', header: 'DNI' },
+      { accessorKey: 'ApelName', header: 'Apellido, nombre' },
+      { accessorKey: 'FechaNacimiento', header: 'FechaNacimiento' },
+      { accessorKey: 'Sexo', header: 'Sexo' },
+      { accessorKey: 'Telefono', header: 'Telefono' },
+      { accessorKey: 'Correo', header: 'Correo' },
+      { accessorKey: 'EstadoMod', header: 'Estado' },
       {
         accessorKey: 'acciones',
         header: 'Acciones',
@@ -134,26 +128,19 @@ function EventosPage () {
               onClick={() =>
                 openForm(row, {
                   soloVer: true,
-                  titulo: `Evento ${row.original.Evento}`
+                  titulo: `Modelo ${row.original.ApelName}`
                 })
               }
             >
               Ver
             </Button>
-            <Button
-              estilo='success'
-              onClick={() => 
-                window.open('/eventos/' + row.original.IdEvento, '_blank')
-              }
-            >
-              Ingresar
-            </Button>
+          
             <Button
               estilo='secondary'
               onClick={() =>
                 openForm(row, {
                   modificar: true,
-                  titulo: `Modificar a ${row.original.Evento}`
+                  titulo: `Modificar a ${row.original.ApelName}`
                 })
               }
             >
@@ -164,80 +151,59 @@ function EventosPage () {
               estilo='danger'
               onClick={() => {
                 doubleConfirmationAlert({
-                  textoConfirmacion: `¿Estas seguro de eliminar el evento ${row.original.Evento}?`,
-                  textoSuccess: 'Se elimino el evento correctamente',
-                  textoError: 'No se elimino el evento.',
-                  funcion: () => deleteEventoApi(row.original.IdEvento),
+                  textoConfirmacion: `¿Estas seguro de eliminar el modelo ${row.original.ApelName}?`,
+                  textoSuccess: 'Se elimino el modelo correctamente',
+                  textoError: 'No se elimino el modelo.',
+                  funcion: () => deleteModeloApi(row.original.IdModelo),
                   refresh: refresh
                 })
               }}
             >
               Borrar
             </Button>
-            {row.original.EstadoEvento == 'A' ? (
+            {row.original.EstadoMod == 'A' ? (
               <Button
                 estilo='warning'
                 onClick={() => {
                   doubleConfirmationAlert({
-                    textoConfirmacion: `¿Estas seguro de dar de baja el evento ${row.original.Evento}?`,
-                    textoSuccess: 'Se dio de baja el evento correctamente',
-                    textoError: 'No se dio de baja el evento.',
-                    funcion: () => darBajaEventoApi(row.original.IdEvento),
+                    textoConfirmacion: `¿Estas seguro de dar de baja el modelo ${row.original.ApelName}?`,
+                    textoSuccess: 'Se dio de baja el modelo correctamente',
+                    textoError: 'No se dio de baja el modelo.',
+                    funcion: () => darBajaModeloApi(row.original.IdModelo),
                     refresh: refresh
                   })
-                }}                disabled={row.original.EstadoEvento == 'B'}
+                }}                disabled={row.original.EstadoMod == 'B'}
               >
                 Dar Baja
               </Button>
             ) : (
               ''
             )}
-            {row.original.EstadoEvento == 'B' ? (
+            {row.original.EstadoMod == 'B' ? (
               <Button
                 estilo='success'
                 onClick={() => {
                   doubleConfirmationAlert({
-                    textoConfirmacion: `¿Estas seguro de activar el evento ${row.original.Evento}?`,
-                    textoSuccess: 'Se activo el evento correctamente',
-                    textoError: 'No se activo el evento.',
-                    funcion: () => activarEventoApi(row.original.IdEvento),
+                    textoConfirmacion: `¿Estas seguro de activar el modelo ${row.original.ApelName}?`,
+                    textoSuccess: 'Se activo el modelo correctamente',
+                    textoError: 'No se activo el modelo.',
+                    funcion: () => activarModeloApi(row.original.IdModelo),
                     refresh: refresh
                   })
-                }}                disabled={row.original.EstadoEvento == 'A'}
+                }}                disabled={row.original.EstadoMod == 'A'}
               >
                 Activar
               </Button>
             ) : (
               ''
             )}
-            {row.original.EstadoEvento == 'A' ? (
-              <Button
-                estilo='primary'
-                onClick={() =>
-                  openFormFinalizar(row, {
-                    soloVer: false,
-                    modificar: false,
-                    titulo: 'Finalizar evento ' + row.original.Evento
-                  })
-                }    
-                            disabled={row.original.EstadoEvento != 'A'}
-              >
-                Finalizar
-              </Button>
-            ) : (
-              ''
-            )}
+            
           </ButtonGroup>
         )
       }
     ],
     [refresh]
   )
-
-  function handlePage (numberPage) {
-    setPagination({ ...pagination, pageIndex: numberPage })
-    console.log({ ...pagination, pageIndex: numberPage })
-  }
 
   const onSubmit = data => {
     console.log(data)
@@ -247,18 +213,63 @@ function EventosPage () {
 
   function fastSearch(e){
     setBusqueda(e.target.value)
-    handleFilterParams({pCadena:e.target.value})
+    handleFilterParams({pApelName:e.target.value})
   }
 
+  const inputsFormulario = [
+    {
+      name: 'DNI',
+      label: 'DNI',
+      type: 'text',
+      estilos: 'col-12',
+      options: [],
+    },
+    {
+      name: 'ApelName',
+      label: 'Apellido, nombre',
+      type: 'text',
+      estilos: 'col-12',
+      options: [],
+    },
+    {
+      name: 'FechaNacimiento',
+      label: 'Fecha Nacimiento',
+      type: 'date',
+      estilos: 'col-12',
+      options: [],
+    },
+    {
+      name: 'Sexo',
+      label: 'Sexo',
+      type: 'select',
+      estilos: 'col-12',
+      options: SexoOptions,
+    },
+    {
+      name: 'Telefono',
+      label: 'Telefono',
+      type: 'text',
+      estilos: 'col-12',
+      options: [],
+    },
+    {
+      name: 'Correo',
+      label: 'Correo electronico',
+      type: 'mail',
+      estilos: 'col-12',
+      options: [],
+    },
+    
+  ]
 
   return (
     <>
     <div>
       <HeaderPageComponent
-        title='Eventos'
-        items={[{ name: 'eventos', link: '/eventos' }]}
+        title='Modelos'
+        items={[{ name: 'modelos', link: '/modelos' }]}
       />
-      <SectionPage header={'Listado de eventos registradas'}>
+      <SectionPage header={'Listado de modelos registradas'}>
         <div className='d-flex justify-content-start'>
           <Button
             lg
@@ -266,11 +277,11 @@ function EventosPage () {
               openForm(null, {
                 soloVer: false,
                 modificar: false,
-                titulo: 'Registrar evento'
+                titulo: 'Registrar modelo'
               })
             }
           >
-            Registrar eventos
+            Registrar modelos
           </Button>
         </div>
 
@@ -307,9 +318,9 @@ function EventosPage () {
           <input
             type='text'
             value={Busqueda}
-            onChange={fastSearch}
             className='form-control'
-            placeholder='Busqueda de eventos por nombre'
+            onChange={fastSearch}
+            placeholder='Busqueda de modelos por apellido y nombre'
           />
         </div>
 
@@ -334,34 +345,25 @@ function EventosPage () {
     <ModalModificado
         show={Modal}
         handleClose={closeForm}
-        size={40}
+        size={30}
         title={Modal.titulo}
       >
-        <FormEventos
+        <GenerateForms
           closeModal={closeForm}
           onlyView={Modal.soloVer}
           modificar={Modal.modificar}
           dataform={Seleccionado}
           refresh={refresh}
+          inputs={inputsFormulario}
+          id={'IdModelo'}
+          functionCreate={storeModeloApi}
+          functionUpdate={updateModeloApi}
+          elemento={'Modelo'}
         />
       </ModalModificado>
-      <ModalModificado
-        show={ModalFinalizar}
-        handleClose={closeForm}
-        size={40}
-        title={ModalFinalizar.titulo}
-      >
-        <FormFinalizarEvento
-          closeModal={closeForm}
-          onlyView={ModalFinalizar.soloVer}
-          modificar={ModalFinalizar.modificar}
-          dataform={Seleccionado}
-          refresh={refresh}
-          IdEvento={Seleccionado?.IdEvento}
-        />
-      </ModalModificado>
+
     </>
   )
 }
 
-export default EventosPage
+export default ModelosPage

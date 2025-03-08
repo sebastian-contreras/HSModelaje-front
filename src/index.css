@@ -2615,6 +2615,9 @@ body[data-background-color="dark"] .border-top {
 .sidebar[data-background-color="dark"] {
   background: #1a2035 !important;
 }
+.sidebar-evento[data-background-color="dark"] {
+  background: #2C3E50 !important;
+}
 .sidebar[data-background-color="dark"] .user {
   border-color: rgba(181, 181, 181, 0.1) !important;
 }
@@ -2659,6 +2662,11 @@ body[data-background-color="dark"] .border-top {
   > a[data-toggle="collapse"][aria-expanded="true"] {
   background: #fff !important;
   color: #1a2035 !important;
+}
+.nav-item-evento.active
+> a[data-toggle="collapse"][aria-expanded="true"] {
+background: #fff !important;
+color: #2a2f5b !important;
 }
 .sidebar[data-background-color="dark"].sidebar-style-2
   .nav

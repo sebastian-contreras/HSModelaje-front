@@ -1,0 +1,25 @@
+.sidebar[data-background-color="dark"] {
+    background: #1a2035 !important;
+  }
+  .sidebar[data-background-color="dark"] {
+    background: #2C3E50 !important;
+  }
+
+  .nav-item.active
+> a[data-toggle="collapse"][aria-expanded="true"] {
+background: #fff !important;
+color: #2a2f5b !important;
+}
+
+.logo-header[data-background-color="dark"] {
+    background: #213140 !important;
+}
+.sidebar[data-background-color="dark"] .nav > .nav-item a {
+    color: #fff !important;
+}
+.sidebar .nav > .nav-item a i, .sidebar[data-background-color="white"] .nav > .nav-item a i {
+    color: #fff !important;
+}
+
+
+

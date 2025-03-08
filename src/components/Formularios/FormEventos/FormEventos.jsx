@@ -1,20 +1,16 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { API_URL } from '../../../Fixes/API_URL'
+import { SiONoOptions } from '../../../Fixes/fixes'
 import { MENSAJE_DEFAULT } from '../../../Fixes/messages'
 import { Alerta } from '../../../functions/alerts'
-import Button from '../../Button/Button'
-import GenerateInputs from '../../GenerateInputs/GenerateInputs'
-import {
-  storeEstablecimientoApi,
-  updateEstablecimientoApi
-} from '../../../services/EstablecimientosService'
+import { useFetch } from '../../../hooks/useFetch'
 import {
   storeEventoApi,
   updateEventoApi
 } from '../../../services/EventosService'
-import { SiONoOptions } from '../../../Fixes/fixes'
-import { API_URL } from '../../../Fixes/API_URL'
-import { useFetch } from '../../../hooks/useFetch'
+import Button from '../../Button/Button'
+import GenerateInputs from '../../GenerateInputs/GenerateInputs'
 
 function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
   const { control, errors, reset, handleSubmit } = useForm()
@@ -43,7 +39,7 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
     {
       name: `FechaProbableInicio`,
       control: control,
-      label: 'FechaProbableInicio',
+      label: 'Fecha Probable Inicio',
       type: 'datetime-local',
       error: errors?.FechaProbableInicio,
       readOnly: onlyView
@@ -51,7 +47,7 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
     {
       name: `FechaProbableFinal`,
       control: control,
-      label: 'FechaProbableFinal',
+      label: 'Fecha Probable Final',
       type: 'datetime-local',
       error: errors?.FechaProbableFinal,
       readOnly: onlyView

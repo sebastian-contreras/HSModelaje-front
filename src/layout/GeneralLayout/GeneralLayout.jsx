@@ -39,7 +39,7 @@ function GeneralLayout ({ tipo = 'ADMIN' }) {
             return
           } else {
             console.log('fuarda evento')
-            document.title = "HSModelaje - "+res.data[0].Evento;
+            document.title = res.data[0].Evento + " - HSModelaje";
             setEvento(res.data[0]) // Guarda la información en el contexto
           }
         })

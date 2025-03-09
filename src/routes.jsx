@@ -11,6 +11,7 @@ import GastosPage from './pages/GastosPage/GastosPage'
 import PatrocinadoresPage from './pages/PatrocinadoresPage/PatrocinadoresPage'
 import JuecesPage from './pages/JuecesPage/JuecesPage'
 import ZonasPage from './pages/ZonasPage/ZonasPage'
+import MetricasPage from './pages/MetricasPage/MetricasPage'
 
 const RoutesComponent = () => (
   <Routes>
@@ -34,7 +35,7 @@ const RoutesComponent = () => (
       <Route path='/eventos/:id/jueces' element={<JuecesPage />} />
       <Route path='/eventos/:id/patrocinadores' element={<PatrocinadoresPage />} />
       <Route path='/eventos/:id/participantes' element={<PatrocinadoresPage />} />
-      <Route path='/eventos/:id/metricas' element={<PatrocinadoresPage />} />
+      <Route path='/eventos/:id/metricas' element={<MetricasPage />} />
     </Route>
   </Routes>
 )

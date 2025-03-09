@@ -273,3 +273,9 @@ export const EstadosZonasOptions = [
   { value: 'A', label: 'Activo' },
   { value: 'B', label: 'Dado de baja' },
 ]
+
+//metricas
+export const EstadosMetricasOptions = [
+  { value: 'A', label: 'Activo' },
+  { value: 'B', label: 'Dado de baja' },
+]

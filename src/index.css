@@ -83,8 +83,22 @@ success-color : #35cd3a
 warning-color : #ffa534
 danger-color : #f3545d
 
+
+var(--bs-card-color)
 -------------------------------------------------------------------
 */
+
+.form-control {
+
+  border: var(--bs-border-width) solid #a3a3a3 !important;
+}
+
+.card-body {
+  background-color:rgb(243, 244, 252) !important; 
+}
+.modal-body{
+  background-color:rgb(243, 244, 252) !important; 
+}
 .accordion-body {
   background-color: #f0f0f0 !important; /* Color gris claro */
 }

@@ -20,6 +20,16 @@ function TablaMaterial ({
     enableColumnPinning: true,
     enableColumnResizing: true,
     enableMultiRowSelection: enableMultiRowSelection,
+    muiTopToolbarProps:{
+      sx:{
+        backgroundColor: 'rgb(243, 244, 252)'
+      }
+    },
+    muiBottomToolbarProps:{
+      sx:{
+        backgroundColor: 'rgb(243, 244, 252)'
+      }
+    },
     muiTableHeadProps: {
       sx: {
         width: '100%',

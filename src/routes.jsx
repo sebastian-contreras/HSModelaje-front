@@ -32,6 +32,7 @@ const RoutesComponent = () => (
       <Route path='/eventos/:id/modelos' element={<DashboardPage />} />
       <Route path='/eventos/:id/jueces' element={<JuecesPage />} />
       <Route path='/eventos/:id/patrocinadores' element={<PatrocinadoresPage />} />
+      <Route path='/eventos/:id/participantes' element={<PatrocinadoresPage />} />
     </Route>
   </Routes>
 )

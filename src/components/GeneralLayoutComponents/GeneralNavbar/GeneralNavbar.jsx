@@ -43,7 +43,7 @@ function GeneralNavbar () {
               <i className='gg-menu-right text-black'></i>
             </button>
 
-            <div className='input-group ms-5'>
+            {/* <div className='input-group ms-5'>
               <div className='input-group-prepend'>
                 <button type='submit' className='btn btn-search pe-1'>
                   <i className='fa fa-search search-icon'></i>
@@ -54,7 +54,7 @@ function GeneralNavbar () {
                 placeholder='Search ...'
                 className='form-control'
               />
-            </div>
+            </div> */}
           </nav>
 
           <ul className='navbar-nav topbar-nav ms-md-auto align-items-center'>

@@ -158,7 +158,7 @@ function PatrocinadoresPage () {
     <>
     <div>
       <HeaderPageComponent
-        title='Patrocinadors'
+        title='Patrocinadores'
         items={[{ name: 'patrocinadores', link: '/patrocinadores' }]}
       />
       <SectionPage header={'Listado de patrocinadores registradas'}>

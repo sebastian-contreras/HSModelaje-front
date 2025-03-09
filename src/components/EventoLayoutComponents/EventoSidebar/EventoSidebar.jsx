@@ -1,11 +1,13 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styles from './EventosLayout.module.css' // Importa el CSS como un módulo
 import { useEvento } from '../../../context/SidebarContext/EventoContext';
 import { formatearFechayHora } from '../../../Fixes/formatter';
 import { ESTADOS_EVENTOS, getLabelByValue } from '../../../Fixes/fixes';
+import { dameEstablecimientoApi } from '../../../services/EstablecimientosService';
 
 function EventoSidebar () {
+  const [Establecimiento, setEstablecimiento] = useState({})
   const location = useLocation()
   const { evento } = useEvento();
   const BASE_URL = '/eventos/' + evento?.IdEvento
@@ -57,8 +59,8 @@ function EventoSidebar () {
           }`}
         >
           <Link to={link}>
-            <i className={`fas ${icon}`}></i>
-            <p>{name}</p>
+            <i className={`${styles['link-color']} fas ${icon}`}></i>
+            <p className={`${styles['link-color']}`}>{name}</p>
           </Link>
         </li>
       )
@@ -71,8 +73,8 @@ function EventoSidebar () {
             aria-expanded={subSectionActive}
             href={`#${name}`}
           >
-            <i className={`fas ${icon}`}></i>
-            <p>{name}</p>
+            <i className={`${styles['link-color']} fas ${icon}`}></i>
+            <p className={`${styles['link-color']}`}>{name}</p>
             <span className='caret'></span>
           </a>
           <div
@@ -98,6 +100,16 @@ function EventoSidebar () {
       )
     }
   }
+
+  useEffect(()=>{
+    if(evento){
+      dameEstablecimientoApi(evento.IdEvento).then((res)=>{
+        console.log(res)
+        setEstablecimiento(res.data[0])
+      })
+    }
+  },[evento])
+
   return (
     <aside className={`${styles.sidebar} sidebar`} data-background-color='dark'>
       <div className='sidebar-logo d-block'>
@@ -109,14 +121,20 @@ function EventoSidebar () {
           <p className="fw-bold text-white mb-0 fs-5">
             Evento
           </p>
-          <p className="fw-bold text-white fs-5">
+          <p className="fw-bold text-white fs-5 mb-0">
             {evento?.Evento}
           </p>
-          <p className="fw-medium text-white mb-0">
+          <p className="fw-medium text-white mb-0 mt-0">
           Inicio: {formatearFechayHora(evento?.FechaInicio || evento?.FechaProbableInicio)}
           </p>
           <p className="fw-medium text-white mb-0">
             Final: {formatearFechayHora(evento?.FechaFinal || evento?.FechaProbableFinal)}
+          </p>
+          <p className="fw-bold text-white mb-0 fs-5 mt-">
+            Lugar
+          </p>
+          <p className="text-white mt-0">
+            {Establecimiento?.Establecimiento}
           </p>
           <p className="fw-medium text-white mb-0">
             Estado: {getLabelByValue(ESTADOS_EVENTOS,evento?.EstadoEvento)}

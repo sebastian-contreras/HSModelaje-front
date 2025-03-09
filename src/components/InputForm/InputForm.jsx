@@ -1,5 +1,6 @@
 import CurrencyInput from 'react-currency-input-field'
 import { Controller } from 'react-hook-form'
+import Select from 'react-select'
 
 function InputForm ({
   name,
@@ -14,12 +15,14 @@ function InputForm ({
   defaultValue,
   step,
   required,
-  estilos = 'col-12'
+  estilos = 'col-12',
+  options
 }) {
   const intlConfig = {
     locale: 'en-US',
     currency: 'USD'
   }
+  
   return type == 'checkbox' ? (
     <div className={`form-group ${estilos}`}>
       <div className='form-check'>
@@ -44,7 +47,34 @@ function InputForm ({
         </label>
       </div>
     </div>
-  ) : (
+  ) : 
+  type === 'select-autocomplete' ? (
+    <div className={`form-group ${estilos}`}>
+      <div className='form-check'>
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={null} // Puedes establecer un valor predeterminado aquí
+      render={({ field }) => (
+        <Select
+          className={'w-100  ' + estilos}
+          classNamePrefix='select'
+          isDisabled={readOnly}
+          required={required}
+          isSearchable={true}
+          {...field} // Esto conecta react-select con react-hook-form
+          options={options}
+        />
+      )}
+    />
+            <label htmlFor={name} className='form-check-label'>
+          {label}
+        </label>
+      </div>
+    </div>
+  
+  ) : 
+  (
     <div
       className={`form-group ${
         error ? 'has-error has-feedback' : ''

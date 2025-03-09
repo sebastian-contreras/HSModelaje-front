@@ -1,30 +1,39 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styles from './EventosLayout.module.css' // Importa el CSS como un módulo
-import { useEvento } from '../../../context/SidebarContext/EventoContext';
-import { formatearFechayHora } from '../../../Fixes/formatter';
-import { ESTADOS_EVENTOS, getLabelByValue } from '../../../Fixes/fixes';
-import { dameEstablecimientoApi } from '../../../services/EstablecimientosService';
+import { useEvento } from '../../../context/SidebarContext/EventoContext'
+import { formatearFechayHora } from '../../../Fixes/formatter'
+import { ESTADOS_EVENTOS, getLabelByValue } from '../../../Fixes/fixes'
+import { dameEstablecimientoApi } from '../../../services/EstablecimientosService'
 
 function EventoSidebar () {
+  const navigate = useNavigate()
   const [Establecimiento, setEstablecimiento] = useState({})
   const location = useLocation()
-  const { evento } = useEvento();
+  const { evento } = useEvento()
   const BASE_URL = '/eventos/' + evento?.IdEvento
   const rutas = useMemo(
     () => [
       { name: 'Dashboard', link: BASE_URL, icon: 'fa-home' },
       { name: 'Registros', separador: true },
       // { name: 'Personas', link: '/personas', icon: 'fa-user' },
-      { name: 'Entradas', link: BASE_URL+'/entradas', icon: 'fa-ticket' },
-      { name: 'Zonas', link: BASE_URL+'/zonas', icon: 'fa-location-dot' },
-      { name: 'Patrocinadores', link: BASE_URL+'/patrocinadores', icon: 'fa-bullhorn' },
-      { name: 'Gastos', link: BASE_URL+'/gastos', icon: 'fa-minus' },
+      { name: 'Entradas', link: BASE_URL + '/entradas', icon: 'fa-ticket' },
+      { name: 'Zonas', link: BASE_URL + '/zonas', icon: 'fa-location-dot' },
+      {
+        name: 'Patrocinadores',
+        link: BASE_URL + '/patrocinadores',
+        icon: 'fa-bullhorn'
+      },
+      { name: 'Gastos', link: BASE_URL + '/gastos', icon: 'fa-minus' },
       { name: 'Votacion', separador: true },
-      { name: 'Votacion', link: BASE_URL+'/votacion', icon: 'fa-comment' },
-      { name: 'Participantes', link: BASE_URL+'/participantes', icon: 'fa-person' },
-      { name: 'Jueces', link: BASE_URL+'/jueces', icon: 'fa-gavel' },
-
+      { name: 'Votacion', link: BASE_URL + '/votacion', icon: 'fa-comment' },
+      {
+        name: 'Participantes',
+        link: BASE_URL + '/participantes',
+        icon: 'fa-person'
+      },
+      { name: 'Jueces', link: BASE_URL + '/jueces', icon: 'fa-gavel' },
+      { name: 'Metricas', link: BASE_URL + '/metricas', icon: 'fa-circle' }
     ],
     [BASE_URL]
   )
@@ -101,43 +110,51 @@ function EventoSidebar () {
     }
   }
 
-  useEffect(()=>{
-    if(evento){
-      dameEstablecimientoApi(evento.IdEvento).then((res)=>{
+  useEffect(() => {
+    if (evento) {
+      dameEstablecimientoApi(evento.IdEvento).then(res => {
         console.log(res)
         setEstablecimiento(res.data[0])
       })
     }
-  },[evento])
+  }, [evento])
 
   return (
     <aside className={`${styles.sidebar} sidebar`} data-background-color='dark'>
       <div className='sidebar-logo d-block'>
         {/* Logo Header  */}
+        <div className="text-center">
+
+        <img
+          src='/img/logo/logo_white.png'
+          alt='navbar brand'
+          className='mt-2'
+          onClick={()=>navigate('/eventos')}
+          height='70'
+        />
+        </div>
         <div
           className={`${styles['logo-header']} text-center  py-5  w-100 justify-content-center mt-5`}
           data-background-color='dark'
         >
-          <p className="fw-bold text-white mb-0 fs-5">
-            Evento
+          <p className='fw-bold text-white mb-0 fs-5 mt-0'>Evento</p>
+          <p className='fw-bold text-white fs-5 mb-0'>{evento?.Evento}</p>
+          <p className='fw-medium text-white mb-0 mt-0'>
+            Inicio:{' '}
+            {formatearFechayHora(
+              evento?.FechaInicio || evento?.FechaProbableInicio
+            )}
           </p>
-          <p className="fw-bold text-white fs-5 mb-0">
-            {evento?.Evento}
+          <p className='fw-medium text-white mb-0'>
+            Final:{' '}
+            {formatearFechayHora(
+              evento?.FechaFinal || evento?.FechaProbableFinal
+            )}
           </p>
-          <p className="fw-medium text-white mb-0 mt-0">
-          Inicio: {formatearFechayHora(evento?.FechaInicio || evento?.FechaProbableInicio)}
-          </p>
-          <p className="fw-medium text-white mb-0">
-            Final: {formatearFechayHora(evento?.FechaFinal || evento?.FechaProbableFinal)}
-          </p>
-          <p className="fw-bold text-white mb-0 fs-5 mt-">
-            Lugar
-          </p>
-          <p className="text-white mt-0">
-            {Establecimiento?.Establecimiento}
-          </p>
-          <p className="fw-medium text-white mb-0">
-            Estado: {getLabelByValue(ESTADOS_EVENTOS,evento?.EstadoEvento)}
+          <p className='fw-bold text-white mb-0 fs-5 mt-'>Lugar</p>
+          <p className='text-white mt-0 mb-0'>{Establecimiento?.Establecimiento}</p>
+          <p className='fw-medium text-white mb-0'>
+            Estado: {getLabelByValue(ESTADOS_EVENTOS, evento?.EstadoEvento)}
           </p>
         </div>
         {/* End Logo Header */}

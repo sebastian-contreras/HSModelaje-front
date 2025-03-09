@@ -87,7 +87,9 @@ danger-color : #f3545d
 var(--bs-card-color)
 -------------------------------------------------------------------
 */
-
+.sidebar{
+  overflow-y: auto;
+}
 .form-control {
 
   border: var(--bs-border-width) solid #a3a3a3 !important;
@@ -522,7 +524,7 @@ body {
   min-height: calc(100vh - 57px);
   position: relative;
 }
-.page-wrapper.has-sidebar .page-inner {
+.page-wrapper.has-f .page-inner {
   /* margin-left: 22.5rem; */
 }
 .page-navs {

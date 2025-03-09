@@ -70,14 +70,12 @@ function GeneralSidebar () {
       <div className='sidebar-logo d-block'>
         {/* Logo Header  */}
         <div className='logo-header py-5 d-flex w-100 justify-content-center mt-5' data-background-color='dark'>
-          <a href='index.html' className='logo'>
             <img
               src='/img/logo/logo_white.png'
               alt='navbar brand'
               className='navbar-brand'
               height='100'
             />
-          </a>
         </div>
         {/* End Logo Header */}
       </div>

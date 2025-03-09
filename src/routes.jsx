@@ -9,6 +9,7 @@ import EstablecimientosPage from './pages/EstablecimientosPage/EstablecimientosP
 import ModelosPage from './pages/ModelosPage/ModelosPage'
 import GastosPage from './pages/GastosPage/GastosPage'
 import PatrocinadoresPage from './pages/PatrocinadoresPage/PatrocinadoresPage'
+import JuecesPage from './pages/JuecesPage/JuecesPage'
 
 const RoutesComponent = () => (
   <Routes>
@@ -29,7 +30,7 @@ const RoutesComponent = () => (
       <Route path='/eventos/:id/gastos' element={<GastosPage />} />
       <Route path='/eventos/:id/votacion' element={<DashboardPage />} />
       <Route path='/eventos/:id/modelos' element={<DashboardPage />} />
-      <Route path='/eventos/:id/jueces' element={<DashboardPage />} />
+      <Route path='/eventos/:id/jueces' element={<JuecesPage />} />
       <Route path='/eventos/:id/patrocinadores' element={<PatrocinadoresPage />} />
     </Route>
   </Routes>

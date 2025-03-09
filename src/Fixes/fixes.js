@@ -261,3 +261,9 @@ export const SexoOptions = [
   { value: 'M', label: 'Masculino' },
   { value: 'O', label: 'Otro' },
 ]
+
+//jueces
+export const EstadosJuecesOptions = [
+  { value: 'A', label: 'Activo' },
+  { value: 'B', label: 'Dado de baja' },
+]

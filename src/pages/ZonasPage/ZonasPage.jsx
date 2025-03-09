@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ButtonGroup, Dropdown, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import Button from '../../components/Button/Button'
@@ -9,10 +9,7 @@ import ModalModificado from '../../components/Modal/ModalModificado'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
-import {
-  EstadosZonasOptions,
-  SiONoOptions,
-} from '../../Fixes/fixes'
+import { EstadosZonasOptions, SiONoOptions } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
 import {
@@ -23,10 +20,22 @@ import {
   updateZonaApi
 } from '../../services/ZonasService'
 import { useEvento } from '../../context/SidebarContext/EventoContext'
+import { dameEstablecimientoApi } from '../../services/EstablecimientosService'
 
 function ZonasPage () {
   const { evento } = useEvento() // Usa el contexto
   const { control, errors, reset, handleSubmit } = useForm()
+  const [Establecimiento, setEstablecimiento] = useState({})
+
+  useEffect(() => {
+    if (evento) {
+      dameEstablecimientoApi(evento.IdEvento).then(res => {
+        console.log(res)
+        setEstablecimiento(res.data[0])
+      })
+    }
+  }, [evento])
+
   const inputsFiltros = [
     {
       name: `pZOna`,
@@ -196,13 +205,18 @@ function ZonasPage () {
 
   const onSubmit = data => {
     console.log(data)
-    handleFilterParams({ ...data, pCantidad: 10, pPagina: 1, pIdEvento:evento.IdEvento })
+    handleFilterParams({
+      ...data,
+      pCantidad: 10,
+      pPagina: 1,
+      pIdEvento: evento.IdEvento
+    })
     // Aquí puedes manejar los datos del formulario
   }
 
   function fastSearch (e) {
     setBusqueda(e.target.value)
-    handleFilterParams({ pZona: e.target.value,pIdEvento:evento.IdEvento })
+    handleFilterParams({ pZona: e.target.value, pIdEvento: evento.IdEvento })
   }
 
   const inputsFormulario = [
@@ -235,12 +249,12 @@ function ZonasPage () {
       options: []
     },
     {
-        name: 'Detalle',
-        label: 'Detalle',
-        type: 'text',
-        estilos: 'col-12',
-        options: []
-      }
+      name: 'Detalle',
+      label: 'Detalle',
+      type: 'text',
+      estilos: 'col-12',
+      options: []
+    }
   ]
 
   return (
@@ -264,6 +278,11 @@ function ZonasPage () {
             >
               Registrar zonas
             </Button>
+          </div>
+          <div className='alert alert-info mt-4' role='alert'>
+            Evento realizado en <b>{Establecimiento.Establecimiento}</b>, este lugar
+            tiene una capacidad promedio de <b>{Establecimiento.Capacidad}</b>, Ten en
+            cuenta esto a la hora de crear las zonas.
           </div>
 
           <div className='input-group mb-0 mt-5'>

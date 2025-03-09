@@ -7,12 +7,15 @@ import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPage
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
-import {
-  EstadosEventosOptions
-} from '../../Fixes/fixes'
+import { EstadosEventosOptions } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
-import { activarEventoApi, darBajaEventoApi, deleteEventoApi, finalizarEventoApi } from '../../services/EventosService'
+import {
+  activarEventoApi,
+  darBajaEventoApi,
+  deleteEventoApi,
+  finalizarEventoApi
+} from '../../services/EventosService'
 import ModalModificado from '../../components/Modal/ModalModificado'
 import FormEventos from '../../components/Formularios/FormEventos/FormEventos'
 import FormFinalizarEvento from '../../components/Formularios/FormEventos/FormFinalizarEvento'
@@ -97,8 +100,7 @@ function EventosPage () {
     setModal({ soloVer, modificar, titulo })
   }
 
-
-  function openFormFinalizar(
+  function openFormFinalizar (
     e = null,
     { soloVer = false, modificar = false, titulo = 'No hay titulo' }
   ) {
@@ -142,23 +144,27 @@ function EventosPage () {
             </Button>
             <Button
               estilo='success'
-              onClick={() => 
+              onClick={() =>
                 window.open('/eventos/' + row.original.IdEvento, '_blank')
               }
             >
               Ingresar
             </Button>
-            <Button
-              estilo='secondary'
-              onClick={() =>
-                openForm(row, {
-                  modificar: true,
-                  titulo: `Modificar a ${row.original.Evento}`
-                })
-              }
-            >
-              Modificar
-            </Button>
+            {row.original.EstadoEvento != 'F' ? (
+              <Button
+                estilo='secondary'
+                onClick={() =>
+                  openForm(row, {
+                    modificar: true,
+                    titulo: `Modificar a ${row.original.Evento}`
+                  })
+                }
+              >
+                Modificar
+              </Button>
+            ) : (
+              ''
+            )}
 
             <Button
               estilo='danger'
@@ -185,7 +191,8 @@ function EventosPage () {
                     funcion: () => darBajaEventoApi(row.original.IdEvento),
                     refresh: refresh
                   })
-                }}                disabled={row.original.EstadoEvento == 'B'}
+                }}
+                disabled={row.original.EstadoEvento == 'B'}
               >
                 Dar Baja
               </Button>
@@ -203,7 +210,8 @@ function EventosPage () {
                     funcion: () => activarEventoApi(row.original.IdEvento),
                     refresh: refresh
                   })
-                }}                disabled={row.original.EstadoEvento == 'A'}
+                }}
+                disabled={row.original.EstadoEvento == 'A'}
               >
                 Activar
               </Button>
@@ -219,8 +227,8 @@ function EventosPage () {
                     modificar: false,
                     titulo: 'Finalizar evento ' + row.original.Evento
                   })
-                }    
-                            disabled={row.original.EstadoEvento != 'A'}
+                }
+                disabled={row.original.EstadoEvento != 'A'}
               >
                 Finalizar
               </Button>
@@ -234,104 +242,98 @@ function EventosPage () {
     [refresh]
   )
 
-  function handlePage (numberPage) {
-    setPagination({ ...pagination, pageIndex: numberPage })
-    console.log({ ...pagination, pageIndex: numberPage })
-  }
-
   const onSubmit = data => {
     console.log(data)
     handleFilterParams({ ...data, pCantidad: 10, pPagina: 1 })
     // Aquí puedes manejar los datos del formulario
   }
 
-  function fastSearch(e){
+  function fastSearch (e) {
     setBusqueda(e.target.value)
-    handleFilterParams({pCadena:e.target.value})
+    handleFilterParams({ pCadena: e.target.value })
   }
-
 
   return (
     <>
-    <div>
-      <HeaderPageComponent
-        title='Eventos'
-        items={[{ name: 'eventos', link: '/eventos' }]}
-      />
-      <SectionPage header={'Listado de eventos registradas'}>
-        <div className='d-flex justify-content-start'>
-          <Button
-            lg
-            onClick={() =>
-              openForm(null, {
-                soloVer: false,
-                modificar: false,
-                titulo: 'Registrar evento'
-              })
-            }
-          >
-            Registrar eventos
-          </Button>
-        </div>
-
-        <div className='input-group mb-0 mt-5'>
-          <Dropdown className='me-3' style={{ width: '20rem' }}>
-            <Dropdown.Toggle
-              variant='primary'
-              className='w-100'
-              id='dropdown-basic'
+      <div>
+        <HeaderPageComponent
+          title='Eventos'
+          items={[{ name: 'eventos', link: '/eventos' }]}
+        />
+        <SectionPage header={'Listado de eventos registradas'}>
+          <div className='d-flex justify-content-start'>
+            <Button
+              lg
+              onClick={() =>
+                openForm(null, {
+                  soloVer: false,
+                  modificar: false,
+                  titulo: 'Registrar evento'
+                })
+              }
             >
-              Filtros Avanzado
-            </Dropdown.Toggle>
+              Registrar eventos
+            </Button>
+          </div>
 
-            <Dropdown.Menu className='w-100'>
-              <Form
-                onSubmit={handleSubmit(onSubmit)}
-                style={{ padding: '10px' }}
+          <div className='input-group mb-0 mt-5'>
+            <Dropdown className='me-3' style={{ width: '20rem' }}>
+              <Dropdown.Toggle
+                variant='primary'
+                className='w-100'
+                id='dropdown-basic'
               >
-                <GenerateInputs
-                  inputs={inputsTest}
-                  control={control}
-                  errors={errors}
-                  onlyView={false}
-                />
-                <Button estilo='primary' type='submit'>
-                  Enviar Filtros
-                </Button>
-              </Form>
-            </Dropdown.Menu>
-          </Dropdown>
-          <span className='input-group-text'>
-            <i className='fas fa-search'></i>
-          </span>
-          <input
-            type='text'
-            value={Busqueda}
-            onChange={fastSearch}
-            className='form-control'
-            placeholder='Busqueda de eventos por nombre'
-          />
-        </div>
+                Filtros Avanzado
+              </Dropdown.Toggle>
 
-        {error ? (
-          'Ocurrio un error, contacte con el administrador.'
-        ) : (
-          <TablaMaterial
-            columnFilters={columnFilters}
-            loading={loading}
-            pagination={pagination}
-            setColumnFilters={setColumnFilters}
-            setPagination={setPagination}
-            setSorting={setSorting}
-            rowCount={data?.total_row}
-            sorting={sorting}
-            columns={columns}
-            data={data.data}
-          />
-        )}
-      </SectionPage>
-    </div>
-    <ModalModificado
+              <Dropdown.Menu className='w-100'>
+                <Form
+                  onSubmit={handleSubmit(onSubmit)}
+                  style={{ padding: '10px' }}
+                >
+                  <GenerateInputs
+                    inputs={inputsTest}
+                    control={control}
+                    errors={errors}
+                    onlyView={false}
+                  />
+                  <Button estilo='primary' type='submit'>
+                    Enviar Filtros
+                  </Button>
+                </Form>
+              </Dropdown.Menu>
+            </Dropdown>
+            <span className='input-group-text'>
+              <i className='fas fa-search'></i>
+            </span>
+            <input
+              type='text'
+              value={Busqueda}
+              onChange={fastSearch}
+              className='form-control'
+              placeholder='Busqueda de eventos por nombre'
+            />
+          </div>
+
+          {error ? (
+            'Ocurrio un error, contacte con el administrador.'
+          ) : (
+            <TablaMaterial
+              columnFilters={columnFilters}
+              loading={loading}
+              pagination={pagination}
+              setColumnFilters={setColumnFilters}
+              setPagination={setPagination}
+              setSorting={setSorting}
+              rowCount={data?.total_row}
+              sorting={sorting}
+              columns={columns}
+              data={data.data}
+            />
+          )}
+        </SectionPage>
+      </div>
+      <ModalModificado
         show={Modal}
         handleClose={closeForm}
         size={40}

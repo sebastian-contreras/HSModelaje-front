@@ -18,15 +18,18 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
     data: dataEstablecimientos,
     loading,
     error
-  } = useFetch(`${API_URL}/api/establecimientos/busqueda`, 'get', {
-    pIncluyeBajas: 'N',
-    pCantidad: 999,
-    pPagina: 1
+  } = useFetch(`${API_URL}/api/establecimientos/`, 'get', {
+    pIncluyeBajas: dataform ? 'S' : 'N',
   })
 
   useEffect(() => {
-    if (dataform) reset(dataform)
-  }, [reset, dataform])
+    if (dataform && !loading) {
+      const itemFound = dataEstablecimientos?.find(
+        item => item.IdEstablecimiento == dataform.IdEstablecimiento
+      )
+      reset({...dataform,IdEstablecimiento:{value:itemFound?.IdEstablecimiento,label:itemFound?.Establecimiento}})
+    }
+  }, [reset, dataform, dataEstablecimientos,loading])
   const inputsTest = [
     {
       name: `Evento`,
@@ -66,10 +69,10 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
       name: `IdEstablecimiento`,
       control: control,
       label: 'Establecimiento',
-      type: 'select',
+      type: 'select-autocomplete',
       error: errors?.IdEstablecimiento,
       estilos: 'col-12',
-      options: dataEstablecimientos?.data?.map(item => ({
+      options: dataEstablecimientos?.map(item => ({
         value: item.IdEstablecimiento,
         label: item.Establecimiento
       })),
@@ -79,8 +82,8 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
 
   function onSubmit (data) {
     ;(modificar
-      ? updateEventoApi(data, dataform.IdEvento)
-      : storeEventoApi(data)
+      ? updateEventoApi({...data,IdEstablecimiento:data.IdEstablecimiento.value}, dataform.IdEvento)
+      : storeEventoApi({...data,IdEstablecimiento:data.IdEstablecimiento.value})
     )
       .then(response => {
         console.log(data)

@@ -49,7 +49,7 @@ function FormUsers ({ dataform, onlyView, modificar, closeModal, refresh }) {
     {
       name: `Email`,
       control: control,
-      label: 'Email',
+      label: 'email',
       type: 'text',
       error: errors?.Email,
       readOnly: onlyView

@@ -7,6 +7,7 @@ import UsuariosPage from './pages/UsuariosPage/UsuariosPage'
 import EventosPage from './pages/EventosPage/EventosPage'
 import EstablecimientosPage from './pages/EstablecimientosPage/EstablecimientosPage'
 import ModelosPage from './pages/ModelosPage/ModelosPage'
+import GastosPage from './pages/GastosPage/GastosPage'
 
 const RoutesComponent = () => (
   <Routes>
@@ -24,7 +25,7 @@ const RoutesComponent = () => (
       <Route path='/eventos/:id/' element={<DashboardPage />} />
       <Route path='/eventos/:id/entradas' element={<DashboardPage />} />
       <Route path='/eventos/:id/zonas' element={<DashboardPage />} />
-      <Route path='/eventos/:id/gastos' element={<DashboardPage />} />
+      <Route path='/eventos/:id/gastos' element={<GastosPage />} />
       <Route path='/eventos/:id/votacion' element={<DashboardPage />} />
       <Route path='/eventos/:id/modelos' element={<DashboardPage />} />
       <Route path='/eventos/:id/jueces' element={<DashboardPage />} />

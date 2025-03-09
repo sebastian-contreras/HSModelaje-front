@@ -38,18 +38,18 @@ function ZonasPage () {
 
   const inputsFiltros = [
     {
-      name: `pZOna`,
+      name: `pZona`,
       control: control,
       label: 'Zona',
       type: 'text',
-      error: errors?.pZOna,
+      error: errors?.pZona,
       readOnly: false
     },
     {
       name: `pAccesoDisc`,
       control: control,
       label: 'Espacio Inclusivo?',
-      type: 'text',
+      type: 'select',
       error: errors?.pAccesoDisc,
       options: SiONoOptions,
       readOnly: false
@@ -282,7 +282,7 @@ function ZonasPage () {
           <div className='alert alert-info mt-4' role='alert'>
             Evento realizado en <b>{Establecimiento.Establecimiento}</b>, este lugar
             tiene una capacidad promedio de <b>{Establecimiento.Capacidad}</b>, Ten en
-            cuenta esto a la hora de crear las zonas.
+            cuenta esto a la hora de crear las zonas. <b>Esto va a definir la cantidad de entradas a crear.</b>
           </div>
 
           <div className='input-group mb-0 mt-5'>

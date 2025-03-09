@@ -267,3 +267,9 @@ export const EstadosJuecesOptions = [
   { value: 'A', label: 'Activo' },
   { value: 'B', label: 'Dado de baja' },
 ]
+
+//zonas
+export const EstadosZonasOptions = [
+  { value: 'A', label: 'Activo' },
+  { value: 'B', label: 'Dado de baja' },
+]

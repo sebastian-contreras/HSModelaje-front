@@ -56,6 +56,7 @@ function PatrocinadoresPage () {
       { accessorKey: 'Patrocinador', header: 'Patrocinador' },
       { accessorKey: 'Correo', header: 'Correo' },
       { accessorKey: 'Telefono', header: 'Telefono' },
+      { accessorKey: 'DomicilioRef', header: 'Domicilio Referencial' },
       { accessorKey: 'Descripcion', header: 'Descripcion' },
       { accessorKey: 'FechaCreado', header: 'Fecha Creado' },
       {
@@ -140,6 +141,13 @@ function PatrocinadoresPage () {
     {
       name: 'Telefono',
       label: 'Telefono',
+      type: 'text',
+      estilos: 'col-12',
+      options: [],
+    },
+    {
+      name: 'DomicilioRef',
+      label: 'Domicilio Referencial',
       type: 'text',
       estilos: 'col-12',
       options: [],

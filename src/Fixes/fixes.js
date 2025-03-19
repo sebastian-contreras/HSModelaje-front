@@ -279,3 +279,10 @@ export const EstadosMetricasOptions = [
   { value: 'A', label: 'Activo' },
   { value: 'B', label: 'Dado de baja' },
 ]
+
+//entradas
+export const EstadosEntradasOptions = [
+  { value: 'A', label: 'Abonada' },
+  { value: 'R', label: 'Rechazada' },
+  { value: 'U', label: 'Usada' },
+]

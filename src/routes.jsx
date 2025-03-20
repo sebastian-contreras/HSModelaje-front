@@ -13,11 +13,13 @@ import JuecesPage from './pages/JuecesPage/JuecesPage'
 import ZonasPage from './pages/ZonasPage/ZonasPage'
 import MetricasPage from './pages/MetricasPage/MetricasPage'
 import EntradasPage from './pages/EntradasPage/EntradasPage'
+import PasarelaPage from './pages/PasarelaPage/PasarelaPage'
 
 const RoutesComponent = () => (
   <Routes>
     {/* RUTAS GENERALES */}
     <Route path='/login' element={<Login />} />
+    <Route path='/pasarela/:idTitulo' element={<PasarelaPage />} />
     <Route element={<GeneralLayout />}>
       <Route path='/' element={<DashboardPage />} />
       <Route path='/personas' element={<PersonasPage />} />

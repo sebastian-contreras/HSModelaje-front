@@ -258,12 +258,15 @@ function EntradasPage () {
     {
       name: 'IdZona',
       label: 'Zona',
-      type: 'text',
+      type: 'select',
       estilos: 'col-12',
-      options: []
+      options: dataZona?.data?.map(zona => ({
+        value: zona.IdZona,
+        label: zona.Zona
+      }))
     },
     {
-      name: 'ApelName',
+      name: 'Apelname',
       label: 'Apellido, Nombre',
       type: 'text',
       estilos: 'col-12',

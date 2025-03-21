@@ -7,9 +7,9 @@ export async function dameZonaApi (id) {
   return response.data
 }
 
-export async function listarZonaApi (pIdEvento,pIncluyeBajas = true) {
-  const response = await axios.get(`${API_URL}/api/zonas`, {
-    params: { pIncluyeBajas: pIncluyeBajas, pIdEvento:pIdEvento }
+export async function listarZonaApi (pIdEvento,pIncluyeBajas = true,cantidad = 10) {
+  const response = await axios.get(`${API_URL}/api/zonas/busqueda`, {
+    params: { pIncluyeBajas: pIncluyeBajas, pIdEvento:pIdEvento, cantidad: cantidad }
   })
   console.log(response)
   return response.data

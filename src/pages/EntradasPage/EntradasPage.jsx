@@ -119,6 +119,7 @@ function EntradasPage () {
         Cell: ({ row }) =>
           dataZona?.data?.find(item => item.IdZona == row.original.IdZona).Zona
       },
+      { accessorKey: 'Cantidad', header: 'Cantidad' },
       { accessorKey: 'ApelName', header: 'Apellido, Nombre' },
       { accessorKey: 'DNI', header: 'DNI' },
       { accessorKey: 'Correo', header: 'Correo' },
@@ -129,7 +130,7 @@ function EntradasPage () {
         accessorKey: 'acciones',
         header: 'Acciones',
         enableSorting: false,
-        size: '400',
+        size: '450',
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
           <ButtonGroup
@@ -239,6 +240,18 @@ function EntradasPage () {
             ) : (
               ''
             )}
+            <Button
+              estilo='primary'
+              onClick={() => {
+                window.open(
+                  `${API_URL}/storage/${row.original.Comprobante}`,
+                  '_blank'
+                )
+              }}
+              disabled={!row.original.Comprobante}
+            >
+              Comprobante
+            </Button>
           </ButtonGroup>
         )
       }
@@ -264,6 +277,14 @@ function EntradasPage () {
         value: zona.IdZona,
         label: zona.Zona
       }))
+    },
+    {
+      name: 'Cantidad',
+      label: 'Cantidad',
+      type: 'number',
+      min: 1,
+      estilos: 'col-12',
+      options: []
     },
     {
       name: 'Apelname',
@@ -294,9 +315,9 @@ function EntradasPage () {
       options: []
     },
     {
-      name: 'Comprobante',
-      label: 'Comprobante',
-      type: 'text',
+      name: 'Archivo',
+      label: 'Archivo',
+      type: 'file',
       estilos: 'col-12',
       options: []
     }

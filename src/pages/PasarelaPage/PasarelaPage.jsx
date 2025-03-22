@@ -10,6 +10,7 @@ import { Alerta } from '../../functions/alerts'
 import { dameEventoApi } from '../../services/EventosService'
 import { listarZonaApi } from '../../services/ZonasService'
 import './PasarelaPage.css'
+import { storeEntradaPasarelaApi } from '../../services/EntradasService'
 
 function PasarelaPage () {
   const { control, errors, reset, handleSubmit, getValues, watch } = useForm()
@@ -107,16 +108,46 @@ function PasarelaPage () {
     }
   ]
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  useEffect(() => {
+    if (pasoActual === 2) {
+      listarZonaApi(id, 'N', 9999).then(res => {
+        setZonas(res.data.data)
+      })
+    }
+    if (pasoActual === 4) {
+      document.title = 'Compra finalizada'
+    } else {
+      document.title = 'Comprar entradas'
+    }
+  }, [id, pasoActual])
+
+  const onSubmit = data => {
+    console.log(data)
+    const entrada = { ...data, IdZona: selectedZona.IdZona }
+    storeEntradaPasarelaApi(entrada)
+      .then(res => {
+        console.log(res)
+        setPasoActual(4)
+        reset()
+      })
+      .catch(error => {
+        Alerta()
+          .withMini(true)
+          .withTipo('error')
+          .withTitulo(`Error al realizar la compra`)
+          .withMensaje(
+            error.response.data.message
+              ? error.response.data.message
+              : MENSAJE_DEFAULT
+          )
+          .build()
+      })
+  }
 
   // Función para manejar el envío desde el botón externo
   const handleExternalSubmit = () => {
-    handleSubmit(onSubmit)(); // Llama a handleSubmit y ejecuta la función onSubmit
-  };
-
-
+    handleSubmit(onSubmit)() // Llama a handleSubmit y ejecuta la función onSubmit
+  }
 
   if (Loading) return <Placeholder />
   return (
@@ -198,36 +229,41 @@ function PasarelaPage () {
                   <div className='col-5'>
                     <div className='fs-5 fw-bold mb-3'>Zonas Disponibles</div>
                     <ListGroup as='ol' numbered>
-                      {Zonas.map(zona => (
-                        <ListGroup.Item
-                          as='li'
-                          key={zona.IdZona}
-                          className={`d-flex justify-content-between align-items-start ${
-                            selectedZona?.IdZona === zona.IdZona
-                              ? 'text-white'
-                              : ''
-                          }`}
-                          onClick={() => handleSelect(zona)}
-                          style={{
-                            cursor: 'pointer',
-                            backgroundColor:
+                      {Zonas.map(zona => {
+                        const isAvailable = zona.Capacidad - zona.Ocupacion > 0 // Verifica si hay espacio disponible
+                        return (
+                          <ListGroup.Item
+                            as='li'
+                            key={zona.IdZona}
+                            className={`d-flex justify-content-between align-items-start ${
                               selectedZona?.IdZona === zona.IdZona
-                                ? '#6c5ce7'
+                                ? 'text-white'
                                 : ''
-                          }} // Cambia el cursor al pasar sobre el elemento
-                        >
-                          <div className='ms-2 me-auto'>
-                            <div className='fw-bold'>{zona.Zona}</div>
-                            {zona.Detalle}
-                            <p className='small mb-0 fw-bold'>
-                              Disponible: {zona.Capacidad - zona.Ocupacion}
-                            </p>
-                          </div>
-                          <Badge bg='primary' className='fs-6 my-auto'>
-                            $ {formatearMoneda(zona.Precio)}
-                          </Badge>
-                        </ListGroup.Item>
-                      ))}
+                            } ${!isAvailable ? 'text-muted' : ''}`} // Añade clase para texto gris si no hay disponibilidad
+                            onClick={() => isAvailable && handleSelect(zona)} // Solo llama a handleSelect si hay disponibilidad
+                            style={{
+                              cursor: isAvailable ? 'pointer' : 'not-allowed', // Cambia el cursor si no hay disponibilidad
+                              backgroundColor:
+                                selectedZona?.IdZona === zona.IdZona
+                                  ? '#6c5ce7'
+                                  : !isAvailable
+                                  ? '#e9ecef'
+                                  : '' // Cambia el fondo a gris si no hay disponibilidad
+                            }}
+                          >
+                            <div className='ms-2 me-auto'>
+                              <div className='fw-bold'>{zona.Zona}</div>
+                              {zona.Detalle}
+                              <p className='small mb-0 fw-bold'>
+                                Disponible: {zona.Capacidad - zona.Ocupacion}
+                              </p>
+                            </div>
+                            <Badge bg='primary' className='fs-6 my-auto'>
+                              $ {formatearMoneda(zona.Precio)}
+                            </Badge>
+                          </ListGroup.Item>
+                        )
+                      })}
                     </ListGroup>
                     <div className='d-flex  align-items-center'>
                       <InputForm
@@ -340,7 +376,7 @@ function PasarelaPage () {
                       !getValues('Correo') ||
                       !getValues('Telefono') ||
                       !getValues('Apelname'))) ||
-                      (pasoActual === 3 && !watch('Archivo'))
+                  (pasoActual === 3 && !watch('Archivo'))
                 }
                 onClick={() =>
                   pasoActual + 1 === totalPasos
@@ -354,7 +390,16 @@ function PasarelaPage () {
               </button>
             )}
             {pasoActual === totalPasos ? (
-              <button className='btn btn-primary'>Realizar otra compra</button>
+              <button
+                className='btn btn-primary'
+                onClick={() => {
+                  reset()
+                  setSelectedZona(null)
+                  setPasoActual(1)
+                }}
+              >
+                Realizar otra compra
+              </button>
             ) : (
               ''
             )}

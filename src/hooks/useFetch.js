@@ -59,7 +59,7 @@ export const useFetch = (
     return () => {
       controller.abort();
     };
-  }, [endpoint, method, body, params, pagination, columnFilters, sorting]);
+  }, [endpoint, method, body, params, pagination.pageIndex,pagination.pageSize, columnFilters, sorting]);
 
   const handleFilterParams = (filter) => {
     setParams((old) => ({ ...filter, pagina: 1, cantidad: old.cantidad }));

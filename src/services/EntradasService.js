@@ -8,13 +8,17 @@ export async function dameEntradaApi (id) {
 }
 
 export async function listarEntradaApi (pIdEvento) {
-  const response = await axios.get(`${API_URL}/api/entradas/`+pIdEvento)
+  const response = await axios.get(`${API_URL}/api/entradas/` + pIdEvento)
   console.log(response)
   return response.data
 }
 
 export async function storeEntradaApi (item) {
-  const response = await axios.post(`${API_URL}/api/entradas`, item)
+  const response = await axios.post(`${API_URL}/api/entradas`, item,{
+    headers: {
+      'Content-Type': 'multipart/form-data' // Especificar el tipo de contenido
+    }
+  })
   console.log(response)
   return response.data
 }
@@ -30,8 +34,6 @@ export async function deleteEntradaApi (id) {
   return response.data
 }
 
-
-
 export async function abonarEntradaApi (id) {
   const response = await axios.post(`${API_URL}/api/entradas/abonar/` + id)
   return response.data
@@ -44,5 +46,15 @@ export async function usarEntradaApi (id) {
 
 export async function rechazarEntradaApi (id) {
   const response = await axios.post(`${API_URL}/api/entradas/rechazar/` + id)
+  return response.data
+}
+
+export async function storeEntradaPasarelaApi (item) {
+  const response = await axios.post(`${API_URL}/api/entradas/pasarela`, item, {
+    headers: {
+      'Content-Type': 'multipart/form-data' // Especificar el tipo de contenido
+    }
+  })
+  console.log(response)
   return response.data
 }

@@ -11,6 +11,7 @@ import { dameEventoApi } from '../../services/EventosService'
 import { listarZonaApi } from '../../services/ZonasService'
 import './PasarelaPage.css'
 import { storeEntradaPasarelaApi } from '../../services/EntradasService'
+import Button from '../../components/Button/Button'
 
 function PasarelaPage () {
   const { control, errors, reset, handleSubmit, getValues, watch } = useForm()
@@ -18,6 +19,8 @@ function PasarelaPage () {
   const [id, title] = idTitulo.split('-')
   const [Loading, setLoading] = useState(false)
   const [Evento, setEvento] = useState({})
+  const [LoadingFinal, setLoadingFinal] = useState(false)
+
   const [Zonas, setZonas] = useState([])
   useEffect(() => {
     setLoading(true)
@@ -81,12 +84,12 @@ function PasarelaPage () {
     },
     {
       required: true,
-      name: `Apelname`,
+      name: `ApelName`,
       control: control,
       label: 'Nombre, Apellido',
       type: 'text',
       estilos: 'col-8',
-      error: errors?.Apelname
+      error: errors?.ApelName
     },
     {
       name: `Correo`,
@@ -123,6 +126,7 @@ function PasarelaPage () {
 
   const onSubmit = data => {
     console.log(data)
+    setLoadingFinal(true)
     const entrada = { ...data, IdZona: selectedZona.IdZona }
     storeEntradaPasarelaApi(entrada)
       .then(res => {
@@ -141,6 +145,9 @@ function PasarelaPage () {
               : MENSAJE_DEFAULT
           )
           .build()
+      })
+      .finally(() => {
+        setLoadingFinal(false)
       })
   }
 
@@ -301,7 +308,7 @@ function PasarelaPage () {
                       Documento: {getValues('DNI')}
                     </li>
                     <li className='list-group-item'>
-                      Nombre y apellido: {getValues('Apelname')}
+                      Nombre y apellido: {getValues('ApelName')}
                     </li>
                     <li className='list-group-item'>
                       Correo Electronico: {getValues('Correo')}
@@ -357,25 +364,26 @@ function PasarelaPage () {
               (pasoActual === totalPasos ? (
                 ''
               ) : (
-                <button
+                <Button
                   className='btn btn-secondary'
                   onClick={() => mostrarPaso(pasoActual - 1)}
                 >
                   Atrás
-                </button>
+                </Button>
               ))}
             {pasoActual === totalPasos ? (
               ''
             ) : (
-              <button
+              <Button
                 className='btn btn-primary'
+                loading={LoadingFinal}
                 disabled={
                   (pasoActual === 2 && !selectedZona) ||
                   (pasoActual === 2 &&
                     (!getValues('DNI') ||
                       !getValues('Correo') ||
                       !getValues('Telefono') ||
-                      !getValues('Apelname'))) ||
+                      !getValues('ApelName'))) ||
                   (pasoActual === 3 && !watch('Archivo'))
                 }
                 onClick={() =>
@@ -387,10 +395,10 @@ function PasarelaPage () {
                 }
               >
                 {pasoActual + 1 === totalPasos ? 'Finalizar' : 'Siguiente'}
-              </button>
+              </Button>
             )}
             {pasoActual === totalPasos ? (
-              <button
+              <Button
                 className='btn btn-primary'
                 onClick={() => {
                   reset()
@@ -399,7 +407,7 @@ function PasarelaPage () {
                 }}
               >
                 Realizar otra compra
-              </button>
+              </Button>
             ) : (
               ''
             )}

@@ -28,6 +28,7 @@ function EntradasPage () {
   const { control, errors, reset, handleSubmit } = useForm()
   const [Seleccionado, setSeleccionado] = useState(null)
   const [Busqueda, setBusqueda] = useState('')
+  const [LoadingFinal, setLoadingFinal] = useState(false)
 
   const {
     data: dataZona,
@@ -221,7 +222,7 @@ function EntradasPage () {
 
             {row.original.EstadoEnt == 'A' ? (
               <Button
-                estilo='primary'
+                estilo='warning'
                 onClick={() => {
                   doubleConfirmationAlert({
                     textoConfirmacion: `¿Estas seguro de usar la entrada ${row.original.IdEntrada}?`,
@@ -287,7 +288,7 @@ function EntradasPage () {
       options: []
     },
     {
-      name: 'Apelname',
+      name: 'ApelName',
       label: 'Apellido, Nombre',
       type: 'text',
       estilos: 'col-12',

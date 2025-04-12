@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import CurrencyInput from 'react-currency-input-field'
 import { Controller } from 'react-hook-form'
 import Select from 'react-select'
@@ -11,6 +12,7 @@ function InputForm ({
   readOnly,
   disabled,
   min,
+  onFilterChange,
   max,
   defaultValue,
   step,
@@ -22,6 +24,7 @@ function InputForm ({
     locale: 'en-US',
     currency: 'USD'
   }
+  const [inputValue, setInputValue] = useState('')
 
   return type == 'checkbox' ? (
     <div className={`form-group ${estilos}`}>
@@ -75,23 +78,22 @@ function InputForm ({
               allowDecimals={false}
             />
           ) : type == 'select-autocomplete' ? (
-            <Controller
-              name={name}
-              control={control}
-              defaultValue={null} // Puedes establecer un valor predeterminado aquí
-              render={({ field }) => (
-                <Select
-                  className={'w-100  ' + estilos}
-                  classNamePrefix='select'
-                  isDisabled={readOnly}
-                  required={required}
-                  isSearchable={true}
-                  {...field} // Esto conecta react-select con react-hook-form
-                  options={options}
-                />
-              )}
-            />
-          ) : type == 'file' ? (
+            <Select
+            {...field}
+            options={options}
+            isDisabled={readOnly}
+            isOptionDisabled={readOnly}
+            isClearable
+            placeholder='Seleccione una opción...'
+            inputValue={inputValue}
+            onInputChange={value => {
+              setInputValue(value)
+              onFilterChange(value) // Enviar el texto de filtro al padre
+            }}
+          />
+          
+          )
+          : type == 'file' ? (
             <input
               {...field}
               value={field.value?.fileName}

@@ -15,31 +15,37 @@ function GenerateForms ({
   functionUpdate,
   functionCreate,
   id,
-  elemento
+  elemento,
+  CustomSubmit,
+  CustomReset,
 }) {
   const { control, errors, reset, handleSubmit } = useForm()
-  const esFemenino = (palabra) => {
-    return palabra.endsWith('a'); // Asume que las palabras que terminan en "a" son femeninas
-  };
+  const esFemenino = palabra => {
+    return palabra.endsWith('a') // Asume que las palabras que terminan en "a" son femeninas
+  }
 
   // Generar los mensajes de éxito y error dinámicamente
-  const successMessage = esFemenino(elemento) 
-    ? `${elemento} creada correctamente.` 
-    : `${elemento} creado correctamente.`;
+  const successMessage = esFemenino(elemento)
+    ? `${elemento} creada correctamente.`
+    : `${elemento} creado correctamente.`
 
-  const errorMessage = esFemenino(elemento) 
-    ? `No se pudo crear la ${elemento}.` 
-    : `No se pudo crear el ${elemento}.`;
-
+  const errorMessage = esFemenino(elemento)
+    ? `No se pudo crear la ${elemento}.`
+    : `No se pudo crear el ${elemento}.`
 
   useEffect(() => {
-    if (dataform) reset(dataform)
+    if(CustomReset){
+      reset(CustomReset)
+    }else{
+      if (dataform) reset(dataform)
+    }
   }, [reset, dataform])
   const inputsTest = inputs.map(inputElement => ({
     name: inputElement.name,
     control: control,
     label: inputElement.label,
     type: inputElement.type,
+    onFilterChange: inputElement.onFilterChange,
     estilos: inputElement?.estilos,
     options: inputElement?.options,
     error: errors?.Evento,
@@ -49,6 +55,10 @@ function GenerateForms ({
   console.log(inputsTest)
 
   function onSubmit (data) {
+    if (CustomSubmit) {
+      CustomSubmit(data)
+      return
+    }
     ;(modificar ? functionUpdate(data, dataform[id]) : functionCreate(data))
       .then(response => {
         console.log(data)
@@ -57,9 +67,7 @@ function GenerateForms ({
         Alerta()
           .withMini(true)
           .withTipo('success')
-          .withTitulo(
-            response.message ? response.message : successMessage
-          )
+          .withTitulo(response.message ? response.message : successMessage)
           .build()
       })
       .catch(error => {

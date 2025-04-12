@@ -15,6 +15,13 @@ export async function listarModeloApi (pIncluyeBajas = true) {
   return response.data
 }
 
+export async function buscarModeloApi (data) {
+  const response = await axios.get(`${API_URL}/api/modelos/busqueda`,data)
+  console.log(response)
+  return response.data
+}
+
+
 export async function storeModeloApi (item) {
   const response = await axios.post(`${API_URL}/api/modelos`, item)
   console.log(response)

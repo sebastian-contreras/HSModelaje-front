@@ -17,7 +17,7 @@ function GenerateForms ({
   id,
   elemento,
   CustomSubmit,
-  CustomReset,
+  CustomReset
 }) {
   const { control, errors, reset, handleSubmit } = useForm()
   const esFemenino = palabra => {
@@ -34,9 +34,9 @@ function GenerateForms ({
     : `No se pudo crear el ${elemento}.`
 
   useEffect(() => {
-    if(CustomReset){
-      reset(CustomReset)
-    }else{
+    if (CustomReset) {
+      if (dataform) reset(CustomReset)
+    } else {
       if (dataform) reset(dataform)
     }
   }, [reset, dataform])

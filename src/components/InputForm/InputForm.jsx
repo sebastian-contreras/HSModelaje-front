@@ -24,7 +24,7 @@ function InputForm ({
     locale: 'en-US',
     currency: 'USD'
   }
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(null)
 
   return type == 'checkbox' ? (
     <div className={`form-group ${estilos}`}>
@@ -79,21 +79,18 @@ function InputForm ({
             />
           ) : type == 'select-autocomplete' ? (
             <Select
-            {...field}
-            options={options}
-            isDisabled={readOnly}
-            isOptionDisabled={readOnly}
-            isClearable
-            placeholder='Seleccione una opción...'
-            inputValue={inputValue}
-            onInputChange={value => {
-              setInputValue(value)
-              onFilterChange(value) // Enviar el texto de filtro al padre
-            }}
-          />
-          
-          )
-          : type == 'file' ? (
+              {...field}
+              options={options}
+              isDisabled={readOnly}
+              isClearable
+              placeholder='Seleccione una opción...'
+              inputValue={inputValue}
+              onInputChange={value => {
+                setInputValue(value)
+                onFilterChange(value) // Enviar el texto de filtro al padre
+              }}
+            />
+          ) : type == 'file' ? (
             <input
               {...field}
               value={field.value?.fileName}

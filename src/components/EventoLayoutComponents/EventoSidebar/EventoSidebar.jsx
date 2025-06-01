@@ -5,6 +5,8 @@ import { useEvento } from '../../../context/SidebarContext/EventoContext'
 import { formatearFechayHora } from '../../../Fixes/formatter'
 import { ESTADOS_EVENTOS, getLabelByValue } from '../../../Fixes/fixes'
 import { dameEstablecimientoApi } from '../../../services/EstablecimientosService'
+import Pusher from 'pusher-js'
+import Echo from 'laravel-echo'
 
 function EventoSidebar () {
   const navigate = useNavigate()
@@ -123,15 +125,14 @@ function EventoSidebar () {
     <aside className={`${styles.sidebar} sidebar`} data-background-color='dark'>
       <div className='sidebar-logo d-block'>
         {/* Logo Header  */}
-        <div className="text-center">
-
-        <img
-          src='/img/logo/logo_white.png'
-          alt='navbar brand'
-          className='mt-2'
-          onClick={()=>navigate('/eventos')}
-          height='70'
-        />
+        <div className='text-center'>
+          <img
+            src='/img/logo/logo_white.png'
+            alt='navbar brand'
+            className='mt-2'
+            onClick={() => navigate('/eventos')}
+            height='70'
+          />
         </div>
         <div
           className={`${styles['logo-header']} text-center  py-5  w-100 justify-content-center mt-5`}
@@ -152,7 +153,9 @@ function EventoSidebar () {
             )}
           </p>
           <p className='fw-bold text-white mb-0 fs-5 mt-'>Lugar</p>
-          <p className='text-white mt-0 mb-0'>{Establecimiento?.Establecimiento}</p>
+          <p className='text-white mt-0 mb-0'>
+            {Establecimiento?.Establecimiento}
+          </p>
           <p className='fw-medium text-white mb-0'>
             Estado: {getLabelByValue(ESTADOS_EVENTOS, evento?.EstadoEvento)}
           </p>

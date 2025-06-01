@@ -16,11 +16,13 @@ import EntradasPage from './pages/EntradasPage/EntradasPage'
 import PasarelaPage from './pages/PasarelaPage/PasarelaPage'
 import ParticipantesPage from './pages/ParticipantesPage/ParticipantesPage'
 import VotacionPage from './pages/VotacionPage/VotacionPage'
+import VotoJurado from './pages/VotoJurado/VotoJurado'
 
 const RoutesComponent = () => (
   <Routes>
     {/* RUTAS GENERALES */}
     <Route path='/login' element={<Login />} />
+    <Route path='/voto-jurado' element={<VotoJurado />} />
     <Route path='/pasarela/:idTitulo' element={<PasarelaPage />} />
     <Route element={<GeneralLayout />}>
       <Route path='/' element={<DashboardPage />} />

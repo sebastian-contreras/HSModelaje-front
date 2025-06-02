@@ -18,6 +18,7 @@ import {
   activarJuezApi,
   darBajaJuezApi,
   deleteJuezApi,
+  invitarJuezApi,
   storeJuezApi,
   updateJuezApi
 } from '../../services/JuecesService'
@@ -133,12 +134,15 @@ function JuecesPage () {
 
             <Button
               estilo='success'
-              onClick={() =>
-                openForm(row, {
-                  modificar: true,
-                  titulo: `Modificar a ${row.original.ApelName}`
+               onClick={() => {
+                doubleConfirmationAlert({
+                  textoConfirmacion: `¿Estas seguro de enviar la invitacion a el juez ${row.original.ApelName}?`,
+                  textoSuccess: 'Se envio la invitacion correctamente',
+                  textoError: 'No se envio la invitacion.',
+                  funcion: () => invitarJuezApi(row.original.IdJuez),
+                  refresh: refresh
                 })
-              }
+              }}
             >
               Invitacion
             </Button>

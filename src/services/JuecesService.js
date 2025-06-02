@@ -41,3 +41,8 @@ export async function activarJuezApi (id) {
   const response = await axios.post(`${API_URL}/api/jueces/activar/` + id)
   return response.data
 }
+
+export async function invitarJuezApi (id) {
+  const response = await axios.get(`${API_URL}/api/jueces/invitar/` + id)
+  return response.data
+}

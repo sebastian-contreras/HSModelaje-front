@@ -19,14 +19,16 @@ function TablaMaterial ({
     enableEditing: enableEditing,
     enableColumnPinning: true,
     enableColumnResizing: true,
+    columnResizeMode: 'onChange', // o 'onEnd'
+        layoutMode: "autowidth", // O "autoWidth" si está disponible
     enableMultiRowSelection: enableMultiRowSelection,
-    muiTopToolbarProps:{
-      sx:{
+    muiTopToolbarProps: {
+      sx: {
         backgroundColor: 'rgb(243, 244, 252)'
       }
     },
-    muiBottomToolbarProps:{
-      sx:{
+    muiBottomToolbarProps: {
+      sx: {
         backgroundColor: 'rgb(243, 244, 252)'
       }
     },

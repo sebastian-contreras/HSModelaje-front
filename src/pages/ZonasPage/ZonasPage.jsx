@@ -113,12 +113,11 @@ function ZonasPage () {
         accessorKey: 'acciones',
         header: 'Acciones',
         enableSorting: false,
-        size: '450',
+        enableHiding: false,
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
           <ButtonGroup
             style={{ display: 'flex', justifyContent: 'flex-end' }}
-            className='pe-5'
           >
             <Button
               estilo='primary'

@@ -101,12 +101,11 @@ function JuecesPage () {
         accessorKey: 'acciones',
         header: 'Acciones',
         enableSorting: false,
-        size: '450',
+        enableHiding: false,
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
           <ButtonGroup
             style={{ display: 'flex', justifyContent: 'flex-end' }}
-            className='pe-5'
           >
             <Button
               estilo='primary'
@@ -131,6 +130,19 @@ function JuecesPage () {
             >
               Modificar
             </Button>
+
+            <Button
+              estilo='success'
+              onClick={() =>
+                openForm(row, {
+                  modificar: true,
+                  titulo: `Modificar a ${row.original.ApelName}`
+                })
+              }
+            >
+              Invitacion
+            </Button>
+
 
             <Button
               estilo='danger'

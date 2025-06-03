@@ -22,7 +22,7 @@ const RoutesComponent = () => (
   <Routes>
     {/* RUTAS GENERALES */}
     <Route path='/login' element={<Login />} />
-    <Route path='/voto-jurado' element={<VotoJurado />} />
+    <Route path='/voto-jurado/:token' element={<VotoJurado />} />
     <Route path='/pasarela/:idTitulo' element={<PasarelaPage />} />
     <Route element={<GeneralLayout />}>
       <Route path='/' element={<DashboardPage />} />

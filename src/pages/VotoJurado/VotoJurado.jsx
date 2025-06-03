@@ -96,7 +96,8 @@ export default function VotoJurado () {
           dameEventoApi(juez.IdEvento)
         ])
 
-        setMetricaData(metricRes.data?.[0])
+        setMetricaData(metricRes.data)
+        console.log(metricRes.data)
         const evento = eventRes.data?.[0]
         setEventoData(evento)
 
@@ -248,7 +249,7 @@ export default function VotoJurado () {
                   }}
                 >
                   <Chip
-                    label={'Nombre evento'}
+                    label={EventoData?.Evento}
                     color='secondary'
                     size='small'
                   />
@@ -275,8 +276,8 @@ export default function VotoJurado () {
             </CardContent>
           </Card>
 
-          {modelData.metrics.map(metric => (
-            <Card key={metric.id} sx={{ mb: 2 }}>
+          {MetricaData.map(metric => (
+            <Card key={metric.IdMetrica} sx={{ mb: 2 }}>
               <CardHeader
                 sx={{ mb: 0, pb: 0 }}
                 title={
@@ -289,9 +290,9 @@ export default function VotoJurado () {
                       paddingBottom: 0
                     }}
                   >
-                    <Typography variant='subtitle1'>{metric.name}</Typography>
+                    <Typography variant='subtitle1'>{metric.Metrica}</Typography>
                     {votes[metric.id] && (
-                      <Badge bg='success'>{votes[metric.id]}/10</Badge>
+                      <Badge bg='success'>{votes[metric.IdMetrica]}/10</Badge>
                     )}
                   </Box>
                 }
@@ -302,13 +303,13 @@ export default function VotoJurado () {
                     <Grid item xs={2.4} key={score}>
                       <Button
                         variant={
-                          votes[metric.id] === score
+                          votes[metric.IdMetrica] === score
                             ? 'primary'
                             : 'outline-secondary'
                         }
                         size='sm'
                         className='w-100'
-                        onClick={() => handleVote(metric.id, score)}
+                        onClick={() => handleVote(metric.IdMetrica, score)}
                       >
                         {score}
                       </Button>

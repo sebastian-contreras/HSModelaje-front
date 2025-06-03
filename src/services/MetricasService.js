@@ -7,8 +7,9 @@ export async function dameMetricaApi (id) {
   return response.data
 }
 
-export async function listarMetricaApi (pIdEvento,pIncluyeBajas = true) {
-  const response = await axios.get(`${API_URL}/api/metricas`, {
+export async function listarMetricaApi (pIdEvento,pIncluyeBajas = 'N') {
+  console.log(pIdEvento)
+  const response = await axios.get(`${API_URL}/api/metricas/evento/${pIdEvento}`, { 
     params: { pIncluyeBajas: pIncluyeBajas, pIdEvento:pIdEvento }
   })
   console.log(response)

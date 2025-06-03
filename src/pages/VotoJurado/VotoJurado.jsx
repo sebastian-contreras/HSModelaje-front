@@ -20,13 +20,25 @@ import {
   LinearProgress,
   Typography
 } from '@mui/material'
-import { useState } from 'react'
-import { Badge, Button } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { Badge, Button, Spinner } from 'react-bootstrap'
+import { dameEstablecimientoApi } from '../../services/EstablecimientosService'
+import { useParams } from 'react-router-dom'
+import { dameTokenJuezApi } from '../../services/JuecesService'
+import { dameEventoApi } from '../../services/EventosService'
+import { formatearFechayHora } from '../../Fixes/formatter'
+import { listarMetricaApi } from '../../services/MetricasService'
 
 export default function VotoJurado () {
   const [currentScreen, setCurrentScreen] = useState('welcome')
+  const [Error, setError] = useState(null)
   const [votes, setVotes] = useState({})
-
+  const { token } = useParams()
+  const [JuezData, setJuezData] = useState(null)
+  const [EventoData, setEventoData] = useState(null)
+  const [EstablecimientoData, setEstablecimientoData] = useState(null)
+  const [MetricaData, setMetricaData] = useState(null)
+  const [Loading, setLoading] = useState(false)
   const modelData = {
     name: 'NOMBRE DEL MODELO',
     edad: '25',
@@ -56,13 +68,68 @@ export default function VotoJurado () {
   }
 
   const handleSubmit = () => {
-    console.log('Votos enviados:', votes)
     setCurrentScreen('success')
   }
 
   const isAllVoted = modelData.metrics.every(
     metric => votes[metric.id] !== undefined
   )
+
+  useEffect(() => {
+    if (!token) return
+
+    const cargarDatos = async () => {
+      setLoading(true)
+      try {
+        const res = await dameTokenJuezApi(token)
+        const juez = res.data?.[0]
+        if (!juez) {
+          setError('Token inválido o expirado')
+          setLoading(false)
+          return
+        }
+
+        setJuezData(juez)
+
+        const [metricRes, eventRes] = await Promise.all([
+          listarMetricaApi(juez.IdEvento),
+          dameEventoApi(juez.IdEvento)
+        ])
+
+        setMetricaData(metricRes.data?.[0])
+        const evento = eventRes.data?.[0]
+        setEventoData(evento)
+
+        if (evento?.IdEstablecimiento) {
+          const estRes = await dameEstablecimientoApi(evento.IdEstablecimiento)
+          setEstablecimientoData(estRes.data?.[0])
+        }
+
+        setCurrentScreen('welcome')
+      } catch (err) {
+        console.error(err)
+        setError('Error al obtener los datos del juez')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    cargarDatos()
+  }, [token])
+
+  if (Error) {
+    return <div>Error: {Error}</div>
+  }
+
+  if (Loading) {
+    return (
+      <Box className='min-vh-100 d-flex align-items-center justify-content-center bg-light p-3'>
+        <Card sx={{ width: '100%', maxWidth: 400, textAlign: 'center', p: 2 }}>
+          <Spinner animation='border' role='status' />
+        </Card>
+      </Box>
+    )
+  }
 
   if (currentScreen === 'welcome') {
     return (
@@ -88,7 +155,11 @@ export default function VotoJurado () {
                 />
               </Box>
             }
-            title={<Typography variant='h6'>¡Bienvenido al Evento!</Typography>}
+            title={
+              <Typography variant='h6'>
+                ¡Bienvenido al {EventoData?.Evento}!
+              </Typography>
+            }
             subheader='Evaluación de Modelos'
           />
           <CardContent>
@@ -97,22 +168,23 @@ export default function VotoJurado () {
                 variant='body2'
                 sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
               >
-                <FontAwesomeIcon icon={faCalendar} className='me-2' /> 15 de
-                Diciembre, 2024
+                <FontAwesomeIcon icon={faCalendar} className='me-2' />{' '}
+                {formatearFechayHora(EventoData?.FechaProbableInicio)}
               </Typography>
               <Typography
                 variant='body2'
                 sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
               >
-                <FontAwesomeIcon icon={faLocationDot} className='me-2' /> NOMBRE
-                DE EL ESTABLECIMIENTO
+                <FontAwesomeIcon icon={faLocationDot} className='me-2' />{' '}
+                {EstablecimientoData?.Establecimiento} -{' '}
+                {EstablecimientoData?.Ubicacion}
               </Typography>
               <Typography
                 variant='body2'
                 sx={{ display: 'flex', alignItems: 'center' }}
               >
-                <FontAwesomeIcon icon={faPerson} className='me-2' /> NOMBRE DEL
-                JUEZ
+                <FontAwesomeIcon icon={faPerson} className='me-2' />{' '}
+                {JuezData?.ApelName}
               </Typography>
             </Box>
             <Box
@@ -148,7 +220,6 @@ export default function VotoJurado () {
           <CardActions>
             <Button
               variant='primary'
-
               className='w-100 fw-bold'
               onClick={() => setCurrentScreen('evaluation')}
             >

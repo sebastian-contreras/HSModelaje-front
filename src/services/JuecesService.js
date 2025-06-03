@@ -7,6 +7,12 @@ export async function dameJuezApi (id) {
   return response.data
 }
 
+export async function dameTokenJuezApi (token) {
+  const response = await axios.get(`${API_URL}/api/jueces/show-token/` + token)
+  console.log(response)
+  return response.data
+}
+
 export async function listarJuezApi (pIdEvento,pIncluyeBajas = true) {
   const response = await axios.get(`${API_URL}/api/jueces`, {
     params: { pIncluyeBajas: pIncluyeBajas, pIdEvento:pIdEvento }

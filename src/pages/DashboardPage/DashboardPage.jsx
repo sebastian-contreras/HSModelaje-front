@@ -11,6 +11,7 @@ import GenerateInputs from '../../components/GenerateInputs/GenerateInputs'
 import InputPersonas from '../../components/Formularios/FormPersonas/InputPersonas'
 import Pusher from 'pusher-js'
 import Echo from 'laravel-echo'
+import { echo } from '../../config/EchoConfig'
 
 const schema = z.object({
   name: z
@@ -23,19 +24,7 @@ const schema = z.object({
     .nonempty({ message: 'El test es requerido.' })
 })
 
-window.Pusher = Pusher
 
-const echo = (window.Echo = new Echo({
-  broadcaster: 'pusher',
-  key: 'eq6doihjm8dcke8g263o',
-  wsHost: '127.0.0.1',
-  wsPort: 8080,
-  wssPort: 8080,
-  forceTLS: false,
-  encrypted: false,
-  disableStats: true,
-  cluster: 'mt1'
-}))
 
 function DashboardPage () {
   const {

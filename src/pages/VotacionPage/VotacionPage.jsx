@@ -1,6 +1,7 @@
 import Button from '../../components/Button/Button'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
 import SectionPage from '../../components/SectionPage/SectionPage'
+import { InicioVotacionModeloApi } from '../../services/VotacionService'
 
 function VotacionPage () {
   const data = {
@@ -68,8 +69,9 @@ function VotacionPage () {
     ]
   }
 
-  const handleIniciar = id => {
+  const handleIniciar = async id => {
     console.log('Iniciar votación para participante', id)
+    await InicioVotacionModeloApi(id)
     // Lógica para iniciar votación
   }
 

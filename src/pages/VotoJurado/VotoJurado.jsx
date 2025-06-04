@@ -28,6 +28,7 @@ import { dameTokenJuezApi } from '../../services/JuecesService'
 import { dameEventoApi } from '../../services/EventosService'
 import { formatearFechayHora } from '../../Fixes/formatter'
 import { listarMetricaApi } from '../../services/MetricasService'
+import { echo } from '../../config/EchoConfig'
 
 export default function VotoJurado () {
   const [currentScreen, setCurrentScreen] = useState('welcome')
@@ -88,6 +89,10 @@ export default function VotoJurado () {
           setLoading(false)
           return
         }
+        const channel = echo.channel('evento-' + juez.IdEvento)
+        channel.listen('VotoModeloIniciado', data => {
+          console.log('Nuevo voto recibido:', data)
+        })
 
         setJuezData(juez)
 
@@ -117,6 +122,18 @@ export default function VotoJurado () {
 
     cargarDatos()
   }, [token])
+
+  useEffect(() => {
+    const channel = echo.channel('test-channel')
+    console.log('Conectado al canal de votación')
+    channel.listen('TestEvent', data => {
+      console.log('Nuevo voto recibido:', data)
+    })
+
+    return () => {
+      echo.leaveChannel('test-channel')
+    }
+  }, [])
 
   if (Error) {
     return <div>Error: {Error}</div>
@@ -290,7 +307,9 @@ export default function VotoJurado () {
                       paddingBottom: 0
                     }}
                   >
-                    <Typography variant='subtitle1'>{metric.Metrica}</Typography>
+                    <Typography variant='subtitle1'>
+                      {metric.Metrica}
+                    </Typography>
                     {votes[metric.id] && (
                       <Badge bg='success'>{votes[metric.IdMetrica]}/10</Badge>
                     )}

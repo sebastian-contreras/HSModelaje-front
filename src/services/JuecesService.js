@@ -13,9 +13,12 @@ export async function dameTokenJuezApi (token) {
   return response.data
 }
 
-export async function listarJuezApi (pIdEvento,pIncluyeBajas = true) {
-  const response = await axios.get(`${API_URL}/api/jueces`, {
-    params: { pIncluyeBajas: pIncluyeBajas, pIdEvento:pIdEvento }
+export async function listarJuezApi (pIdEvento,pIncluyeBajas = 'N') {
+  const response = await axios.get(`${API_URL}/api/jueces/lista`,{
+    params: {
+      pIdEvento,
+      pIncluyeBajas
+    }
   })
   console.log(response)
   return response.data

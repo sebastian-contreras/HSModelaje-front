@@ -1,186 +1,129 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { Badge, Table } from 'react-bootstrap'
 import Button from '../../components/Button/Button'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
 import SectionPage from '../../components/SectionPage/SectionPage'
-import { API_URL } from '../../Fixes/API_URL'
-import { useFetch } from '../../hooks/useFetch'
-import { InicioVotacionModeloApi } from '../../services/VotacionService'
-import { listarMetricaApi } from '../../services/MetricasService'
 import { useEvento } from '../../context/SidebarContext/EventoContext'
-import { buscarParticipanteApi } from '../../services/ParticipantesService'
-import { Badge, Table } from 'react-bootstrap'
 import { listarJuezApi } from '../../services/JuecesService'
+import { buscarParticipanteApi } from '../../services/ParticipantesService'
+import {
+  DetenerVotacionModeloApi,
+  InicioVotacionModeloApi,
+  listarVotacionApi,
+  reiniciarVotacionApi
+} from '../../services/VotacionService'
+import { Alerta } from '../../functions/alerts'
+import { MENSAJE_DEFAULT } from '../../Fixes/messages'
+import { echo } from '../../config/EchoConfig'
 
 function VotacionPage () {
   const { evento } = useEvento() // Usa el contexto
 
-  const [MetricaData, setMetricaData] = useState([])
   const [JuecesData, setJuecesData] = useState([])
   const [ParticipantesData, setParticipantesData] = useState([])
-  const data = {
-    votaciones: [
-      {
-        participante_id: 1,
-        participante_nombre: 'Juan Pérez',
-        metricas: [
-          {
-            metrica_id: 1,
-            metrica_nombre: 'Originalidad',
-            puntajes: [
-              {
-                juez_id: 1,
-                juez_nombre: 'Juez A',
-                puntuacion: 8
-              },
-              {
-                juez_id: 2,
-                juez_nombre: 'Juez B',
-                puntuacion: 7
-              }
-            ],
-            promedio: 7.5
-          },
-          {
-            metrica_id: 2,
-            metrica_nombre: 'Creatividad',
-            puntajes: [
-              {
-                juez_id: 1,
-                juez_nombre: 'Juez A',
-                puntuacion: 9
-              },
-              {
-                juez_id: 2,
-                juez_nombre: 'Juez B',
-                puntuacion: 8
-              }
-            ],
-            promedio: 8.5
-          }
-        ],
-        puntaje_total: 8
-      },
-      {
-        participante_id: 2,
-        participante_nombre: 'María Gómez',
-        metricas: [
-          {
-            metrica_id: 1,
-            metrica_nombre: 'Originalidad',
-            puntajes: [
-              {
-                juez_id: 1,
-                juez_nombre: 'Juez A',
-                puntuacion: 10
-              }
-            ],
-            promedio: 10
-          }
-        ],
-        puntaje_total: 10
-      }
-    ]
-  }
+  const [Votos, setVotos] = useState([])
+  const votosByParticipante = useMemo(() => {
+    const map = new Map()
+    Votos.forEach(voto => {
+      map.set(voto.IdParticipante, voto)
+    })
+    return map
+  }, [Votos])
+  const [ParticipanteActivo, setParticipanteActivo] = useState(null)
 
   const handleIniciar = async id => {
-    console.log('Iniciar votación para participante', id)
-    await InicioVotacionModeloApi(id)
-    // Lógica para iniciar votación
+    InicioVotacionModeloApi(id)
+      .then(res => {
+        console.log('Iniciar votación para participante', id)
+
+        setParticipanteActivo(id)
+      })
+      .catch(err => {
+        Alerta()
+          .withMini(true)
+          .withTipo('error')
+          .withTitulo('Error al iniciar votación')
+          .withMensaje(
+            err?.response?.data?.message
+              ? err.response.data.message
+              : MENSAJE_DEFAULT
+          )
+      })
   }
 
   const handleDetener = id => {
-    console.log('Detener votación para participante', id)
-    // Lógica para detener votación
+    DetenerVotacionModeloApi(id)
+      .then(res => {
+        setParticipanteActivo(null)
+      })
+      .catch(err => {
+        Alerta()
+          .withMini(true)
+          .withTipo('error')
+          .withTitulo('Error al detener votación')
+          .withMensaje(
+            err?.response?.data?.message
+              ? err.response.data.message
+              : MENSAJE_DEFAULT
+          )
+      })
   }
 
   const handleReiniciar = id => {
-    console.log('Reiniciar votación para participante', id)
-    // Lógica para reiniciar votación
+    reiniciarVotacionApi(id)
+      .then(res => {
+        setParticipanteActivo(null)
+        Alerta()
+          .withMini(true)
+          .withTipo('success')
+          .withTitulo('Votación reiniciada exitosamente')
+          .build()
+      })
+      .catch(err => {
+        Alerta()
+          .withMini(true)
+          .withTipo('error')
+          .withTitulo('Error al reiniciar votación')
+          .withMensaje(
+            err?.response?.data?.message
+              ? err.response.data.message
+              : MENSAJE_DEFAULT
+          )
+      })
   }
 
   useEffect(() => {
-    listarMetricaApi(evento?.IdEvento).then(res => {
-      console.log(res.data)
-      setMetricaData(res.data)
-    })
-    listarJuezApi(10).then(res => {
-      console.log(res.data)
+    listarJuezApi(evento?.IdEvento).then(res => {
       setJuecesData(res.data)
+    })
+    listarVotacionApi(evento?.IdEvento).then(res => {
+      setVotos(res.data)
     })
     buscarParticipanteApi({
       pIdEvento: evento?.IdEvento,
       pCantidad: 1000,
       pPagina: 1
     }).then(res => {
-      console.log(res.data)
       setParticipantesData(res.data.data)
     })
-  }, [evento?.IdEvento])
+    // Conectar al canal de votación
+    const channel = echo.channel('evento-' + evento?.IdEvento)
+    console.log('Conectado al canal de votación')
+    channel.listen('TestEvent', data => {
+      console.log('Nuevo voto recibido:', data)
+    })
 
-  const judges = [
-    { id: 'j1', name: 'Dr. Ana García', expertise: 'Machine Learning' },
-    { id: 'j2', name: 'Prof. Carlos López', expertise: 'Computer Vision' },
-    { id: 'j3', name: 'Dra. María Rodríguez', expertise: 'NLP' },
-    { id: 'j4', name: 'Dr. Juan Martínez', expertise: 'AI Ethics' }
-  ]
-
-  const models = [
-    {
-      id: 'm1',
-      name: 'GPT-4 Turbo',
-      description: 'Modelo de lenguaje avanzado para tareas generales',
-      averageScore: 8.5,
-      votes: [
-        {
-          judgeId: 'j1',
-          metrics: [
-            { name: 'Precisión', score: 9, maxScore: 10 },
-            { name: 'Velocidad', score: 8, maxScore: 10 },
-            { name: 'Creatividad', score: 9, maxScore: 10 }
-          ]
-        },
-        {
-          judgeId: 'j2',
-          metrics: [
-            { name: 'Precisión', score: 8, maxScore: 10 },
-            { name: 'Velocidad', score: 7, maxScore: 10 },
-            { name: 'Creatividad', score: 8, maxScore: 10 }
-          ]
-        },
-        {
-          judgeId: 'j3',
-          metrics: [
-            { name: 'Precisión', score: 9, maxScore: 10 },
-            { name: 'Velocidad', score: 8, maxScore: 10 },
-            { name: 'Creatividad', score: 9, maxScore: 10 }
-          ]
-        },
-        {
-          judgeId: 'j4',
-          metrics: [
-            { name: 'Precisión', score: 8, maxScore: 10 },
-            { name: 'Velocidad', score: 9, maxScore: 10 },
-            { name: 'Creatividad', score: 7, maxScore: 10 }
-          ]
-        }
-      ]
+    return () => {
+      echo.leaveChannel('evento-' + evento?.IdEvento)
     }
-    // ...otros modelos (omitidos por brevedad)
-  ]
+  }, [evento?.IdEvento])
 
   function getScoreVariant (score, maxScore) {
     const percent = (score / maxScore) * 100
     if (percent >= 80) return 'success'
-    if (percent >= 60) return 'warning'
+    if (percent >= 50) return 'primary'
+    if (percent >= 30) return 'warning'
     return 'danger'
-  }
-
-  const [selectedModel, setSelectedModel] = useState(null)
-  const [showModal, setShowModal] = useState(false)
-
-  const handleViewDetails = model => {
-    setSelectedModel(model)
-    setShowModal(true)
   }
 
   return (
@@ -205,18 +148,28 @@ function VotacionPage () {
               </tr>
             </thead>
             <tbody>
-              {models.map(model => (
-                <tr key={model.id}>
+              {ParticipantesData.map(model => (
+                <tr key={model?.IdParticipante}>
                   <td>
-                    <strong>{model.name}</strong>
+                    <strong>{model?.ApelName}</strong>
                   </td>
                   <td className='text-center'>
-                    <Badge bg={getScoreVariant(model.averageScore, 10)}>
-                      {model.averageScore.toFixed(1)}
+                    <Badge
+                      bg={getScoreVariant(
+                        votosByParticipante?.get(model?.IdParticipante)
+                          ?.averageScore,
+                        10
+                      )}
+                    >
+                      {votosByParticipante
+                        ?.get(model?.IdParticipante)
+                        ?.averageScore?.toFixed(1)}
                     </Badge>
                   </td>
                   {JuecesData.map(judge => {
-                    const vote = model.votes.find(v => v.judgeId === judge.IdJuez)
+                    const vote = votosByParticipante
+                      ?.get(model?.IdParticipante)
+                      ?.votes?.find(v => v.IdJuez == judge.IdJuez)
                     return (
                       <td key={judge.IdJuez} className='text-center'>
                         {vote ? (
@@ -239,23 +192,43 @@ function VotacionPage () {
                   })}
                   <td>
                     <div className='d-grid gap-2'>
-                      <Button sm onClick={() => handleIniciar()}>
-                        Iniciar
-                      </Button>
-                      <Button
-                        sm
-                        estilo='warning'
-                        onClick={() => handleDetener()}
-                      >
-                        Detener
-                      </Button>
-                      <Button
-                        estilo='danger'
-                        sm
-                        onClick={() => handleReiniciar()}
-                      >
-                        Reiniciar
-                      </Button>
+                      {(!ParticipanteActivo ||
+                        ParticipanteActivo == model.IdParticipante) && (
+                        <>
+                          {ParticipanteActivo != model.IdParticipante && (
+                            <Button
+                              sm
+                              onClick={() =>
+                                handleIniciar(model.IdParticipante)
+                              }
+                            >
+                              Iniciar
+                            </Button>
+                          )}
+                          {ParticipanteActivo == model.IdParticipante && (
+                            <Button
+                              sm
+                              estilo='warning'
+                              onClick={() =>
+                                handleDetener(model.IdParticipante)
+                              }
+                            >
+                              Detener
+                            </Button>
+                          )}
+                          {ParticipanteActivo != model.IdParticipante && (
+                            <Button
+                              estilo='danger'
+                              sm
+                              onClick={() =>
+                                handleReiniciar(model.IdParticipante)
+                              }
+                            >
+                              Reiniciar
+                            </Button>
+                          )}
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

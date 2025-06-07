@@ -29,7 +29,22 @@ import { dameEventoApi } from '../../services/EventosService'
 import { formatearFechayHora } from '../../Fixes/formatter'
 import { listarMetricaApi } from '../../services/MetricasService'
 import { echo } from '../../config/EchoConfig'
+import { enviarVotacionJuezApi } from '../../services/VotacionService'
+import { Alerta } from '../../functions/alerts'
+import { MENSAJE_DEFAULT } from '../../Fixes/messages'
 
+const calcularEdad = fecha => {
+  const hoy = new Date()
+  const nacimiento = new Date(fecha)
+  let edad = hoy.getFullYear() - nacimiento.getFullYear()
+  const mes = hoy.getMonth() - nacimiento.getMonth()
+
+  if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+    edad--
+  }
+
+  return edad
+}
 export default function VotoJurado () {
   const [currentScreen, setCurrentScreen] = useState('welcome')
   const [Error, setError] = useState(null)
@@ -38,42 +53,47 @@ export default function VotoJurado () {
   const [JuezData, setJuezData] = useState(null)
   const [EventoData, setEventoData] = useState(null)
   const [EstablecimientoData, setEstablecimientoData] = useState(null)
-  const [MetricaData, setMetricaData] = useState(null)
+  const [MetricaData, setMetricaData] = useState([])
   const [Loading, setLoading] = useState(false)
-  const modelData = {
-    name: 'NOMBRE DEL MODELO',
-    edad: '25',
-    description: 'Promotor o lo que haya',
-    category: 'Procesamiento de Lenguaje Natural',
-    metrics: [
-      {
-        id: 'accuracy',
-        name: 'Precisión',
-        description: 'Exactitud en las respuestas generadas'
-      },
-      {
-        id: 'coherence',
-        name: 'Coherencia',
-        description: 'Consistencia lógica en las respuestas'
-      },
-      {
-        id: 'creativity',
-        name: 'Creatividad',
-        description: 'Capacidad de generar contenido original'
-      }
-    ]
-  }
+  const [ParticipanteActivo, setParticipanteActivo] = useState(null)
 
   const handleVote = (metricId, score) => {
     setVotes(prev => ({ ...prev, [metricId]: score }))
   }
 
   const handleSubmit = () => {
-    setCurrentScreen('success')
+    const formattedVotes = Object.entries(votes).map(([metricId, score]) => ({
+      IdMetrica: metricId,
+      Nota: score
+    }))
+
+    const payload = {
+      IdParticipante: ParticipanteActivo.IdParticipante,
+      IdJuez: JuezData.IdJuez,
+      votos: formattedVotes
+    }
+
+    console.log(payload)
+    enviarVotacionJuezApi(payload)
+      .then(res => {
+        setCurrentScreen('success')
+      })
+      .catch(err => {
+        console.log(err)
+        Alerta()
+          .withMini(true)
+          .withTipo('error')
+          .withTitulo('Error al enviar la evaluación')
+          .withMensaje(
+            err?.response?.data?.message
+              ? err.response.data.message
+              : MENSAJE_DEFAULT
+          )
+      })
   }
 
-  const isAllVoted = modelData.metrics.every(
-    metric => votes[metric.id] !== undefined
+  const isAllVoted = MetricaData?.every(
+    metric => votes[metric.IdMetrica] !== undefined
   )
 
   useEffect(() => {
@@ -89,9 +109,20 @@ export default function VotoJurado () {
           setLoading(false)
           return
         }
+
         const channel = echo.channel('evento-' + juez.IdEvento)
+
         channel.listen('VotoModeloIniciado', data => {
-          console.log('Nuevo voto recibido:', data)
+          console.log('Participante recibido desde WebSocket:', data)
+          setVotes({})
+          if (data.accion == 'iniciar') {
+            setParticipanteActivo(data.participante) // <-- Asegúrate que 'participante' venga así desde el backend
+            setCurrentScreen('evaluation')
+          }
+          if (data.accion == 'detener') {
+            setCurrentScreen('welcome')
+            setParticipanteActivo(null) // <-- Asegúrate que 'participante' venga así desde el backend
+          }
         })
 
         setJuezData(juez)
@@ -102,7 +133,6 @@ export default function VotoJurado () {
         ])
 
         setMetricaData(metricRes.data)
-        console.log(metricRes.data)
         const evento = eventRes.data?.[0]
         setEventoData(evento)
 
@@ -122,18 +152,6 @@ export default function VotoJurado () {
 
     cargarDatos()
   }, [token])
-
-  useEffect(() => {
-    const channel = echo.channel('test-channel')
-    console.log('Conectado al canal de votación')
-    channel.listen('TestEvent', data => {
-      console.log('Nuevo voto recibido:', data)
-    })
-
-    return () => {
-      echo.leaveChannel('test-channel')
-    }
-  }, [])
 
   if (Error) {
     return <div>Error: {Error}</div>
@@ -239,7 +257,9 @@ export default function VotoJurado () {
             <Button
               variant='primary'
               className='w-100 fw-bold'
-              onClick={() => setCurrentScreen('evaluation')}
+              onClick={() => {
+                console.log('welcome')
+              }}
             >
               Espere a que el moderador inicie la votacion{' '}
               <FontAwesomeIcon icon={faHourglassStart} className='ms-2' />
@@ -271,25 +291,26 @@ export default function VotoJurado () {
                     size='small'
                   />
                   <Typography variant='caption'>
-                    {Object.keys(votes).length}/{modelData.metrics.length}
+                    {Object.keys(votes).length}/{MetricaData.length}
                   </Typography>
                 </Box>
               }
               subheader={
-                <Typography variant='h6'>
-                  {modelData.name} - {modelData?.edad} años
+                <Typography className='mt-2' variant='h6'>
+                  {ParticipanteActivo?.ApelName} -{' '}
+                  {calcularEdad(ParticipanteActivo?.FechaNacimiento)} años
                 </Typography>
               }
             />
-            <CardContent>
+            <CardContent className='mt-0 pt-3'>
               <LinearProgress
                 variant='determinate'
-                value={
-                  (Object.keys(votes).length / modelData.metrics.length) * 100
-                }
+                value={(Object.keys(votes).length / MetricaData.length) * 100}
                 sx={{ mb: 2 }}
               />
-              <Typography variant='body2'>{modelData.description}</Typography>
+              <Typography variant='body2'>
+                {ParticipanteActivo?.Promotor ?? ''}
+              </Typography>
             </CardContent>
           </Card>
 
@@ -393,14 +414,14 @@ export default function VotoJurado () {
               <Typography variant='subtitle2'>
                 Resumen de tu evaluación:
               </Typography>
-              {modelData.metrics.map(metric => (
+              {MetricaData?.map(metric => (
                 <Box
                   key={metric.id}
                   sx={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <Typography variant='body2'>{metric.name}:</Typography>
+                  <Typography variant='body2'>{metric.Metrica}:</Typography>
                   <Typography variant='body2' fontWeight='bold'>
-                    {votes[metric.id]}/10
+                    {votes[metric.IdMetrica]}/10
                   </Typography>
                 </Box>
               ))}
@@ -411,8 +432,7 @@ export default function VotoJurado () {
               variant='outline-secondary'
               className='w-100'
               onClick={() => {
-                setCurrentScreen('welcome')
-                setVotes({})
+                console.log('welcome')
               }}
             >
               Espere a que el moderador inicie la votacion

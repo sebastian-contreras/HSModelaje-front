@@ -174,6 +174,89 @@ export default function VotoJurado () {
     )
   }
 
+    if (EventoData?.Votacion === 'F') {
+    return (
+      <Box className='min-vh-100 d-flex align-items-center justify-content-center bg-light p-3'>
+        <Card sx={{ width: '100%', maxWidth: 400, textAlign: 'center', p: 2 }}>
+          <CardHeader
+            avatar={
+              <Box
+                sx={{
+                  width: 64,
+                  height: 64,
+                  bgcolor: 'primary.main',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mx: 'auto'
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faStar}
+                  style={{ width: '32px', height: '32px' }}
+                />
+              </Box>
+            }
+            title={
+              <Typography variant='h6'>
+                ¡Bienvenido al {EventoData?.Evento}!
+              </Typography>
+            }
+            subheader='Evaluación de Modelos'
+          />
+          <CardContent>
+            <Box sx={{ textAlign: 'left', mb: 2 }}>
+              <Typography
+                variant='body2'
+                sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+              >
+                <FontAwesomeIcon icon={faCalendar} className='me-2' />{' '}
+                {formatearFechayHora(EventoData?.FechaProbableInicio)}
+              </Typography>
+              <Typography
+                variant='body2'
+                sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+              >
+                <FontAwesomeIcon icon={faLocationDot} className='me-2' />{' '}
+                {EstablecimientoData?.Establecimiento} -{' '}
+                {EstablecimientoData?.Ubicacion}
+              </Typography>
+              <Typography
+                variant='body2'
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                <FontAwesomeIcon icon={faPerson} className='me-2' />{' '}
+                {JuezData?.ApelName}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                bgcolor: 'primary.light',
+                p: 2,
+                pt: 1,
+                borderRadius: 2,
+                textAlign: 'left'
+              }}
+            >
+              <Typography
+                variant='body2'
+                mt={1}
+                color='primary.contrastText'
+                fontWeight={'bold'}
+              >
+                La votacion ha finalizado, Muchas gracias por su participacion
+              </Typography>
+              
+            </Box>
+          </CardContent>
+         
+        </Card>
+      </Box>
+    )
+  }
+
+
   if (currentScreen === 'welcome') {
     return (
       <Box className='min-vh-100 d-flex align-items-center justify-content-center bg-light p-3'>

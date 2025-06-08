@@ -23,6 +23,7 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.13",
+    "html5-qrcode": "^2.3.8",
     "laravel-echo": "^2.1.4",
     "material-react-table": "^3.0.1",
     "pusher-js": "^8.4.0",

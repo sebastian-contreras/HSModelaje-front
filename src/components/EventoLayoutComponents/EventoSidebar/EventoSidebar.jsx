@@ -28,7 +28,7 @@ function EventoSidebar () {
       },
       { name: 'Gastos', link: BASE_URL + '/gastos', icon: 'fa-minus' },
       { name: 'Votacion', separador: true },
-      { name: 'Votacion', link: BASE_URL + '/votacion', icon: 'fa-comment' },
+      { name: 'Votacion', link: BASE_URL + '/votacion', icon: 'fa-comment', hidden: evento?.Votacion == 'N' },
       {
         name: 'Participantes',
         link: BASE_URL + '/participantes',
@@ -45,7 +45,8 @@ function EventoSidebar () {
     link = '',
     separador = false,
     subruta = null,
-    icon = ''
+    icon = '',
+    hidden=false
   }) => {
     const isActive = location.pathname == link
     const firstRoute = location.pathname.split('/')
@@ -54,7 +55,7 @@ function EventoSidebar () {
     const subSectionActive = firstRoute[1] == test[1]
     if (separador) {
       return (
-        <li className='nav-section'>
+        <li className='nav-section' hidden={hidden}>
           <span className='sidebar-mini-icon'>
             <i className='fa fa-ellipsis-h'></i>
           </span>
@@ -68,6 +69,7 @@ function EventoSidebar () {
           className={`${styles['nav-item']} nav-item ${
             isActive ? 'active' : ''
           }`}
+          hidden={hidden}
         >
           <Link to={link}>
             <i className={`${styles['link-color']} fas ${icon}`}></i>
@@ -78,7 +80,7 @@ function EventoSidebar () {
     }
     if (subruta) {
       return (
-        <li className={`${styles['nav-item']} nav-item`}>
+        <li className={`${styles['nav-item']} nav-item`} hidden={hidden}>
           <a
             data-bs-toggle='collapse'
             aria-expanded={subSectionActive}

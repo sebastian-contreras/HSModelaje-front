@@ -7,6 +7,17 @@ export async function dameEntradaApi (id) {
   return response.data
 }
 
+export async function dameEntradaTokenApi (token) {
+  console.log(token)
+  const response = await axios.get(`${API_URL}/api/entradas/dame-token`, {
+    params: {
+      pToken: token
+    }
+  })
+  console.log(response)
+  return response.data
+}
+
 export async function listarEntradaApi (pIdEvento) {
   const response = await axios.get(`${API_URL}/api/entradas/` + pIdEvento)
   console.log(response)
@@ -14,7 +25,7 @@ export async function listarEntradaApi (pIdEvento) {
 }
 
 export async function storeEntradaApi (item) {
-  const response = await axios.post(`${API_URL}/api/entradas`, item,{
+  const response = await axios.post(`${API_URL}/api/entradas`, item, {
     headers: {
       'Content-Type': 'multipart/form-data' // Especificar el tipo de contenido
     }

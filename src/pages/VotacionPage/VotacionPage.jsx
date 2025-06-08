@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Badge, Table } from 'react-bootstrap'
+import { Alert, Badge, Table } from 'react-bootstrap'
 import Button from '../../components/Button/Button'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
 import SectionPage from '../../components/SectionPage/SectionPage'
@@ -8,6 +8,8 @@ import { listarJuezApi } from '../../services/JuecesService'
 import { buscarParticipanteApi } from '../../services/ParticipantesService'
 import {
   DetenerVotacionModeloApi,
+  finalizarVotacionApi,
+  iniciarVotacionApi,
   InicioVotacionModeloApi,
   listarVotacionApi,
   reiniciarVotacionApi
@@ -17,8 +19,7 @@ import { MENSAJE_DEFAULT } from '../../Fixes/messages'
 import { echo } from '../../config/EchoConfig'
 
 function VotacionPage () {
-  const { evento } = useEvento() // Usa el contexto
-
+  const { evento, refresh } = useEvento() // Usa el contexto
   const [JuecesData, setJuecesData] = useState([])
   const [ParticipantesData, setParticipantesData] = useState([])
   const [Votos, setVotos] = useState([])
@@ -70,7 +71,7 @@ function VotacionPage () {
   }
 
   const handleReiniciar = id => {
-    reiniciarVotacionApi(id,evento?.IdEvento)
+    reiniciarVotacionApi(id, evento?.IdEvento)
       .then(res => {
         setParticipanteActivo(null)
         Alerta()
@@ -125,116 +126,184 @@ function VotacionPage () {
     return 'danger'
   }
 
+  const iniciarVotacion = async () => {
+    iniciarVotacionApi(evento.IdEvento)
+      .then(res => {
+        refresh()
+        Alerta()
+          .withMini(true)
+          .withTipo('success')
+          .withTitulo('Votación iniciada exitosamente')
+          .build()
+      })
+      .catch(err => {
+        Alerta()
+          .withMini(true)
+          .withTipo('error')
+          .withTitulo('Error al iniciar votación')
+          .withMensaje(
+            err?.response?.data?.message
+              ? err.response.data.message
+              : MENSAJE_DEFAULT
+          )
+      })
+  }
+
+  const finalizarVotacion = async () => {
+    finalizarVotacionApi(evento.IdEvento)
+      .then(res => {
+        refresh()
+        Alerta()
+          .withMini(true)
+          .withTipo('success')
+          .withTitulo('Votación finalizada exitosamente')
+          .build()
+      })
+      .catch(err => {
+        Alerta()
+          .withMini(true)
+          .withTipo('error')
+          .withTitulo('Error al finalzar votación')
+          .withMensaje(
+            err?.response?.data?.message
+              ? err.response.data.message
+              : MENSAJE_DEFAULT
+          )
+      })
+  }
+
   return (
     <>
       <div>
         <HeaderPageComponent
-          title='Metricas'
-          items={[{ name: 'metricas', link: '/metricas' }]}
+          title='Votacion'
+          items={[{ name: 'votacion', link: '/votacion' }]}
         />
-        <SectionPage header={'Tabla de Votacion'}>
-          <Table responsive striped bordered hover>
-            <thead>
-              <tr>
-                <th>Modelo</th>
-                <th>Promedio</th>
-                {JuecesData.map(j => (
-                  <th key={j.IdJuez} className='text-center'>
-                    <div className='fw-bold'>{j.ApelName}</div>
-                  </th>
-                ))}
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ParticipantesData.map(model => (
-                <tr key={model?.IdParticipante}>
-                  <td>
-                    <strong>{model?.ApelName}</strong>
-                  </td>
-                  <td className='text-center'>
-                    <Badge
-                      bg={getScoreVariant(
-                        votosByParticipante?.get(model?.IdParticipante)
-                          ?.averageScore,
-                        10
-                      )}
-                    >
-                      {votosByParticipante
-                        ?.get(model?.IdParticipante)
-                        ?.averageScore?.toFixed(1)}
-                    </Badge>
-                  </td>
-                  {JuecesData.map(judge => {
-                    const vote = votosByParticipante
-                      ?.get(model?.IdParticipante)
-                      ?.votes?.find(v => v.IdJuez == judge.IdJuez)
-                    return (
-                      <td key={judge.IdJuez} className='text-center'>
-                        {vote ? (
-                          vote.metrics.map((m, idx) => (
-                            <div
-                              key={idx}
-                              className='d-flex justify-content-between'
-                            >
-                              <small className='text-muted'>{m.name}</small>
-                              <Badge bg={getScoreVariant(m.score, m.maxScore)}>
-                                {m.score}
-                              </Badge>
-                            </div>
-                          ))
-                        ) : (
-                          <span className='text-muted'>Sin votar</span>
-                        )}
-                      </td>
-                    )
-                  })}
-                  <td>
-                    <div className='d-grid gap-2'>
-                      {(!ParticipanteActivo ||
-                        ParticipanteActivo == model.IdParticipante) && (
-                        <>
-                          {ParticipanteActivo != model.IdParticipante && (
-                            <Button
-                              sm
-                              onClick={() =>
-                                handleIniciar(model.IdParticipante)
-                              }
-                            >
-                              Iniciar
-                            </Button>
-                          )}
-                          {ParticipanteActivo == model.IdParticipante && (
-                            <Button
-                              sm
-                              estilo='warning'
-                              onClick={() =>
-                                handleDetener(model.IdParticipante)
-                              }
-                            >
-                              Detener
-                            </Button>
-                          )}
-                          {ParticipanteActivo != model.IdParticipante && (
-                            <Button
-                              estilo='danger'
-                              sm
-                              onClick={() =>
-                                handleReiniciar(model.IdParticipante)
-                              }
-                            >
-                              Reiniciar
-                            </Button>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </td>
+        {evento?.Votacion == 'N' ? (
+          <Alert variant='warning'>
+            <Alert.Heading>El evento no tiene votacion</Alert.Heading>
+            <p>El evento fue configurado sin activar la votación</p>
+          </Alert>
+        ) : (
+          <SectionPage header={'Tabla de Votacion'}>
+            <div className='d-flex gap-3 mb-3'>
+              {evento?.Votacion == 'S' && (
+                <Button onClick={iniciarVotacion} estilo='primary' lg>
+                  Iniciar Votacion
+                </Button>
+              )}
+              {evento?.Votacion == 'P' && (
+                <Button onClick={finalizarVotacion} estilo='secondary' lg>
+                  Finalizar Votacion
+                </Button>
+              )}
+            </div>
+            <Table responsive striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Modelo</th>
+                  <th>Promedio</th>
+                  {JuecesData.map(j => (
+                    <th key={j.IdJuez} className='text-center'>
+                      <div className='fw-bold'>{j.ApelName}</div>
+                    </th>
+                  ))}
+
+                  <th hidden={evento?.Votacion != 'P'}>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </SectionPage>
+              </thead>
+              <tbody>
+                {ParticipantesData.map(model => (
+                  <tr key={model?.IdParticipante}>
+                    <td>
+                      <strong>{model?.ApelName}</strong>
+                    </td>
+                    <td className='text-center'>
+                      <Badge
+                        bg={getScoreVariant(
+                          votosByParticipante?.get(model?.IdParticipante)
+                            ?.averageScore,
+                          10
+                        )}
+                      >
+                        {votosByParticipante
+                          ?.get(model?.IdParticipante)
+                          ?.averageScore?.toFixed(1)}
+                      </Badge>
+                    </td>
+                    {JuecesData.map(judge => {
+                      const vote = votosByParticipante
+                        ?.get(model?.IdParticipante)
+                        ?.votes?.find(v => v.IdJuez == judge.IdJuez)
+                      return (
+                        <td key={judge.IdJuez} className='text-center'>
+                          {vote ? (
+                            vote.metrics.map((m, idx) => (
+                              <div
+                                key={idx}
+                                className='d-flex justify-content-between'
+                              >
+                                <small className='text-muted'>{m.name}</small>
+                                <Badge
+                                  bg={getScoreVariant(m.score, m.maxScore)}
+                                >
+                                  {m.score}
+                                </Badge>
+                              </div>
+                            ))
+                          ) : (
+                            <span className='text-muted'>Sin votar</span>
+                          )}
+                        </td>
+                      )
+                    })}
+                    <td hidden={evento?.Votacion != 'P'}>
+                      <div className='d-grid gap-2'>
+                        {(!ParticipanteActivo ||
+                          ParticipanteActivo == model.IdParticipante) && (
+                          <>
+                            {ParticipanteActivo != model.IdParticipante && (
+                              <Button
+                                sm
+                                onClick={() =>
+                                  handleIniciar(model.IdParticipante)
+                                }
+                              >
+                                Iniciar
+                              </Button>
+                            )}
+                            {ParticipanteActivo == model.IdParticipante && (
+                              <Button
+                                sm
+                                estilo='warning'
+                                onClick={() =>
+                                  handleDetener(model.IdParticipante)
+                                }
+                              >
+                                Detener
+                              </Button>
+                            )}
+                            {ParticipanteActivo != model.IdParticipante && (
+                              <Button
+                                estilo='danger'
+                                sm
+                                onClick={() =>
+                                  handleReiniciar(model.IdParticipante)
+                                }
+                              >
+                                Reiniciar
+                              </Button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </SectionPage>
+        )}
       </div>
     </>
   )

@@ -9,6 +9,7 @@ function Button ({
   disabled = false,
   style = {},
   lg = false,
+  className = '',
   children
 }) {
   const buttonClasses = {
@@ -31,7 +32,7 @@ function Button ({
       disabled={disabled || loading}
       className={`${buttonClasses[estilo]} ${sm ? 'btn-sm' : ''} ${
         lg ? 'btn-lg' : ''
-      }`}
+      } ${className}`}
     >
       <Spinner hidden={!loading} size="sm" animation="border" className="me-2" />
       {children}

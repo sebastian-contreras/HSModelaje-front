@@ -68,12 +68,12 @@ export default function VotoJurado () {
     }))
 
     const payload = {
+      IdEvento: EventoData.IdEvento,
       IdParticipante: ParticipanteActivo.IdParticipante,
       IdJuez: JuezData.IdJuez,
       votos: formattedVotes
     }
 
-    console.log(payload)
     enviarVotacionJuezApi(payload)
       .then(res => {
         setCurrentScreen('success')
@@ -99,6 +99,8 @@ export default function VotoJurado () {
   useEffect(() => {
     if (!token) return
 
+    let channel
+
     const cargarDatos = async () => {
       setLoading(true)
       try {
@@ -110,18 +112,18 @@ export default function VotoJurado () {
           return
         }
 
-        const channel = echo.channel('evento-' + juez.IdEvento)
+        channel = echo.channel('evento-' + juez.IdEvento)
 
         channel.listen('VotoModeloIniciado', data => {
           console.log('Participante recibido desde WebSocket:', data)
-          setVotes({})
-          if (data.accion == 'iniciar') {
-            setParticipanteActivo(data.participante) // <-- Asegúrate que 'participante' venga así desde el backend
+          if (data.accion === 'iniciar') {
+            setVotes({})
+            setParticipanteActivo(data.participante)
             setCurrentScreen('evaluation')
-          }
-          if (data.accion == 'detener') {
-            setCurrentScreen('welcome')
-            setParticipanteActivo(null) // <-- Asegúrate que 'participante' venga así desde el backend
+          } else if (data.accion === 'detener') {
+            if (currentScreen == 'evaluation') {
+              setCurrentScreen('welcome')
+            }
           }
         })
 
@@ -140,8 +142,6 @@ export default function VotoJurado () {
           const estRes = await dameEstablecimientoApi(evento.IdEstablecimiento)
           setEstablecimientoData(estRes.data?.[0])
         }
-
-        setCurrentScreen('welcome')
       } catch (err) {
         console.error(err)
         setError('Error al obtener los datos del juez')
@@ -151,7 +151,14 @@ export default function VotoJurado () {
     }
 
     cargarDatos()
-  }, [token])
+
+    return () => {
+      if (channel) {
+        channel.stopListening('VotoModeloIniciado')
+        echo.leave('evento-' + EventoData?.IdEvento)
+      }
+    }
+  }, [token, EventoData?.IdEvento])
 
   if (Error) {
     return <div>Error: {Error}</div>

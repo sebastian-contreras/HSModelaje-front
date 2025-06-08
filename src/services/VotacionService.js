@@ -32,10 +32,11 @@ export async function enviarVotacionJuezApi (data) {
   return response.data
 }
 
-export async function reiniciarVotacionApi (data) {
+export async function reiniciarVotacionApi (data,idEvento) {
   const response = await axios.get(`${API_URL}/api/votos/reiniciar-voto`,{
     params: {
-      pIdParticipante: data
+      pIdParticipante: data,
+      pIdEvento: idEvento,
     }
   })
   return response.data

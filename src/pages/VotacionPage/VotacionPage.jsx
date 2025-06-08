@@ -70,7 +70,7 @@ function VotacionPage () {
   }
 
   const handleReiniciar = id => {
-    reiniciarVotacionApi(id)
+    reiniciarVotacionApi(id,evento?.IdEvento)
       .then(res => {
         setParticipanteActivo(null)
         Alerta()
@@ -108,9 +108,8 @@ function VotacionPage () {
     })
     // Conectar al canal de votación
     const channel = echo.channel('evento-' + evento?.IdEvento)
-    console.log('Conectado al canal de votación')
-    channel.listen('TestEvent', data => {
-      console.log('Nuevo voto recibido:', data)
+    channel.listen('ListadoVotosParticipantes', data => {
+      setVotos(data.votos)
     })
 
     return () => {

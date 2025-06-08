@@ -17,6 +17,7 @@ import PasarelaPage from './pages/PasarelaPage/PasarelaPage'
 import ParticipantesPage from './pages/ParticipantesPage/ParticipantesPage'
 import VotacionPage from './pages/VotacionPage/VotacionPage'
 import VotoJurado from './pages/VotoJurado/VotoJurado'
+import GuardiaPage from './pages/GuardiaPage/GuardiaPage'
 
 const RoutesComponent = () => (
   <Routes>
@@ -24,6 +25,7 @@ const RoutesComponent = () => (
     <Route path='/login' element={<Login />} />
     <Route path='/voto-jurado/:token' element={<VotoJurado />} />
     <Route path='/pasarela/:idTitulo' element={<PasarelaPage />} />
+    <Route path='/guardia' element={<GuardiaPage />} />
     <Route element={<GeneralLayout />}>
       <Route path='/' element={<DashboardPage />} />
       <Route path='/personas' element={<PersonasPage />} />

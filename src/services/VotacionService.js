@@ -41,3 +41,21 @@ export async function reiniciarVotacionApi (data,idEvento) {
   })
   return response.data
 }
+
+export async function iniciarVotacionApi (idEvento) {
+  const response = await axios.get(`${API_URL}/api/votos/iniciar`,{
+    params: {
+      pIdEvento: idEvento,
+    }
+  })
+  return response.data
+}
+
+export async function finalizarVotacionApi (idEvento) {
+  const response = await axios.get(`${API_URL}/api/votos/finalizar`,{
+    params: {
+      pIdEvento: idEvento,
+    }
+  })
+  return response.data
+}

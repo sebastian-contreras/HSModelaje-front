@@ -6,6 +6,7 @@ import { Alerta } from "../../../functions/alerts"
 import { MENSAJE_DEFAULT } from "../../../Fixes/messages"
 import GenerateInputs from "../../GenerateInputs/GenerateInputs"
 import Button from "../../Button/Button"
+import { Autocomplete } from "@mui/material"
 
 function FormUsers ({ dataform, onlyView, modificar, closeModal, refresh }) {
   const { control, errors, reset, handleSubmit } = useForm()
@@ -49,6 +50,7 @@ function FormUsers ({ dataform, onlyView, modificar, closeModal, refresh }) {
     {
       name: `Email`,
       control: control,
+      Autocomplete:false,
       label: 'email',
       type: 'text',
       error: errors?.Email,
@@ -58,6 +60,7 @@ function FormUsers ({ dataform, onlyView, modificar, closeModal, refresh }) {
       name: `Contrasena`,
       control: control,
       label: 'Contraseña',
+      Autocomplete:false,
       type: 'password',
       error: errors?.Contrasena,
       readOnly: onlyView || modificar

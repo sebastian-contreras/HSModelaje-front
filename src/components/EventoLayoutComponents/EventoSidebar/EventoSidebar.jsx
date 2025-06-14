@@ -125,19 +125,17 @@ function EventoSidebar () {
 
   return (
     <aside className={`${styles.sidebar} sidebar`} data-background-color='dark'>
-      <div className='sidebar-logo d-block'>
+      <div className=' d-block'>
         {/* Logo Header  */}
-        <div className='text-center'>
+        <div className='text-center mt-3'>
           <img
-            src='/img/logo/logo_white.png'
-            alt='navbar brand'
-            className='mt-2'
+            src='/logos-web/logo-color-blanco.png'
             onClick={() => navigate('/eventos')}
-            height='70'
+            height='150'
           />
         </div>
         <div
-          className={`${styles['logo-header']} text-center  py-5  w-100 justify-content-center mt-5`}
+          className={`${styles['logo-header']} text-center  py-5 mt-3  w-100 justify-content-center`}
           data-background-color='dark'
         >
           <p className='fw-bold text-white mb-0 fs-5 mt-0'>Evento</p>

@@ -20,7 +20,7 @@ import {
   LinearProgress,
   Typography
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Badge, Button, Spinner } from 'react-bootstrap'
 import { dameEstablecimientoApi } from '../../services/EstablecimientosService'
 import { useParams } from 'react-router-dom'
@@ -56,6 +56,11 @@ export default function VotoJurado () {
   const [MetricaData, setMetricaData] = useState([])
   const [Loading, setLoading] = useState(false)
   const [ParticipanteActivo, setParticipanteActivo] = useState(null)
+  const currentScreenRef = useRef(currentScreen)
+  useEffect(() => {
+    currentScreenRef.current = currentScreen
+  }, [currentScreen])
+
 
   const handleVote = (metricId, score) => {
     setVotes(prev => ({ ...prev, [metricId]: score }))
@@ -121,7 +126,7 @@ export default function VotoJurado () {
             setParticipanteActivo(data.participante)
             setCurrentScreen('evaluation')
           } else if (data.accion === 'detener') {
-            if (currentScreen == 'evaluation') {
+            if (currentScreenRef.current  == 'evaluation') {
               setCurrentScreen('welcome')
             }
           }

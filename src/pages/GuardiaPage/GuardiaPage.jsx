@@ -28,6 +28,7 @@ import {
 } from '../../services/EntradasService'
 import { Alerta } from '../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../Fixes/messages'
+import { EstadosEntradasOptions, getLabelByValue } from '../../Fixes/fixes'
 
 export default function GuardiaPage () {
   const [scanner, setScanner] = useState(null)
@@ -243,26 +244,37 @@ export default function GuardiaPage () {
               Entrada detectada:
             </small>
             <div
-              className='bg-light p-3 rounded'
+              className='text-center bg-light p-3 rounded'
               style={{ wordBreak: 'break-word' }}
             >
               {/* {result} */}
-              <p>DNI: {result?.DNI}</p>
-              <p>Nombre: {result?.ApelName}</p>
-              <p>Cantidad: {result?.Cantidad}</p>
-              <p>Estado: {result?.EstadoEnt}</p>
+              <p className='fs-5 my-0 text-dark'>
+                <span className='fw-bold'>DNI:</span> {result?.DNI}
+              </p>
+              <p className='fs-5 my-0 text-dark'>
+                <span className='fw-bold'>Nombre:</span> {result?.ApelName}
+              </p>
+              <p className='fs-5 my-0 text-dark'>
+                <span className='fw-bold'>Cantidad:</span> {result?.Cantidad}
+              </p>
+              <p className='fs-5 my-0 text-dark'>
+                <span className='fw-bold'>Estado:</span>{' '}
+                {getLabelByValue(EstadosEntradasOptions, result?.EstadoEnt)}
+              </p>
             </div>
             {result?.EstadoEnt == 'A' ? (
-              <Alert variant='success' className='mt-3'>
-                <Alert.Heading>Entrada Valida</Alert.Heading>
+              <Alert variant='success' className='mt-3 text-center'>
+                <Alert.Heading className='fw-semibold'>
+                  Entrada Valida
+                </Alert.Heading>
                 <p>La entrada es valida y fue registrada exitosamente.</p>
               </Alert>
             ) : (
               ''
             )}
             {result?.EstadoEnt == 'U' ? (
-              <Alert variant='warning' className='mt-3'>
-                <Alert.Heading>
+              <Alert variant='info' className='mt-3'>
+                <Alert.Heading className='fw-semibold text-center'>
                   La entrada ya fue marcada como utilizada
                 </Alert.Heading>
               </Alert>

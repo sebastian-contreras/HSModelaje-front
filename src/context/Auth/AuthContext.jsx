@@ -21,14 +21,12 @@ export const AuthProvider = ({ children }) => {
   }
 
   const [token, setToken] = useState(null)
-  const [user, setUser] = useState(null)
+const [user, setUser] = useState(getUserFromStorage()) // <-- Cambia esto
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const storedToken = getTokenFromStorage()
-    const storedUser = getUserFromStorage()
     setToken(storedToken)
-    setUser(storedUser)
     setLoading(false)
   }, [])
 

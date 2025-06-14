@@ -60,9 +60,9 @@ function Login () {
                 <div className="card-body p-3 p-md-4 p-lg-5 mx-md-4">
                   <div className="text-center">
                     <img
-                      src='/img/logo/logo_light.png'
+                      src='/logos-web/logo-color-completo.png' 
                       alt=''
-                      style={{ maxWidth: '200px', height: 'auto' }}
+                      style={{ maxWidth: '250px', height: 'auto' }}
                       className='img-fluid mb-3'
                     />
                     <h4 className='mb-3'>Inicio de sesion</h4>

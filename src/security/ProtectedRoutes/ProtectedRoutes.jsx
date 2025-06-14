@@ -1,18 +1,17 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import  { useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/Auth/AuthContext';
 
-const ProtectedRoute = ({ children }) => {
-  const navigate = useNavigate();
+const ProtectedRoute = ({ allowedRoles=[], children, redirectTo = '/login' }) => {
+    const { user,logout } = useAuth()
+    console.log(user)
+  
+  if (!allowedRoles.includes(user?.role)) {
+    // Puedes personalizar a dónde redirigir si no tiene permiso
+    return <Navigate to={redirectTo} replace />;
+  }
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    
-    // Si no hay token, redirige al login
-    if (!token) {
-      navigate('/login'); // Cambia '/login' a la ruta de tu página de inicio de sesión
-    }
-  }, [navigate]);
-
+  if (!user) return <Navigate to={redirectTo} replace />
   return (
     <>
       {children} {/* Renderiza los hijos si hay un token */}

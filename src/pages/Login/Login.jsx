@@ -7,8 +7,10 @@ import { login } from '../../services/LoginService'
 import Button from '../../components/Button/Button'
 
 function Login () {
+  const { logout } = useAuth()
   const [usuario, setUsuario] = useState('')
   const [contrasena, setContrasena] = useState('')
+  const [UsuarioEstado, setUsuarioEstado] = useState(null)
   const [codigo2fa, setCodigo2fa] = useState('')
   const [loading, setLoading] = useState(false)
   const { token, setToken, user, setUser, login: loginState } = useAuth()
@@ -22,10 +24,10 @@ function Login () {
 
     await login(usuario, contrasena, codigo2fa)
       .then(response => {
-        console.log('skdjfksdjfdskj')
-        console.log(response.data.token)
         localStorage.setItem('token', response.data.token)
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        setUsuarioEstado(response.data.user)
+        console.log(response.data.user)
         loginState(response.data.user)
         Swal.mixin({
           toast: true,
@@ -38,7 +40,6 @@ function Login () {
             toast.addEventListener('mouseleave', Swal.resumeTimer)
           }
         })
-        // navigate('/') // Redirige a /servicios
         console.log(response)
       })
       .catch(error => {
@@ -51,29 +52,27 @@ function Login () {
 
   return !token ? (
     <>
-      <section
-        className=' gradient-form ctn-general-login'
-        style={{ backgroundColor: '#eee', height: '100vh' }}
-      >
-        <div className='container py-5 ' style={{ width: '35%' }}>
-          <div className='row d-flex justify-content-center align-items-center '>
-            <div className='card rounded-3 text-black'>
-              <div className='row g-0'>
-                <div className='card-body p-md-5 mx-md-4'>
-                  <div className='text-center'>
+      <section className="gradient-form ctn-general-login" style={{ backgroundColor: '#eee', minHeight: '100vh' }}>
+        <div className="container py-3 py-md-5">
+          <div className="row d-flex justify-content-center align-items-center h-100">
+            <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+              <div className="card rounded-3 text-black">
+                <div className="card-body p-3 p-md-4 p-lg-5 mx-md-4">
+                  <div className="text-center">
                     <img
                       src='/img/logo/logo_light.png'
                       alt=''
-                      className='logo-login'
+                      style={{ maxWidth: '200px', height: 'auto' }}
+                      className='img-fluid mb-3'
                     />
                     <h4 className='mb-3'>Inicio de sesion</h4>
-                    <h5 className='mb-5 pb-1 fw-light'>
+                    <h5 className='mb-4 mb-md-5 pb-1 fw-light'>
                       Ingrese sus credenciales para iniciar sesión
                     </h5>
                   </div>
 
                   <form onSubmit={handleSubmit}>
-                    <div data-mdb-input-init className='form-outline mb-2'>
+                    <div className='form-outline mb-3'>
                       <label className='form-label fw-semibold mt-1 ms-1'>
                         Direccion de email
                       </label>
@@ -85,14 +84,13 @@ function Login () {
                           setBadCredentials(false)
                         }}
                         className={`form-control`}
-                        // placeholder=" "
                       />
                     </div>
                     {errors.usuario && (
                       <div className='invalid-feedback'>{errors.usuario}</div>
                     )}
 
-                    <div data-mdb-input-init className='form-outline mb-2'>
+                    <div className='form-outline mb-3'>
                       <label className='form-label fw-semibold mt-1 ms-1'>
                         Contraseña
                       </label>
@@ -107,7 +105,6 @@ function Login () {
                       />
                     </div>
 
-                   
                     <Alert
                       show={badCredentials}
                       className='text-center'
@@ -115,27 +112,20 @@ function Login () {
                     >
                       {badCredentials}
                     </Alert>
-                    <div className='text-center pt-1 mb-1 pb-1'>
+                    <div className='text-center pt-1 mb-3 pb-1'>
                       <Button
                         lg
                         type='submit'
                         estilo='secondary'
-                        style={{ width: '55%' }}
+                        className='w-100 w-md-55'
                       >
                         {loading ? 'Enviando...' : 'Iniciar'}
                       </Button>
                     </div>
                   </form>
-                  <div
-                    style={{
-                      width: '100%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      textAlign: 'center'
-                    }}
-                  >
-                    <p className='btn-text mt-3'>¿Olvidaste tu contraseña?</p>
-                    <p className='btn-text mt-3'>¿Olvidaste tu usuario?</p>
+                  <div className='text-center'>
+                    <p className='btn-text mt-3 mb-2'>¿Olvidaste tu contraseña?</p>
+                    <p className='btn-text'>¿Olvidaste tu usuario?</p>
                   </div>
                 </div>
               </div>
@@ -144,9 +134,12 @@ function Login () {
         </div>
       </section>
     </>
+  ) : UsuarioEstado?.role == 'A' || UsuarioEstado?.role == 'M' ? (
+    <Navigate to='/eventos' replace={true} />
+  ) : UsuarioEstado?.role == 'G' ? (
+    <Navigate to='/guardia' replace={true} />
   ) : (
-    
-    <Navigate to='/' replace={true} />
+    logout()
   )
 }
 

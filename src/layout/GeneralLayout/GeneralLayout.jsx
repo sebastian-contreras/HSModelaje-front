@@ -61,7 +61,6 @@ function GeneralLayout ({ tipo = 'ADMIN' }) {
   }, [tipo, id, setEvento, navigate,evento])
 
   return (
-    <ProtectedRoute>
       <body>
         <div className='wrapper'>
           <Collapse in={openSidebar} orientation='horizontal'>
@@ -88,7 +87,6 @@ function GeneralLayout ({ tipo = 'ADMIN' }) {
           </div>
         </div>
       </body>
-    </ProtectedRoute>
   )
 }
 

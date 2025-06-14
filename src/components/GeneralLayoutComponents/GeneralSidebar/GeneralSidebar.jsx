@@ -6,13 +6,13 @@ import { Link, useLocation } from 'react-router-dom'
 function GeneralSidebar () {
   const location = useLocation();
   const rutas = useMemo(()=>[
-    { name: 'Dashboard', link: '/', icon: 'fa-home' },
+    // { name: 'Dashboard', link: '/', icon: 'fa-home' },
     { name: 'Secciones', separador: true },
-    // { name: 'Personas', link: '/personas', icon: 'fa-user' },
     { name: 'Usuarios', link: '/usuarios', icon: 'fa-user-circle' },
     { name: 'Eventos', link: '/eventos', icon: 'fa-calendar' },
     { name: 'Establecimientos', link: '/establecimientos', icon: 'fa-house' },
     { name: 'Modelos', link: '/modelos', icon: 'fa-person' },
+    { name: 'Verificar Entrada', link: '/guardia', icon: 'fa-check-to-slot' }, 
    
   ],[])
 

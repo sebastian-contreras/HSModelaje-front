@@ -67,21 +67,20 @@ function GeneralSidebar () {
   }
   return (
     <aside className='sidebar' data-background-color='dark'>
-      <div className='sidebar-logo d-block'>
+      <div className='mt-4 d-block'>
         {/* Logo Header  */}
-        <div className='logo-header py-5 d-flex w-100 justify-content-center mt-5' data-background-color='dark'>
+        <div className=' d-flex w-100 justify-content-center' data-background-color='dark'> 
             <img
-              src='/img/logo/logo_white.png'
+              src='/logos-web/logo-color-completo.png'
               alt='navbar brand'
-              className='navbar-brand'
-              height='100'
+              height='150'
             />
         </div>
         {/* End Logo Header */}
       </div>
       <div className='scrollbar scrollbar-inner d-block'>
         <div className=' sidebar-content'>
-          <ul className='pt-3 nav nav-secondary'>
+          <ul className='nav nav-secondary'>
             {rutas.map((item, index) => (
               <TiposItemsNav key={index} {...item} />
             ))}

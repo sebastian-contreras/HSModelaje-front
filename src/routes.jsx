@@ -18,6 +18,7 @@ import ParticipantesPage from './pages/ParticipantesPage/ParticipantesPage'
 import VotacionPage from './pages/VotacionPage/VotacionPage'
 import VotoJurado from './pages/VotoJurado/VotoJurado'
 import GuardiaPage from './pages/GuardiaPage/GuardiaPage'
+import ProtectedRoute from './security/ProtectedRoutes/ProtectedRoutes'
 
 const RoutesComponent = () => (
   <Routes>
@@ -25,8 +26,14 @@ const RoutesComponent = () => (
     <Route path='/login' element={<Login />} />
     <Route path='/voto-jurado/:token' element={<VotoJurado />} />
     <Route path='/pasarela/:idTitulo' element={<PasarelaPage />} />
-    <Route path='/guardia' element={<GuardiaPage />} />
-    <Route element={<GeneralLayout />}>
+    <Route path='/guardia' element={<ProtectedRoute allowedRoles={['A','G']}><GuardiaPage /></ProtectedRoute>} />
+    <Route
+      element={
+        <ProtectedRoute allowedRoles={['A','M']}>
+          <GeneralLayout />
+        </ProtectedRoute>
+      }
+    >
       <Route path='/' element={<DashboardPage />} />
       <Route path='/personas' element={<PersonasPage />} />
       <Route path='/usuarios' element={<UsuariosPage />} />
@@ -34,7 +41,13 @@ const RoutesComponent = () => (
       <Route path='/establecimientos' element={<EstablecimientosPage />} />
       <Route path='/modelos' element={<ModelosPage />} />
     </Route>
-    <Route element={<GeneralLayout tipo='EVENTO' />}>
+    <Route
+      element={
+        <ProtectedRoute allowedRoles={['A','M']}>
+          <GeneralLayout tipo='EVENTO' />
+        </ProtectedRoute>
+      }
+    >
       <Route path='/eventos/:id/' element={<DashboardPage />} />
       <Route path='/eventos/:id/entradas' element={<EntradasPage />} />
       <Route path='/eventos/:id/zonas' element={<ZonasPage />} />

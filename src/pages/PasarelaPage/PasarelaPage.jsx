@@ -13,26 +13,24 @@ import './PasarelaPage.css'
 import { storeEntradaPasarelaApi } from '../../services/EntradasService'
 import Button from '../../components/Button/Button'
 
-function PasarelaPage () {
+function PasarelaPage() {
   const { control, errors, reset, handleSubmit, getValues, watch } = useForm()
   const { idTitulo } = useParams()
   const [id, title] = idTitulo.split('-')
   const [Loading, setLoading] = useState(false)
   const [Evento, setEvento] = useState({})
   const [LoadingFinal, setLoadingFinal] = useState(false)
-
   const [Zonas, setZonas] = useState([])
+
   useEffect(() => {
     setLoading(true)
-
     listarZonaApi(id, 'N', 9999).then(res => {
       setZonas(res.data.data)
-      console.log(res.data.data)
     })
+    
     dameEventoApi(id)
       .then(res => {
         if (!res.data.length) {
-          console.log('entra')
           Alerta()
             .withTipo('error')
             .withTitulo('Error al obtener el evento')
@@ -41,8 +39,7 @@ function PasarelaPage () {
             .build()
           return
         } else {
-          setEvento(res.data[0]) // Guarda la información en el contexto
-          console.log('fuarda evento')
+          setEvento(res.data[0])
           document.title = res.data[0].Evento + ' - Ventas de entradas'
         }
       })
@@ -63,14 +60,9 @@ function PasarelaPage () {
 
   const [pasoActual, setPasoActual] = useState(1)
   const totalPasos = 4
-
   const mostrarPaso = paso => setPasoActual(paso)
-
   const [selectedZona, setSelectedZona] = useState(null)
-
-  const handleSelect = zonaId => {
-    setSelectedZona(zonaId)
-  }
+  const handleSelect = zonaId => setSelectedZona(zonaId)
 
   const datosPersonas = [
     {
@@ -79,7 +71,7 @@ function PasarelaPage () {
       required: true,
       label: 'Documento',
       type: 'text',
-      estilos: 'col-4',
+      estilos: 'col-md-4 col-12',
       error: errors?.DNI
     },
     {
@@ -88,7 +80,7 @@ function PasarelaPage () {
       control: control,
       label: 'Nombre, Apellido',
       type: 'text',
-      estilos: 'col-8',
+      estilos: 'col-md-8 col-12',
       error: errors?.ApelName
     },
     {
@@ -97,7 +89,7 @@ function PasarelaPage () {
       label: 'Correo electronico',
       required: true,
       type: 'email',
-      estilo: 'col-6',
+      estilos: 'col-md-6 col-12',
       error: errors?.Correo
     },
     {
@@ -105,7 +97,7 @@ function PasarelaPage () {
       control: control,
       label: 'Telefono',
       required: true,
-      estilo: 'col-6',
+      estilos: 'col-md-6 col-12',
       type: 'text',
       error: errors?.Telefono
     }
@@ -125,12 +117,10 @@ function PasarelaPage () {
   }, [id, pasoActual])
 
   const onSubmit = data => {
-    console.log(data)
     setLoadingFinal(true)
     const entrada = { ...data, IdZona: selectedZona.IdZona }
     storeEntradaPasarelaApi(entrada)
       .then(res => {
-        console.log(res)
         setPasoActual(4)
         reset()
       })
@@ -151,66 +141,45 @@ function PasarelaPage () {
       })
   }
 
-  // Función para manejar el envío desde el botón externo
   const handleExternalSubmit = () => {
-    handleSubmit(onSubmit)() // Llama a handleSubmit y ejecuta la función onSubmit
+    handleSubmit(onSubmit)()
   }
 
   if (Loading) return <Placeholder />
+
   return (
-    <div
-      className=''
-      style={{ backgroundColor: 'AliceBlue', minHeight: '100vh' }}
-    >
-      <div className='container' style={{ paddingTop: '3rem' }}>
-        <div
-          className='card shadow-lg d-flex  mb-5'
-          style={{
-            padding: '2rem',
-            minHeight: '800px',
-            borderRadius: '12px',
-            paddingTop: '2rem'
-          }}
-        >
-          <div
-            className='content-wrapper px-5'
-            style={{ paddingBottom: '4rem' }}
-          >
-            <h2 className='text-center  fw-bold' style={{ color: '#6c5ce7' }}>
-              {Evento.Evento}
-            </h2>
-            <h3
-              className='text-center mb-4 fw-bold'
-              style={{ color: '#6c5ce7' }}
-            >
-              Compra de Entradas
-            </h3>
-            <p className='text-center text-muted mt-2'>
-              Asegura tu lugar en el evento seleccionando la zona y completando
-              tu compra en pocos pasos.
-            </p>
-            <div className='mb-4 mt-5'>
+    <div className="bg-light min-vh-100 py-4">
+      <div className="container">
+        <div className="card shadow-lg mb-5">
+          <div className="card-body p-3 p-md-4 p-lg-5">
+            <div className="text-center mb-4">
+              <h2 className="fw-bold text-primary">{Evento.Evento}</h2>
+              <h3 className="fw-bold text-primary mb-3">Compra de Entradas</h3>
+              <p className="text-muted">
+                Asegura tu lugar en el evento seleccionando la zona y completando
+                tu compra en pocos pasos.
+              </p>
+            </div>
+
+            <div className="mb-4">
               <ProgressBar
                 striped
                 label={`Paso ${pasoActual} de 4`}
-                variant='primary'
-                style={{
-                  height: '1.4rem',
-                  fontSize: '1.1rem',
-                  fontStyle: 'bold'
-                }}
+                variant="primary"
+                className="fw-bold"
+                style={{ height: '1.4rem', fontSize: '1.1rem' }}
                 now={(pasoActual / totalPasos) * 100}
               />
             </div>
 
             {pasoActual === 1 && (
               <div>
-                <h4 className='mt-4 fw-normal'>Información del Evento</h4>
-                <p>
+                <h4 className="fw-normal mb-3">Información del Evento</h4>
+                <p className="mb-4">
                   Selecciona la zona y revisa los precios antes de continuar con
                   la compra.
                 </p>
-                <div className='alert alert-light border'>
+                <div className="alert alert-light border">
                   El evento se llevará a cabo el <strong>15 de abril</strong> en
                   el <strong>Centro de Convenciones</strong>.
                 </div>
@@ -218,81 +187,72 @@ function PasarelaPage () {
             )}
 
             {pasoActual === 2 && (
-              <div>
-                <h4>Datos del Comprador</h4>
-                <div className='row mt-5'>
-                  <div className='col-7'>
-                    <div className='fs-5 fw-bold mb-3'>Datos Personales</div>
-                    <div className='row'>
-                      <GenerateInputs
-                        inputs={datosPersonas}
-                        control={control}
-                        errors={errors}
-                        onlyView={false}
-                      />
-                    </div>
+              <div className="row g-4">
+                <div className="col-lg-7">
+                  <h4 className="mb-4">Datos del Comprador</h4>
+                  <div className="fs-5 fw-bold mb-3">Datos Personales</div>
+                  <div className="row g-3">
+                    <GenerateInputs
+                      inputs={datosPersonas}
+                      control={control}
+                      errors={errors}
+                      onlyView={false}
+                    />
                   </div>
+                </div>
 
-                  <div className='col-5'>
-                    <div className='fs-5 fw-bold mb-3'>Zonas Disponibles</div>
-                    <ListGroup as='ol' numbered>
-                      {Zonas.map(zona => {
-                        const isAvailable = zona.Capacidad - zona.Ocupacion > 0 // Verifica si hay espacio disponible
-                        return (
-                          <ListGroup.Item
-                            as='li'
-                            key={zona.IdZona}
-                            className={`d-flex justify-content-between align-items-start ${
-                              selectedZona?.IdZona === zona.IdZona
-                                ? 'text-white'
-                                : ''
-                            } ${!isAvailable ? 'text-muted' : ''}`} // Añade clase para texto gris si no hay disponibilidad
-                            onClick={() => isAvailable && handleSelect(zona)} // Solo llama a handleSelect si hay disponibilidad
-                            style={{
-                              cursor: isAvailable ? 'pointer' : 'not-allowed', // Cambia el cursor si no hay disponibilidad
-                              backgroundColor:
-                                selectedZona?.IdZona === zona.IdZona
-                                  ? '#6c5ce7'
-                                  : !isAvailable
-                                  ? '#e9ecef'
-                                  : '' // Cambia el fondo a gris si no hay disponibilidad
-                            }}
-                          >
-                            <div className='ms-2 me-auto'>
-                              <div className='fw-bold'>{zona.Zona}</div>
-                              {zona.Detalle}
-                              <p className='small mb-0 fw-bold'>
-                                Disponible: {zona.Capacidad - zona.Ocupacion}
-                              </p>
-                            </div>
-                            <Badge bg='primary' className='fs-6 my-auto'>
-                              $ {formatearMoneda(zona.Precio)}
-                            </Badge>
-                          </ListGroup.Item>
-                        )
-                      })}
-                    </ListGroup>
-                    <div className='d-flex  align-items-center'>
-                      <InputForm
-                        control={control}
-                        defaultValue={0}
-                        error={errors?.Cantidad}
-                        name={'Cantidad'}
-                        min={1}
-                        max={6}
-                        type={'number'}
-                        label={'Cantidad'}
-                        estilos='w-25'
-                      />
-                      <div className=' ms-3 mt-4'>
-                        <strong>
-                          Importe total:{' '}
-                          {formatearMoneda(
-                            (watch('Cantidad') || 0) *
-                              (selectedZona?.Precio || 0)
-                          )}
-                        </strong>
-                      </div>
+                <div className="col-lg-5">
+                  <div className="fs-5 fw-bold mb-3">Zonas Disponibles</div>
+                  <ListGroup as="ol" numbered className="mb-4">
+                    {Zonas.map(zona => {
+                      const isAvailable = zona.Capacidad - zona.Ocupacion > 0
+                      return (
+                        <ListGroup.Item
+                          as="li"
+                          key={zona.IdZona}
+                          className={`d-flex justify-content-between align-items-start ${
+                            selectedZona?.IdZona === zona.IdZona
+                              ? 'text-white bg-primary'
+                              : ''
+                          } ${!isAvailable ? 'text-muted bg-light' : ''}`}
+                          onClick={() => isAvailable && handleSelect(zona)}
+                          style={{
+                            cursor: isAvailable ? 'pointer' : 'not-allowed'
+                          }}
+                        >
+                          <div className="ms-2 me-auto">
+                            <div className="fw-bold">{zona.Zona}</div>
+                            {zona.Detalle}
+                            <p className="small mb-0 fw-bold">
+                              Disponible: {zona.Capacidad - zona.Ocupacion}
+                            </p>
+                          </div>
+                          <Badge bg={isAvailable ? 'primary' : 'secondary'} className="fs-6 my-auto">
+                            $ {formatearMoneda(zona.Precio)}
+                          </Badge>
+                        </ListGroup.Item>
+                      )
+                    })}
+                  </ListGroup>
+                  <div className="d-flex flex-column flex-md-row align-items-md-center gap-3">
+                    <InputForm
+                      control={control}
+                      defaultValue={0}
+                      error={errors?.Cantidad}
+                      name={'Cantidad'}
+                      min={1}
+                      max={6}
+                      type={'number'}
+                      label={'Cantidad'}
+                      estilos="w-auto"
+                    />
+                    <div className="mt-md-0 mt-2">
+                      <strong>
+                        Importe total:{' '}
+                        {formatearMoneda(
+                          (watch('Cantidad') || 0) * (selectedZona?.Precio || 0)
+                        )}
+                      </strong>
                     </div>
                   </div>
                 </div>
@@ -300,27 +260,27 @@ function PasarelaPage () {
             )}
 
             {pasoActual === 3 && (
-              <div className='mt-5'>
-                <h4>Resumen</h4>
-                <div className='resumen'>
-                  <ul className='list-group list-group-flush my-3 fw-bold'>
-                    <li className='list-group-item'>
+              <div>
+                <h4 className="mb-4">Resumen</h4>
+                <div className="resumen">
+                  <ul className="list-group list-group-flush mb-4 fw-bold">
+                    <li className="list-group-item">
                       Documento: {getValues('DNI')}
                     </li>
-                    <li className='list-group-item'>
+                    <li className="list-group-item">
                       Nombre y apellido: {getValues('ApelName')}
                     </li>
-                    <li className='list-group-item'>
+                    <li className="list-group-item">
                       Correo Electronico: {getValues('Correo')}
                     </li>
-                    <li className='list-group-item'>
+                    <li className="list-group-item">
                       Telefono: {getValues('Telefono')}
                     </li>
-                    <li className='list-group-item'>
+                    <li className="list-group-item">
                       Entrada {selectedZona.Zona}, Cantidad:{' '}
                       {getValues('Cantidad')}
                     </li>
-                    <li className='list-group-item'>
+                    <li className="list-group-item">
                       Importe Total:{' '}
                       {formatearMoneda(
                         selectedZona.Precio * getValues('Cantidad')
@@ -328,8 +288,8 @@ function PasarelaPage () {
                     </li>
                   </ul>
                 </div>
-                <div className='comprobante mt-4'>
-                  <h4>Sube tu Comprobante de Pago</h4>
+                <div className="comprobante">
+                  <h4 className="mb-3">Sube tu Comprobante de Pago</h4>
                   <InputForm
                     control={control}
                     error={errors?.Archivo}
@@ -342,75 +302,61 @@ function PasarelaPage () {
             )}
 
             {pasoActual === 4 && (
-              <div className='text-center'>
-                <h4 className='text-success'>Compra Finalizada</h4>
-                <p className='text-muted'>
+              <div className="text-center py-5">
+                <h4 className="text-success mb-3">Compra Finalizada</h4>
+                <p className="text-muted">
                   ¡Gracias por tu compra! Recibirás un correo con los detalles
                   de tus entradas.
                 </p>
               </div>
             )}
           </div>
-          <div
-            className='mx-auto d-flex justify-content-center gap-5'
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: '2rem'
-            }}
-          >
-            {pasoActual > 1 &&
-              (pasoActual === totalPasos ? (
-                ''
-              ) : (
+
+          <div className="card-footer bg-transparent border-0">
+            <div className="d-flex justify-content-center gap-3 flex-wrap">
+              {pasoActual > 1 && pasoActual !== totalPasos && (
                 <Button
-                  className='btn btn-secondary'
+                  variant="secondary"
                   onClick={() => mostrarPaso(pasoActual - 1)}
                 >
                   Atrás
                 </Button>
-              ))}
-            {pasoActual === totalPasos ? (
-              ''
-            ) : (
-              <Button
-                className='btn btn-primary'
-                loading={LoadingFinal}
-                disabled={
-                  (pasoActual === 2 && !selectedZona) ||
-                  (pasoActual === 2 &&
-                    (!getValues('DNI') ||
-                      !getValues('Correo') ||
-                      !getValues('Telefono') ||
-                      !getValues('ApelName'))) ||
-                  (pasoActual === 3 && !watch('Archivo'))
-                }
-                onClick={() =>
-                  pasoActual + 1 === totalPasos
-                    ? handleExternalSubmit()
-                    : mostrarPaso(
-                        pasoActual < totalPasos ? pasoActual + 1 : pasoActual
-                      )
-                }
-              >
-                {pasoActual + 1 === totalPasos ? 'Finalizar' : 'Siguiente'}
-              </Button>
-            )}
-            {pasoActual === totalPasos ? (
-              <Button
-                className='btn btn-primary'
-                onClick={() => {
-                  reset()
-                  setSelectedZona(null)
-                  setPasoActual(1)
-                }}
-              >
-                Realizar otra compra
-              </Button>
-            ) : (
-              ''
-            )}
+              )}
+              
+              {pasoActual !== totalPasos ? (
+                <Button
+                  variant="primary"
+                  loading={LoadingFinal}
+                  disabled={
+                    (pasoActual === 2 && !selectedZona) ||
+                    (pasoActual === 2 &&
+                      (!getValues('DNI') ||
+                        !getValues('Correo') ||
+                        !getValues('Telefono') ||
+                        !getValues('ApelName'))) ||
+                    (pasoActual === 3 && !watch('Archivo'))
+                  }
+                  onClick={() =>
+                    pasoActual + 1 === totalPasos
+                      ? handleExternalSubmit()
+                      : mostrarPaso(pasoActual + 1)
+                  }
+                >
+                  {pasoActual + 1 === totalPasos ? 'Finalizar' : 'Siguiente'}
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    reset()
+                    setSelectedZona(null)
+                    setPasoActual(1)
+                  }}
+                >
+                  Realizar otra compra
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import { API_URL } from '../../Fixes/API_URL'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
 import { deletePatrocinadorApi, storePatrocinadorApi, updatePatrocinadorApi } from '../../services/PatrocinadoresService'
+import { formatearFechayHora } from '../../Fixes/formatter'
 
 function PatrocinadoresPage () {
   const { evento } = useEvento() // Usa el contexto
@@ -58,7 +59,9 @@ function PatrocinadoresPage () {
       { accessorKey: 'Telefono', header: 'Telefono' },
       { accessorKey: 'DomicilioRef', header: 'Domicilio Referencial' },
       { accessorKey: 'Descripcion', header: 'Descripcion' },
-      { accessorKey: 'FechaCreado', header: 'Fecha Creado' },
+      { accessorKey: 'FechaCreado', header: 'Fecha Creado',
+        Cell: ({ cell }) => formatearFechayHora(cell.getValue())
+       },
       {
         accessorKey: 'acciones',
         header: 'Acciones',

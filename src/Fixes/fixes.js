@@ -237,7 +237,7 @@ export const ROLES_CHOICES = [
 export const EstadosEventosOptions = [
   { value: 'A', label: 'Activo' },
   { value: 'B', label: 'Dado de baja' },
-  { value: 'T', label: 'Todos' },
+  { value: 'F', label: 'Finalizado' }, 
 ]
 export const ESTADOS_EVENTOS = [
   { value: 'A', label: 'Activo' },
@@ -250,8 +250,19 @@ export const SiONoOptions = [
   { value: 'N', label: 'No' },
 ]
 
+export const VotacionOptions = [
+  { value: 'S', label: 'Si' },
+  { value: 'N', label: 'No' },
+  { value: 'P', label: 'Pendiente' }, 
+  { value: 'F', label: 'Finalizado' },
+]
+
 
 //MODELOS
+export const ActivoBajaOptions = [
+  { value: 'A', label: 'Activo' },
+  { value: 'B', label: 'Dado de baja' },
+]
 export const EstadosModelosOptions = [
   { value: 'A', label: 'Activo' },
   { value: 'B', label: 'Dado de baja' },

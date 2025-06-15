@@ -78,6 +78,7 @@ export default function VotoJurado () {
       IdEvento: EventoData.IdEvento,
       IdParticipante: ParticipanteActivo.IdParticipante,
       IdJuez: JuezData.IdJuez,
+      Token: token, 
       votos: formattedVotes
     }
 

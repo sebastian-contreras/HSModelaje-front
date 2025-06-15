@@ -5,7 +5,7 @@ export const getLabelByValue = (choices, value) => {
 
 export const EstadosOptions = [
   { value: 'A', label: 'Activo' },
-  { value: 'I', label: 'Inactivo' }
+  { value: 'B', label: 'Dado de baja' },
 ]
 export const getLabelByValueEstados = value => {
   const option = EstadosOptions.find(option => option.value === value)
@@ -293,6 +293,7 @@ export const EstadosMetricasOptions = [
 
 //entradas
 export const EstadosEntradasOptions = [
+  { value: 'P', label: 'Pendiente' }, 
   { value: 'A', label: 'Abonada' },
   { value: 'R', label: 'Rechazada' },
   { value: 'U', label: 'Usada' },

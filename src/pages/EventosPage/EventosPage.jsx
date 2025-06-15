@@ -21,6 +21,7 @@ import FormEventos from '../../components/Formularios/FormEventos/FormEventos'
 import FormFinalizarEvento from '../../components/Formularios/FormEventos/FormFinalizarEvento'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/Auth/AuthContext'
+import { formatearFechayHora } from '../../Fixes/formatter'
 
 function EventosPage () {
   const navigate = useNavigate()
@@ -115,10 +116,10 @@ function EventosPage () {
     () => [
       { accessorKey: 'IdEvento', header: '#' },
       { accessorKey: 'Evento', header: 'Evento' },
-      { accessorKey: 'FechaProbableInicio', header: 'FechaProbableInicio' },
-      { accessorKey: 'FechaProbableFinal', header: 'FechaProbableFinal' },
-      { accessorKey: 'FechaInicio', header: 'FechaInicio' },
-      { accessorKey: 'FechaFinal', header: 'FechaFinal' },
+      { accessorKey: 'FechaProbableInicio', header: 'FechaProbableInicio',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
+      { accessorKey: 'FechaProbableFinal', header: 'FechaProbableFinal',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
+      { accessorKey: 'FechaInicio', header: 'Fecha Inicio',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
+      { accessorKey: 'FechaFinal', header: 'Fecha Final',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
       { accessorKey: 'IdEstablecimiento', header: 'Establecimiento' },
       { accessorKey: 'Votacion', header: '¿Votacion?', Cell: ({ cell }) => getLabelByValue(VotacionOptions, cell.getValue())},
       { accessorKey: 'EstadoEvento', header: 'Estado',

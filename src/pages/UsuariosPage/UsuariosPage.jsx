@@ -12,7 +12,7 @@ import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import ModalModificado from '../../components/Modal/ModalModificado'
 import FormUsers from '../../components/Formularios/FormUsers/FormUsers'
-import { getLabelByValue, ROLES_CHOICES } from '../../Fixes/fixes'
+import { ActivoBajaOptions, getLabelByValue, ROLES_CHOICES } from '../../Fixes/fixes'
 import {
   activarUsuarioApi,
   darBajaUsuarioApi,
@@ -184,7 +184,9 @@ function UsuariosPage () {
       { accessorKey: 'Telefono', header: 'Telefono' },
       { accessorKey: 'Email', header: 'Email' },
       { accessorKey: 'FechaCreado', header: 'FechaCreado' },
-      { accessorKey: 'EstadoUsuario', header: 'EstadoUsuario' },
+      { accessorKey: 'EstadoUsuario', header: 'EstadoUsuario',
+        Cell: ({ cell }) => getLabelByValue(ActivoBajaOptions, cell.getValue())
+       },
       {
         accessorKey: 'Rol',
         header: 'Rol',

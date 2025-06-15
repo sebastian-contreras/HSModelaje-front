@@ -20,7 +20,8 @@ import {
 } from '../../services/EntradasService'
 import GenerateInputs from '../../components/GenerateInputs/GenerateInputs'
 import { useForm } from 'react-hook-form'
-import { EstadosEntradasOptions } from '../../Fixes/fixes'
+import { EstadosEntradasOptions, getLabelByValue } from '../../Fixes/fixes'
+import { formatearFechayHora } from '../../Fixes/formatter'
 
 function EntradasPage () {
   const { evento } = useEvento() // Usa el contexto
@@ -125,8 +126,12 @@ function EntradasPage () {
       { accessorKey: 'DNI', header: 'DNI' },
       { accessorKey: 'Correo', header: 'Correo' },
       { accessorKey: 'Telefono', header: 'Telefono' },
-      { accessorKey: 'FechaAlta', header: 'Fecha Alta' },
-      { accessorKey: 'EstadoEnt', header: 'Estado' },
+      { accessorKey: 'FechaAlta', header: 'Fecha Alta',
+        Cell: ({ cell }) => formatearFechayHora(cell.getValue())
+       },
+      { accessorKey: 'EstadoEnt', header: 'Estado',
+        Cell: ({ cell }) => getLabelByValue(EstadosEntradasOptions, cell.getValue())
+       },
       {
         accessorKey: 'acciones',
         header: 'Acciones',

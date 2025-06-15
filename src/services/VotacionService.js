@@ -9,6 +9,16 @@ export async function InicioVotacionModeloApi (IdParticipante) {
   })
   return response.data
 }
+
+export async function ParticipanteActivoApi (IdEvento) {
+  const response = await axios.get(`${API_URL}/api/voto-activo` ,{
+    params: {
+      pIdEvento: IdEvento
+    }
+  })
+  return response.data
+}
+
 export async function DetenerVotacionModeloApi (IdParticipante) {
   const response = await axios.get(`${API_URL}/api/votos/detener-voto/` ,{
     params: {

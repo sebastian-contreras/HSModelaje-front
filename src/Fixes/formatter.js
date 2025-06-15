@@ -3,6 +3,9 @@ import dayjs from 'dayjs'
 export const formatearFechayHora = fecha => {
   return dayjs(fecha).format('DD/MM/YYYY HH:mm')
 }
+export const formatearFecha = fecha => {
+  return dayjs(fecha).format('DD/MM/YYYY')
+}
 
 export const formatearMoneda = monto => {
   return new Intl.NumberFormat('es-ES', {

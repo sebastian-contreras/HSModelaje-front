@@ -211,7 +211,6 @@ function DashboardPage () {
                         <TableCell>Gasto</TableCell>
                         <TableCell>Personal</TableCell>
                         <TableCell>Monto</TableCell>
-                        <TableCell>Comprobante</TableCell>
                         <TableCell>Fecha</TableCell>
                       </TableRow>
                     </TableHead>
@@ -221,7 +220,6 @@ function DashboardPage () {
                           <TableCell>{g.Gasto}</TableCell>
                           <TableCell>{g.Personal ?? '-'}</TableCell>
                           <TableCell>${g.Monto}</TableCell>
-                          <TableCell>{g.Comprobante ?? '-'}</TableCell>
                           <TableCell>{g.FechaCreado ?? '-'}</TableCell>
                         </TableRow>
                       ))}

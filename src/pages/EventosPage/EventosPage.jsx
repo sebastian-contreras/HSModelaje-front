@@ -20,6 +20,7 @@ import ModalModificado from '../../components/Modal/ModalModificado'
 import FormEventos from '../../components/Formularios/FormEventos/FormEventos'
 import FormFinalizarEvento from '../../components/Formularios/FormEventos/FormFinalizarEvento'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/Auth/AuthContext'
 
 function EventosPage () {
   const navigate = useNavigate()
@@ -60,6 +61,7 @@ function EventosPage () {
       readOnly: false
     }
   ]
+  const { user } = useAuth()
 
   const [Modal, setModal] = useState(false)
   const [ModalFinalizar, setModalFinalizar] = useState(false)
@@ -127,9 +129,7 @@ function EventosPage () {
         enableHiding: false,
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
-          <ButtonGroup
-            style={{ display: 'flex', justifyContent: 'flex-end' }}
-          >
+          <ButtonGroup style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
               estilo='primary'
               onClick={() =>
@@ -144,7 +144,14 @@ function EventosPage () {
             <Button
               estilo='success'
               onClick={() =>
-                window.open('/eventos/' + row.original.IdEvento, '_blank')
+                user.role == 'A'
+                  ? window.open('/eventos/' + row.original.IdEvento, '_blank')
+                  : user.role == 'M'
+                  ? window.open(
+                      '/eventos/' + row.original.IdEvento + '/participantes',
+                      '_blank'
+                    )
+                  : ''
               }
             >
               Ingresar

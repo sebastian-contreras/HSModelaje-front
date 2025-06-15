@@ -2,19 +2,29 @@ import { Collapse } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useHandlerSidebar } from '../../../context/SidebarContext/SidebarContext'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../../../context/Auth/AuthContext';
 
 function GeneralSidebar () {
   const location = useLocation();
+  const { user } = useAuth()
+
   const rutas = useMemo(()=>[
     // { name: 'Dashboard', link: '/', icon: 'fa-home' },
     { name: 'Secciones', separador: true },
-    { name: 'Usuarios', link: '/usuarios', icon: 'fa-user-circle' },
-    { name: 'Eventos', link: '/eventos', icon: 'fa-calendar' },
-    { name: 'Establecimientos', link: '/establecimientos', icon: 'fa-house' },
-    { name: 'Modelos', link: '/modelos', icon: 'fa-person' },
-    { name: 'Verificar Entrada', link: '/guardia', icon: 'fa-check-to-slot' }, 
+    { name: 'Usuarios', link: '/usuarios', icon: 'fa-user-circle', roles: ['A'] },
+    { name: 'Eventos', link: '/eventos', icon: 'fa-calendar', roles: ['A','M'] },
+    { name: 'Establecimientos', link: '/establecimientos', icon: 'fa-house', roles: ['A'] },
+    { name: 'Modelos', link: '/modelos', icon: 'fa-person', roles: ['A'] },
+    { name: 'Verificar Entrada', link: '/guardia', icon: 'fa-check-to-slot', roles: ['A'] }, 
    
   ],[])
+
+  const rutasFiltradas = useMemo(() =>
+    rutas.filter(item =>
+      !item.roles || item.roles.includes(user?.role)
+    ), [rutas, user]
+  )
+
 
   const TiposItemsNav = ({ name='', link='', separador=false, subruta=null, icon='' }) => {
     const isActive = location.pathname == link;
@@ -81,7 +91,7 @@ function GeneralSidebar () {
       <div className='scrollbar scrollbar-inner d-block'>
         <div className=' sidebar-content'>
           <ul className='nav nav-secondary'>
-            {rutas.map((item, index) => (
+            {rutasFiltradas.map((item, index) => (
               <TiposItemsNav key={index} {...item} />
             ))}
            

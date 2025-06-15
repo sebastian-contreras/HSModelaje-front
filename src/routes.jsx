@@ -26,7 +26,28 @@ const RoutesComponent = () => (
     <Route path='/login' element={<Login />} />
     <Route path='/voto-jurado/:token' element={<VotoJurado />} />
     <Route path='/pasarela/:idTitulo' element={<PasarelaPage />} />
-    <Route path='/guardia' element={<ProtectedRoute allowedRoles={['A','G']}><GuardiaPage /></ProtectedRoute>} />
+    <Route
+      path='/guardia'
+      element={
+        <ProtectedRoute allowedRoles={['A', 'G']}>
+          <GuardiaPage />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      element={
+        <ProtectedRoute allowedRoles={['A']}>
+          <GeneralLayout />
+        </ProtectedRoute>
+      }
+    >
+      <Route path='/' element={<EventosPage />} />
+      <Route path='/personas' element={<PersonasPage />} />
+      <Route path='/usuarios' element={<UsuariosPage />} />
+      <Route path='/establecimientos' element={<EstablecimientosPage />} />
+      <Route path='/modelos' element={<ModelosPage />} />
+    </Route>
+
     <Route
       element={
         <ProtectedRoute allowedRoles={['A','M']}>
@@ -35,15 +56,12 @@ const RoutesComponent = () => (
       }
     >
       <Route path='/' element={<EventosPage />} />
-      <Route path='/personas' element={<PersonasPage />} />
-      <Route path='/usuarios' element={<UsuariosPage />} />
       <Route path='/eventos' element={<EventosPage />} />
-      <Route path='/establecimientos' element={<EstablecimientosPage />} />
-      <Route path='/modelos' element={<ModelosPage />} />
     </Route>
+
     <Route
       element={
-        <ProtectedRoute allowedRoles={['A','M']}>
+        <ProtectedRoute allowedRoles={['A']}>
           <GeneralLayout tipo='EVENTO' />
         </ProtectedRoute>
       }
@@ -52,13 +70,23 @@ const RoutesComponent = () => (
       <Route path='/eventos/:id/entradas' element={<EntradasPage />} />
       <Route path='/eventos/:id/zonas' element={<ZonasPage />} />
       <Route path='/eventos/:id/gastos' element={<GastosPage />} />
-      <Route path='/eventos/:id/votacion' element={<VotacionPage />} />
-      <Route path='/eventos/:id/modelos' element={<ModelosPage />} />
-      <Route path='/eventos/:id/jueces' element={<JuecesPage />} />
+
       <Route
         path='/eventos/:id/patrocinadores'
         element={<PatrocinadoresPage />}
       />
+    </Route>
+
+    <Route
+      element={
+        <ProtectedRoute allowedRoles={['A', 'M']}>
+          <GeneralLayout tipo='EVENTO' />
+        </ProtectedRoute>
+      }
+    >
+      <Route path='/eventos/:id/votacion' element={<VotacionPage />} />
+      <Route path='/eventos/:id/modelos' element={<ModelosPage />} />
+      <Route path='/eventos/:id/jueces' element={<JuecesPage />} />
       <Route
         path='/eventos/:id/participantes'
         element={<ParticipantesPage />}

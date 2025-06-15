@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Alert, Badge, Table } from 'react-bootstrap'
+import { Alert, Badge, Spinner, Table } from 'react-bootstrap'
 import Button from '../../components/Button/Button'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
 import SectionPage from '../../components/SectionPage/SectionPage'
@@ -18,10 +18,12 @@ import { Alerta } from '../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../Fixes/messages'
 import { echo } from '../../config/EchoConfig'
 import { downloadInformeVotacion } from '../../services/InformesService'
+import { Skeleton } from '@mui/material'
 
 function VotacionPage () {
   const { evento, refresh } = useEvento() // Usa el contexto
   const [JuecesData, setJuecesData] = useState([])
+  const [LoadingFirst, setLoadingFirst] = useState(false)
   const [Loading, setLoading] = useState(false)
   const [ParticipantesData, setParticipantesData] = useState([])
   const [Votos, setVotos] = useState([])
@@ -96,6 +98,7 @@ function VotacionPage () {
   }
 
   useEffect(() => {
+    setLoadingFirst(true)
     listarJuezApi(evento?.IdEvento).then(res => {
       setJuecesData(res.data)
     })
@@ -106,9 +109,11 @@ function VotacionPage () {
       pIdEvento: evento?.IdEvento,
       pCantidad: 1000,
       pPagina: 1
-    }).then(res => {
-      setParticipantesData(res.data.data)
     })
+      .then(res => {
+        setParticipantesData(res.data.data)
+      })
+      .finally(() => setLoadingFirst(false))
     // Conectar al canal de votación
     const channel = echo.channel('evento-' + evento?.IdEvento)
     channel.listen('ListadoVotosParticipantes', data => {
@@ -129,6 +134,7 @@ function VotacionPage () {
   }
 
   const iniciarVotacion = async () => {
+    setLoading(true)
     iniciarVotacionApi(evento.IdEvento)
       .then(res => {
         refresh()
@@ -149,9 +155,11 @@ function VotacionPage () {
               : MENSAJE_DEFAULT
           )
       })
+      .finally(() => setLoading(false))
   }
 
   const finalizarVotacion = async () => {
+    setLoading(true)
     finalizarVotacionApi(evento.IdEvento)
       .then(res => {
         refresh()
@@ -172,6 +180,7 @@ function VotacionPage () {
               : MENSAJE_DEFAULT
           )
       })
+      .finally(() => setLoading(false))
   }
 
   const exportarHtmlTabla = async () => {
@@ -209,21 +218,44 @@ function VotacionPage () {
             <Alert.Heading>El evento no tiene votacion</Alert.Heading>
             <p>El evento fue configurado sin activar la votación</p>
           </Alert>
+        ) : LoadingFirst ? (
+          <SectionPage header={'Tabla de Votacion'}>
+            <div className='text-center'>
+              <Skeleton size='lg' className='text-center' />
+              <Skeleton size='lg' className='text-center' />
+              <Skeleton size='lg' className='text-center' />
+            </div>
+          </SectionPage>
         ) : (
           <SectionPage header={'Tabla de Votacion'}>
             <div className='d-flex gap-3 mb-3'>
               {evento?.Votacion == 'S' && (
-                <Button onClick={iniciarVotacion} estilo='primary' lg>
+                <Button
+                  loading={Loading}
+                  onClick={iniciarVotacion}
+                  estilo='primary'
+                  lg
+                >
                   Iniciar Votacion
                 </Button>
               )}
               {evento?.Votacion == 'P' && (
-                <Button onClick={finalizarVotacion} estilo='secondary' lg>
+                <Button
+                  loading={Loading}
+                  onClick={finalizarVotacion}
+                  estilo='secondary'
+                  lg
+                >
                   Finalizar Votacion
                 </Button>
               )}
               {evento?.Votacion == 'F' && (
-                <Button  onClick={exportarHtmlTabla}  estilo='info' lg>
+                <Button
+                  loading={Loading}
+                  onClick={exportarHtmlTabla}
+                  estilo='info'
+                  lg
+                >
                   Exportar Votacion
                 </Button>
               )}

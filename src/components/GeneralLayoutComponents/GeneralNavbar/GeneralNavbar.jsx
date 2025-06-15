@@ -24,7 +24,7 @@ function GeneralNavbar () {
             <button className='btn btn-toggle toggle-sidebar'>
               <i className='gg-menu-right'></i>
             </button>
-            <button className='btn btn-toggle sidenav-toggler'>
+            <button onClick={toggle} className='btn btn-toggle sidenav-toggler'>
               <i className='gg-menu-left'></i>
             </button>
           </div>

@@ -26,6 +26,7 @@ import { useEvento } from '../../context/SidebarContext/EventoContext'
 
 function JuecesPage () {
   const { evento } = useEvento() // Usa el contexto
+  
   const { control, errors, reset, handleSubmit } = useForm()
   const inputsTest = [
     {

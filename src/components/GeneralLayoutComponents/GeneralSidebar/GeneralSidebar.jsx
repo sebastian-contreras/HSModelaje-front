@@ -66,7 +66,7 @@ function GeneralSidebar () {
     }
   }
   return (
-    <aside className='sidebar' data-background-color='dark'>
+    <aside className='sidebar ' data-background-color='dark'>
       <div className='mt-4 d-block'>
         {/* Logo Header  */}
         <div className=' d-flex w-100 justify-content-center' data-background-color='dark'> 

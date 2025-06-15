@@ -34,7 +34,7 @@ const RoutesComponent = () => (
         </ProtectedRoute>
       }
     >
-      <Route path='/' element={<DashboardPage />} />
+      <Route path='/' element={<EventosPage />} />
       <Route path='/personas' element={<PersonasPage />} />
       <Route path='/usuarios' element={<UsuariosPage />} />
       <Route path='/eventos' element={<EventosPage />} />

@@ -9,7 +9,7 @@ import ModalModificado from '../../components/Modal/ModalModificado'
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
-import { EstadosZonasOptions, SiONoOptions } from '../../Fixes/fixes'
+import { EstadosZonasOptions, getLabelByValue, SiONoOptions } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
 import {
@@ -105,10 +105,14 @@ function ZonasPage () {
       { accessorKey: 'Zona', header: 'Zona' },
       { accessorKey: 'Capacidad', header: 'Capacidad' },
       { accessorKey: 'Ocupacion', header: 'Ocupacion' },
-      { accessorKey: 'AccesoDisc', header: 'AccesoDisc' },
+      { accessorKey: 'AccesoDisc', header: 'AccesoDisc',
+        Cell: ({ cell }) => getLabelByValue(SiONoOptions, cell.getValue())
+       },
       { accessorKey: 'Precio', header: 'Precio' },
       { accessorKey: 'Detalle', header: 'Detalle' },
-      { accessorKey: 'EstadoZona', header: 'Estado' },
+      { accessorKey: 'EstadoZona', header: 'Estado' ,
+        Cell: ({ cell }) => getLabelByValue(EstadosZonasOptions, cell.getValue())
+      },
       {
         accessorKey: 'acciones',
         header: 'Acciones',

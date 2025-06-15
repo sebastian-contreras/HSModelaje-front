@@ -79,19 +79,13 @@ function DashboardPage () {
   }
 
   const totalGananciaReal =
-    Data?.zona?.reduce((acc, z) => acc + parseFloat(z.GananciaReal || 0), 0) ||
-    0
-  const totalGananciaEsperada =
-    Data?.zona?.reduce(
-      (acc, z) => acc + parseFloat(z.GananciaEsperada || 0),
-      0
-    ) || 0
+    Data?.zona?.at(-1)?.GananciaReal || 0
   const totalGastos =
-    Data?.gastos?.reduce((acc, g) => acc + parseFloat(g.Monto || 0), 0) || 0
+    Data?.gastos?.at(-1)?.Monto || 0
   const totalVendidas =
-    Data?.zona?.reduce((acc, z) => acc + parseInt(z.Vendidas || 0), 0) || 0
+    Data?.zona?.at(-1)?.Vendidas || 0
   const gananciaNeta = totalGananciaReal - totalGastos
-
+console.log(Data)
   return (
     <>
       <HeaderPageComponent
@@ -102,7 +96,7 @@ function DashboardPage () {
       <SectionPage header='Dashboard'>
         <Grid container spacing={2}>
           {/* Botón descarga */}
-          <Grid item xs={12} className='text-end'>
+          <Grid item xs={12} >
             <Button lg loading={Loading} onClick={downloadInforme}>
               {Loading ? 'Descargando...' : 'Descargar Informe'}
             </Button>
@@ -122,7 +116,7 @@ function DashboardPage () {
               <CardContent>
                 <Typography variant='h6'>Ganancia Real</Typography>
                 <Typography variant='h5'>
-                  ${totalGananciaReal.toFixed(2)}
+                  ${totalGananciaReal}
                 </Typography>
               </CardContent>
             </Card>
@@ -131,7 +125,7 @@ function DashboardPage () {
             <Card>
               <CardContent>
                 <Typography variant='h6'>Gastos</Typography>
-                <Typography variant='h5'>${totalGastos.toFixed(2)}</Typography>
+                <Typography variant='h5'>${totalGastos}</Typography>
               </CardContent>
             </Card>
           </Grid>

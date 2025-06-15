@@ -11,6 +11,7 @@ import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
 import {
   EstadosMetricasOptions,
+  getLabelByValue,
 } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
@@ -84,7 +85,9 @@ function MetricasPage () {
     () => [
       { accessorKey: 'IdMetrica', header: '#' },
       { accessorKey: 'Metrica', header: 'Metrica' },
-      { accessorKey: 'EstadoMetrica', header: 'Estado' },
+      { accessorKey: 'EstadoMetrica', header: 'Estado',
+        Cell: ({ cell }) => getLabelByValue(EstadosMetricasOptions, cell.getValue())
+       },
       {
         accessorKey: 'acciones',
         header: 'Acciones',

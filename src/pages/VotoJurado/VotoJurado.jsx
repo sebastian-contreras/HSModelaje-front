@@ -29,7 +29,10 @@ import { dameEventoApi } from '../../services/EventosService'
 import { formatearFechayHora } from '../../Fixes/formatter'
 import { listarMetricaApi } from '../../services/MetricasService'
 import { echo } from '../../config/EchoConfig'
-import { enviarVotacionJuezApi } from '../../services/VotacionService'
+import {
+  enviarVotacionJuezApi,
+  ParticipanteActivoApi
+} from '../../services/VotacionService'
 import { Alerta } from '../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../Fixes/messages'
 
@@ -60,7 +63,6 @@ export default function VotoJurado () {
   useEffect(() => {
     currentScreenRef.current = currentScreen
   }, [currentScreen])
-
 
   const handleVote = (metricId, score) => {
     setVotes(prev => ({ ...prev, [metricId]: score }))
@@ -117,21 +119,6 @@ export default function VotoJurado () {
           return
         }
 
-        channel = echo.channel('evento-' + juez.IdEvento)
-
-        channel.listen('VotoModeloIniciado', data => {
-          console.log('Participante recibido desde WebSocket:', data)
-          if (data.accion === 'iniciar') {
-            setVotes({})
-            setParticipanteActivo(data.participante)
-            setCurrentScreen('evaluation')
-          } else if (data.accion === 'detener') {
-            if (currentScreenRef.current  == 'evaluation') {
-              setCurrentScreen('welcome')
-            }
-          }
-        })
-
         setJuezData(juez)
 
         const [metricRes, eventRes] = await Promise.all([
@@ -147,6 +134,28 @@ export default function VotoJurado () {
           const estRes = await dameEstablecimientoApi(evento.IdEstablecimiento)
           setEstablecimientoData(estRes.data?.[0])
         }
+        ParticipanteActivoApi(evento?.IdEvento).then(res => {
+          console.log(res)
+          if (res.data.length) {
+            setParticipanteActivo(res.data[0])
+            setCurrentScreen('evaluation')
+          }
+        })
+
+        channel = echo.channel('evento-' + juez.IdEvento)
+
+        channel.listen('VotoModeloIniciado', data => {
+          console.log('Participante recibido desde WebSocket:', data)
+          if (data.accion === 'iniciar') {
+            setVotes({})
+            setParticipanteActivo(data.participante)
+            setCurrentScreen('evaluation')
+          } else if (data.accion === 'detener') {
+            if (currentScreenRef.current == 'evaluation') {
+              setCurrentScreen('welcome')
+            }
+          }
+        })
       } catch (err) {
         console.error(err)
         setError('Error al obtener los datos del juez')
@@ -179,7 +188,7 @@ export default function VotoJurado () {
     )
   }
 
-    if (EventoData?.Votacion === 'F') {
+  if (EventoData?.Votacion === 'F') {
     return (
       <Box className='min-vh-100 d-flex align-items-center justify-content-center bg-light p-3'>
         <Card sx={{ width: '100%', maxWidth: 400, textAlign: 'center', p: 2 }}>
@@ -252,15 +261,12 @@ export default function VotoJurado () {
               >
                 La votacion ha finalizado, Muchas gracias por su participacion
               </Typography>
-              
             </Box>
           </CardContent>
-         
         </Card>
       </Box>
     )
   }
-
 
   if (currentScreen === 'welcome') {
     return (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, Badge, Table } from 'react-bootstrap'
 import Button from '../../components/Button/Button'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
@@ -17,10 +17,12 @@ import {
 import { Alerta } from '../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../Fixes/messages'
 import { echo } from '../../config/EchoConfig'
+import { downloadInformeVotacion } from '../../services/InformesService'
 
 function VotacionPage () {
   const { evento, refresh } = useEvento() // Usa el contexto
   const [JuecesData, setJuecesData] = useState([])
+  const [Loading, setLoading] = useState(false)
   const [ParticipantesData, setParticipantesData] = useState([])
   const [Votos, setVotos] = useState([])
   const votosByParticipante = useMemo(() => {
@@ -172,6 +174,29 @@ function VotacionPage () {
       })
   }
 
+  const exportarHtmlTabla = async () => {
+    setLoading(true)
+    downloadInformeVotacion(evento.IdEvento)
+      .then(res => {
+        console.log(res)
+        Alerta()
+          .withTipo('success')
+          .withTitulo('Informe descargado')
+          .withMensaje('El informe se ha descargado correctamente')
+          .withMini(true)
+          .build()
+      })
+      .catch(() => {
+        Alerta()
+          .withTipo('error')
+          .withTitulo('Error al descargar el informe')
+          .withMensaje('No se pudo descargar el informe')
+          .withMini(true)
+          .build()
+      })
+      .finally(() => setLoading(false))
+  }
+
   return (
     <>
       <div>
@@ -195,6 +220,11 @@ function VotacionPage () {
               {evento?.Votacion == 'P' && (
                 <Button onClick={finalizarVotacion} estilo='secondary' lg>
                   Finalizar Votacion
+                </Button>
+              )}
+              {evento?.Votacion == 'F' && (
+                <Button  onClick={exportarHtmlTabla}  estilo='info' lg>
+                  Exportar Votacion
                 </Button>
               )}
             </div>

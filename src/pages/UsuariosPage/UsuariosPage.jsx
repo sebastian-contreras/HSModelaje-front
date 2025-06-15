@@ -4,7 +4,7 @@ import { API_URL } from '../../Fixes/API_URL'
 import Swal from 'sweetalert2'
 import { Alerta } from '../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../Fixes/messages'
-import { formatearFechayHora } from '../../Fixes/formatter'
+import { formatearFecha, formatearFechayHora } from '../../Fixes/formatter'
 import { ButtonGroup } from 'react-bootstrap'
 import Button from '../../components/Button/Button'
 import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
@@ -180,10 +180,14 @@ function UsuariosPage () {
       { accessorKey: 'Username', header: 'Usuario' },
       { accessorKey: 'Apellidos', header: 'Apellidos' },
       { accessorKey: 'Nombres', header: 'Nombres' },
-      { accessorKey: 'FechaNacimiento', header: 'FechaNacimiento' },
+      { accessorKey: 'FechaNacimiento', header: 'FechaNacimiento',
+        Cell: ({ cell }) => formatearFecha(cell.getValue())
+       },
       { accessorKey: 'Telefono', header: 'Telefono' },
       { accessorKey: 'Email', header: 'Email' },
-      { accessorKey: 'FechaCreado', header: 'FechaCreado' },
+      { accessorKey: 'FechaCreado', header: 'FechaCreado',
+        Cell: ({ cell }) => formatearFechayHora(cell.getValue())
+       },
       { accessorKey: 'EstadoUsuario', header: 'EstadoUsuario',
         Cell: ({ cell }) => getLabelByValue(ActivoBajaOptions, cell.getValue())
        },

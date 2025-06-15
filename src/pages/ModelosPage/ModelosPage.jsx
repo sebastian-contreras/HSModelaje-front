@@ -11,11 +11,19 @@ import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
 import {
   EstadosModelosOptions,
-  SexoOptions
+  getLabelByValue,
+  SexoOptions,
 } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
-import { activarModeloApi, darBajaModeloApi, deleteModeloApi, storeModeloApi, updateModeloApi } from '../../services/ModelosService'
+import {
+  activarModeloApi,
+  darBajaModeloApi,
+  deleteModeloApi,
+  storeModeloApi,
+  updateModeloApi
+} from '../../services/ModelosService'
+import { formatearFecha, formatearFechayHora } from '../../Fixes/formatter'
 
 function ModelosPage () {
   const { control, errors, reset, handleSubmit } = useForm()
@@ -100,18 +108,27 @@ function ModelosPage () {
     setModal({ soloVer, modificar, titulo })
   }
 
-
-
   const columns = useMemo(
     () => [
       { accessorKey: 'IdModelo', header: '#' },
       { accessorKey: 'DNI', header: 'DNI' },
       { accessorKey: 'ApelName', header: 'Apellido, nombre' },
-      { accessorKey: 'FechaNacimiento', header: 'FechaNacimiento' },
-      { accessorKey: 'Sexo', header: 'Sexo' },
+      { accessorKey: 'FechaNacimiento', header: 'Fecha Nacimiento',
+        Cell: ({ cell }) => formatearFecha(cell.getValue())
+       },
+      {
+        accessorKey: 'Sexo',
+        header: 'Sexo',
+        Cell: ({ cell }) => getLabelByValue(SexoOptions, cell.getValue())
+      },
       { accessorKey: 'Telefono', header: 'Telefono' },
       { accessorKey: 'Correo', header: 'Correo' },
-      { accessorKey: 'EstadoMod', header: 'Estado' },
+      {
+        accessorKey: 'EstadoMod',
+        header: 'Estado',
+        Cell: ({ cell }) =>
+          getLabelByValue(EstadosModelosOptions, cell.getValue())
+      },
       {
         accessorKey: 'acciones',
         header: 'Acciones',
@@ -119,9 +136,7 @@ function ModelosPage () {
         enableHiding: false,
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
-          <ButtonGroup
-            style={{ display: 'flex', justifyContent: 'flex-end' }}
-          >
+          <ButtonGroup style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
               estilo='primary'
               onClick={() =>
@@ -133,7 +148,7 @@ function ModelosPage () {
             >
               Ver
             </Button>
-          
+
             <Button
               estilo='secondary'
               onClick={() =>
@@ -171,7 +186,8 @@ function ModelosPage () {
                     funcion: () => darBajaModeloApi(row.original.IdModelo),
                     refresh: refresh
                   })
-                }}                disabled={row.original.EstadoMod == 'B'}
+                }}
+                disabled={row.original.EstadoMod == 'B'}
               >
                 Dar Baja
               </Button>
@@ -189,14 +205,14 @@ function ModelosPage () {
                     funcion: () => activarModeloApi(row.original.IdModelo),
                     refresh: refresh
                   })
-                }}                disabled={row.original.EstadoMod == 'A'}
+                }}
+                disabled={row.original.EstadoMod == 'A'}
               >
                 Activar
               </Button>
             ) : (
               ''
             )}
-            
           </ButtonGroup>
         )
       }
@@ -210,9 +226,9 @@ function ModelosPage () {
     // Aquí puedes manejar los datos del formulario
   }
 
-  function fastSearch(e){
+  function fastSearch (e) {
     setBusqueda(e.target.value)
-    handleFilterParams({pApelName:e.target.value})
+    handleFilterParams({ pApelName: e.target.value })
   }
 
   const inputsFormulario = [
@@ -221,127 +237,126 @@ function ModelosPage () {
       label: 'DNI',
       type: 'text',
       estilos: 'col-12',
-      options: [],
+      options: []
     },
     {
       name: 'ApelName',
       label: 'Apellido, nombre',
       type: 'text',
       estilos: 'col-12',
-      options: [],
+      options: []
     },
     {
       name: 'FechaNacimiento',
       label: 'Fecha Nacimiento',
       type: 'date',
       estilos: 'col-12',
-      options: [],
+      options: []
     },
     {
       name: 'Sexo',
       label: 'Sexo',
       type: 'select',
       estilos: 'col-12',
-      options: SexoOptions,
+      options: SexoOptions
     },
     {
       name: 'Telefono',
       label: 'Telefono',
       type: 'text',
       estilos: 'col-12',
-      options: [],
+      options: []
     },
     {
       name: 'Correo',
       label: 'Correo electronico',
       type: 'mail',
       estilos: 'col-12',
-      options: [],
-    },
-    
+      options: []
+    }
   ]
 
   return (
     <>
-    <div>
-      <HeaderPageComponent
-        title='Modelos'
-        items={[{ name: 'modelos', link: '/modelos' }]}
-      />
-      <SectionPage header={'Listado de modelos registradas'}>
-        <div className='d-flex justify-content-start'>
-          <Button
-            lg
-            onClick={() =>
-              openForm(null, {
-                soloVer: false,
-                modificar: false,
-                titulo: 'Registrar modelo'
-              })
-            }
-          >
-            Registrar modelos
-          </Button>
-        </div>
-
-        <div className='input-group mb-0 mt-5'>
-          <Dropdown className='me-3' style={{ width: '20rem' }}>
-            <Dropdown.Toggle
-              variant='primary'
-              className='w-100'
-              id='dropdown-basic'
+      <div>
+        <HeaderPageComponent
+          title='Modelos'
+          items={[{ name: 'modelos', link: '/modelos' }]}
+        />
+        <SectionPage header={'Listado de modelos registradas'}>
+          <div className='d-flex justify-content-start'>
+            <Button
+              lg
+              onClick={() =>
+                openForm(null, {
+                  soloVer: false,
+                  modificar: false,
+                  titulo: 'Registrar modelo'
+                })
+              }
             >
-              Filtros Avanzado
-            </Dropdown.Toggle>
+              Registrar modelos
+            </Button>
+          </div>
 
-            <Dropdown.Menu className='w-100'>
-              <Form
-                onSubmit={handleSubmit(onSubmit)}
-                style={{ padding: '10px' }}
+          <div className='input-group mb-0 mt-5'>
+            <Dropdown className='me-3' style={{ width: '20rem' }}>
+              <Dropdown.Toggle
+                variant='primary'
+                className='w-100'
+                id='dropdown-basic'
               >
-                <GenerateInputs
-                  inputs={inputsTest}
-                  control={control}
-                  errors={errors}
-                  onlyView={false}
-                />
-                <Button estilo='primary' type='submit'>
-                  Enviar Filtros
-                </Button>
-              </Form>
-            </Dropdown.Menu>
-          </Dropdown>
-          <span className='input-group-text'>
-            <i className='fas fa-search'></i>
-          </span>
-          <input
-            type='text'
-            value={Busqueda}
-            className='form-control'
-            onChange={fastSearch}
-            placeholder='Busqueda de modelos por apellido y nombre'
-          />
-        </div>
+                Filtros Avanzado
+              </Dropdown.Toggle>
 
-        {error ? (
-          'Ocurrio un error, contacte con el administrador.'
-        ) : (
-          <TablaMaterial
-            columnFilters={columnFilters}
-            loading={loading}
-            pagination={pagination}
-            setColumnFilters={setColumnFilters}
-            setPagination={setPagination}
-            setSorting={setSorting}
-            rowCount={data?.total_row}
-            sorting={sorting}
-            columns={columns}
-            data={data.data}
-          />
-        )}
-      </SectionPage>
-    </div>
-    <ModalModificado
+              <Dropdown.Menu className='w-100'>
+                <Form
+                  onSubmit={handleSubmit(onSubmit)}
+                  style={{ padding: '10px' }}
+                >
+                  <GenerateInputs
+                    inputs={inputsTest}
+                    control={control}
+                    errors={errors}
+                    onlyView={false}
+                  />
+                  <Button estilo='primary' type='submit'>
+                    Enviar Filtros
+                  </Button>
+                </Form>
+              </Dropdown.Menu>
+            </Dropdown>
+            <span className='input-group-text'>
+              <i className='fas fa-search'></i>
+            </span>
+            <input
+              type='text'
+              value={Busqueda}
+              className='form-control'
+              onChange={fastSearch}
+              placeholder='Busqueda de modelos por apellido y nombre'
+            />
+          </div>
+
+          {error ? (
+            'Ocurrio un error, contacte con el administrador.'
+          ) : (
+            <TablaMaterial
+              columnFilters={columnFilters}
+              loading={loading}
+              pagination={pagination}
+              setColumnFilters={setColumnFilters}
+              setPagination={setPagination}
+              setSorting={setSorting}
+              rowCount={data?.total_row}
+              sorting={sorting}
+              columns={columns}
+              data={data.data}
+            />
+          )}
+        </SectionPage>
+      </div>
+      <ModalModificado
         show={Modal}
         handleClose={closeForm}
         size={30}
@@ -360,7 +375,6 @@ function ModelosPage () {
           elemento={'Modelo'}
         />
       </ModalModificado>
-
     </>
   )
 }

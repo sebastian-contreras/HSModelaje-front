@@ -16,6 +16,7 @@ import {
   darBajaEstablecimientoApi,
   deleteEstablecimientoApi
 } from '../../services/EstablecimientosService'
+import { EstadosOptions, getLabelByValue } from '../../Fixes/fixes'
 
 function EstablecimientosPage () {
   const [Modal, setModal] = useState(false)
@@ -173,7 +174,9 @@ function EstablecimientosPage () {
       { accessorKey: 'Establecimiento', header: 'Establecimiento' },
       { accessorKey: 'Ubicacion', header: 'Ubicacion' },
       { accessorKey: 'Capacidad', header: 'Capacidad' },
-      { accessorKey: 'EstadoEstablecimiento', header: 'Estado' },
+      { accessorKey: 'EstadoEstablecimiento', header: 'Estado',
+        Cell: ({ cell }) => getLabelByValue(EstadosOptions, cell.getValue())
+       },
       {
         accessorKey: 'acciones',
         header: 'Acciones',

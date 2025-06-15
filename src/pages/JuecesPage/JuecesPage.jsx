@@ -11,6 +11,8 @@ import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
 import {
   EstadosJuecesOptions,
+  EstadosOptions,
+  getLabelByValue,
 } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
@@ -98,7 +100,9 @@ function JuecesPage () {
       { accessorKey: 'ApelName', header: 'Apellido, nombre' },
       { accessorKey: 'Correo', header: 'Correo' },
       { accessorKey: 'Telefono', header: 'Telefono' },
-      { accessorKey: 'EstadoJuez', header: 'Estado' },
+      { accessorKey: 'EstadoJuez', header: 'Estado',
+        Cell: ({ cell }) => getLabelByValue(EstadosOptions, cell.getValue())
+       },
       {
         accessorKey: 'acciones',
         header: 'Acciones',

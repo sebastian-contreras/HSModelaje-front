@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { API_URL } from '../../../Fixes/API_URL'
-import { SiONoOptions } from '../../../Fixes/fixes'
+import { SiONoOptions, VotacionOptions } from '../../../Fixes/fixes'
 import { MENSAJE_DEFAULT } from '../../../Fixes/messages'
 import { Alerta } from '../../../functions/alerts'
 import { useFetch } from '../../../hooks/useFetch'
@@ -62,7 +62,7 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
       type: 'select',
       error: errors?.Votacion,
       estilos: 'col-12',
-      options: SiONoOptions,
+      options: VotacionOptions,
       readOnly: onlyView
     },
     {

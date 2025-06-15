@@ -3,6 +3,7 @@ import { Spinner } from "react-bootstrap"
 function Button ({
   type = 'button',
   loading=false,
+  hidden=false,
   estilo = 'primary',
   sm = false,
   onClick = () => {},
@@ -29,6 +30,7 @@ function Button ({
       type={type}
       onClick={onClick}
       style={style}
+      hidden={hidden}
       disabled={disabled || loading}
       className={`${buttonClasses[estilo]} ${sm ? 'btn-sm' : ''} ${
         lg ? 'btn-lg' : ''

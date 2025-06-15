@@ -7,7 +7,11 @@ import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPage
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
-import { EstadosEventosOptions, getLabelByValue, VotacionOptions } from '../../Fixes/fixes'
+import {
+  EstadosEventosOptions,
+  getLabelByValue,
+  VotacionOptions
+} from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
 import {
@@ -116,15 +120,42 @@ function EventosPage () {
     () => [
       { accessorKey: 'IdEvento', header: '#' },
       { accessorKey: 'Evento', header: 'Evento' },
-      { accessorKey: 'FechaProbableInicio', header: 'FechaProbableInicio',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
-      { accessorKey: 'FechaProbableFinal', header: 'FechaProbableFinal',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
-      { accessorKey: 'FechaInicio', header: 'Fecha Inicio',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
-      { accessorKey: 'FechaFinal', header: 'Fecha Final',Cell: ({ cell }) => cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'},
+      {
+        accessorKey: 'FechaProbableInicio',
+        header: 'FechaProbableInicio',
+        Cell: ({ cell }) =>
+          cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'
+      },
+      {
+        accessorKey: 'FechaProbableFinal',
+        header: 'FechaProbableFinal',
+        Cell: ({ cell }) =>
+          cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'
+      },
+      {
+        accessorKey: 'FechaInicio',
+        header: 'Fecha Inicio',
+        Cell: ({ cell }) =>
+          cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'
+      },
+      {
+        accessorKey: 'FechaFinal',
+        header: 'Fecha Final',
+        Cell: ({ cell }) =>
+          cell.getValue() ? formatearFechayHora(cell.getValue()) : '-'
+      },
       { accessorKey: 'IdEstablecimiento', header: 'Establecimiento' },
-      { accessorKey: 'Votacion', header: '¿Votacion?', Cell: ({ cell }) => getLabelByValue(VotacionOptions, cell.getValue())},
-      { accessorKey: 'EstadoEvento', header: 'Estado',
-        Cell: ({ cell }) => getLabelByValue(EstadosEventosOptions, cell.getValue())
-       },
+      {
+        accessorKey: 'Votacion',
+        header: '¿Votacion?',
+        Cell: ({ cell }) => getLabelByValue(VotacionOptions, cell.getValue())
+      },
+      {
+        accessorKey: 'EstadoEvento',
+        header: 'Estado',
+        Cell: ({ cell }) =>
+          getLabelByValue(EstadosEventosOptions, cell.getValue())
+      },
       {
         accessorKey: 'acciones',
         header: 'Acciones',
@@ -162,6 +193,7 @@ function EventosPage () {
             {row.original.EstadoEvento != 'F' ? (
               <Button
                 estilo='secondary'
+                hidden={user.role != 'A'}
                 onClick={() =>
                   openForm(row, {
                     modificar: true,
@@ -176,6 +208,7 @@ function EventosPage () {
             )}
 
             <Button
+              hidden={user.role != 'A'}
               estilo='danger'
               onClick={() => {
                 doubleConfirmationAlert({
@@ -191,6 +224,7 @@ function EventosPage () {
             </Button>
             {row.original.EstadoEvento == 'A' ? (
               <Button
+                hidden={user.role != 'A'}
                 estilo='warning'
                 onClick={() => {
                   doubleConfirmationAlert({
@@ -210,6 +244,7 @@ function EventosPage () {
             )}
             {row.original.EstadoEvento == 'B' ? (
               <Button
+                hidden={user.role != 'A'}
                 estilo='success'
                 onClick={() => {
                   doubleConfirmationAlert({
@@ -229,6 +264,7 @@ function EventosPage () {
             )}
             {row.original.EstadoEvento == 'A' ? (
               <Button
+                hidden={user.role != 'A'}
                 estilo='primary'
                 onClick={() =>
                   openFormFinalizar(row, {

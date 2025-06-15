@@ -7,8 +7,10 @@ import { ESTADOS_EVENTOS, getLabelByValue } from '../../../Fixes/fixes'
 import { dameEstablecimientoApi } from '../../../services/EstablecimientosService'
 import Pusher from 'pusher-js'
 import Echo from 'laravel-echo'
+import { useAuth } from '../../../context/Auth/AuthContext'
 
 function EventoSidebar () {
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [Establecimiento, setEstablecimiento] = useState({})
   const location = useLocation()
@@ -16,28 +18,68 @@ function EventoSidebar () {
   const BASE_URL = '/eventos/' + evento?.IdEvento
   const rutas = useMemo(
     () => [
-      { name: 'Dashboard', link: BASE_URL, icon: 'fa-home' },
-      { name: 'Registros', separador: true },
-      // { name: 'Personas', link: '/personas', icon: 'fa-user' },
-      { name: 'Entradas', link: BASE_URL + '/entradas', icon: 'fa-ticket' },
-      { name: 'Zonas', link: BASE_URL + '/zonas', icon: 'fa-location-dot' },
+      { name: 'Dashboard', link: BASE_URL, icon: 'fa-home', roles: ['A'] },
+      { name: 'Registros', separador: true, roles: ['A'] },
+      // { name: 'Personas', link: '/personas', icon: 'fa-user' , roles: ['A']},
+      {
+        name: 'Entradas',
+        link: BASE_URL + '/entradas',
+        icon: 'fa-ticket',
+        roles: ['A']
+      },
+      {
+        name: 'Zonas',
+        link: BASE_URL + '/zonas',
+        icon: 'fa-location-dot',
+        roles: ['A']
+      },
       {
         name: 'Patrocinadores',
         link: BASE_URL + '/patrocinadores',
-        icon: 'fa-bullhorn'
+        icon: 'fa-bullhorn',
+        roles: ['A']
       },
-      { name: 'Gastos', link: BASE_URL + '/gastos', icon: 'fa-minus' },
-      { name: 'Votacion', separador: true },
-      { name: 'Votacion', link: BASE_URL + '/votacion', icon: 'fa-comment', hidden: evento?.Votacion == 'N' },
+      {
+        name: 'Gastos',
+        link: BASE_URL + '/gastos',
+        icon: 'fa-minus',
+        roles: ['A']
+      },
+      { name: 'Votacion', separador: true, roles: ['A','M'] },
+      {
+        name: 'Votacion',
+        link: BASE_URL + '/votacion',
+        icon: 'fa-comment',
+        hidden: evento?.Votacion == 'N',
+        roles: ['A','M']
+      },
       {
         name: 'Participantes',
         link: BASE_URL + '/participantes',
-        icon: 'fa-person'
+        icon: 'fa-person',
+        roles: ['A','M']
       },
-      { name: 'Jueces', link: BASE_URL + '/jueces', icon: 'fa-gavel' },
-      { name: 'Metricas', link: BASE_URL + '/metricas', icon: 'fa-circle' }
+      {
+        name: 'Jueces',
+        link: BASE_URL + '/jueces',
+        icon: 'fa-gavel',
+        roles: ['A','M']
+      },
+      {
+        name: 'Metricas',
+        link: BASE_URL + '/metricas',
+        icon: 'fa-circle',
+        roles: ['A','M']
+      }
     ],
     [BASE_URL]
+  )
+  const rutasFiltradas = useMemo(
+    () =>
+      rutas.filter(
+        item => (!item.roles || item.roles.includes(user?.role)) && !item.hidden // También filtra los ocultos por lógica de evento
+      ),
+    [rutas, user]
   )
 
   const TiposItemsNav = ({
@@ -46,7 +88,7 @@ function EventoSidebar () {
     separador = false,
     subruta = null,
     icon = '',
-    hidden=false
+    hidden = false
   }) => {
     const isActive = location.pathname == link
     const firstRoute = location.pathname.split('/')
@@ -165,7 +207,7 @@ function EventoSidebar () {
       <div className='scrollbar scrollbar-inner d-block'>
         <div className=' sidebar-content'>
           <ul className='pt-3 nav nav-secondary'>
-            {rutas.map((item, index) => (
+            {rutasFiltradas.map((item, index) => (
               <TiposItemsNav key={index} {...item} />
             ))}
 

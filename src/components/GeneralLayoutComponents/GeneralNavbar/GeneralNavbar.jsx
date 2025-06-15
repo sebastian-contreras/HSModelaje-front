@@ -14,10 +14,10 @@ function GeneralNavbar () {
         <div className='logo-header' data-background-color='dark'>
           <a href='index.html' className='logo'>
             <img
-              src='/img/logo/logo_light.png'
+              src='/img/logo/logo_white.png'
               alt='navbar brand'
               className='navbar-brand'
-              height='50'
+              height='66'
             />
           </a>
           <div className='nav-toggle'>

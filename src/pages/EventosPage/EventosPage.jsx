@@ -7,7 +7,7 @@ import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPage
 import SectionPage from '../../components/SectionPage/SectionPage'
 import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
 import { API_URL } from '../../Fixes/API_URL'
-import { EstadosEventosOptions } from '../../Fixes/fixes'
+import { EstadosEventosOptions, getLabelByValue, VotacionOptions } from '../../Fixes/fixes'
 import { doubleConfirmationAlert } from '../../functions/alerts'
 import { useFetch } from '../../hooks/useFetch'
 import {
@@ -120,8 +120,10 @@ function EventosPage () {
       { accessorKey: 'FechaInicio', header: 'FechaInicio' },
       { accessorKey: 'FechaFinal', header: 'FechaFinal' },
       { accessorKey: 'IdEstablecimiento', header: 'Establecimiento' },
-      { accessorKey: 'Votacion', header: '¿Votacion?' },
-      { accessorKey: 'EstadoEvento', header: 'Estado' },
+      { accessorKey: 'Votacion', header: '¿Votacion?', Cell: ({ cell }) => getLabelByValue(VotacionOptions, cell.getValue())},
+      { accessorKey: 'EstadoEvento', header: 'Estado',
+        Cell: ({ cell }) => getLabelByValue(EstadosEventosOptions, cell.getValue())
+       },
       {
         accessorKey: 'acciones',
         header: 'Acciones',

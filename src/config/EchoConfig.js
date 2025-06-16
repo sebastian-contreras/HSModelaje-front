@@ -1,14 +1,14 @@
-import Echo from "laravel-echo"
-import Pusher from "pusher-js"
+import Echo from 'laravel-echo'
+import Pusher from 'pusher-js'
 
 window.Pusher = Pusher
 
 export const echo = (window.Echo = new Echo({
   broadcaster: 'pusher',
-  key: 'eq6doihjm8dcke8g263o',
-  wsHost: '127.0.0.1',
-  wsPort: 8080,
-  wssPort: 8080,
+  key: import.meta.env.VITE_PUSHER_KEY,
+  wsHost: import.meta.env.VITE_WS_HOST,
+  wsPort: import.meta.env.VITE_WS_PORT,
+  wssPort: import.meta.env.VITE_WS_PORT,
   forceTLS: false,
   encrypted: false,
   disableStats: true,

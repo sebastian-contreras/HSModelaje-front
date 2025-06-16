@@ -261,6 +261,20 @@ function PasarelaPage() {
 
             {pasoActual === 3 && (
               <div>
+                <h4 className="mb-4">Metodo de Pago</h4>
+                <div className="resumen">
+                  <ul className="list-group list-group-flush mb-4 fw-bold">
+                    <li className="list-group-item">
+                      Titular de la cuenta: {Evento?.TitularCuenta}
+                    </li>
+                    <li className="list-group-item">
+                      Alias: {Evento?.Alias}
+                    </li>
+                    <li className="list-group-item">
+                      CBU: {Evento?.CBU}
+                    </li>
+                  </ul>
+                </div>
                 <h4 className="mb-4">Resumen</h4>
                 <div className="resumen">
                   <ul className="list-group list-group-flush mb-4 fw-bold">
@@ -328,7 +342,7 @@ function PasarelaPage() {
                   variant="primary"
                   loading={LoadingFinal}
                   disabled={
-                    (pasoActual === 2 && !selectedZona) ||
+                    (pasoActual === 2 && !selectedZona || watch('Cantidad')<=0) ||
                     (pasoActual === 2 &&
                       (!getValues('DNI') ||
                         !getValues('Correo') ||

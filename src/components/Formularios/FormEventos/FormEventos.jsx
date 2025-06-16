@@ -19,7 +19,7 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
     loading,
     error
   } = useFetch(`${API_URL}/api/establecimientos/`, 'get', {
-    pIncluyeBajas: dataform ? 'S' : 'N',
+    pIncluyeBajas: dataform ? 'S' : 'N'
   })
 
   useEffect(() => {
@@ -27,9 +27,15 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
       const itemFound = dataEstablecimientos?.find(
         item => item.IdEstablecimiento == dataform.IdEstablecimiento
       )
-      reset({...dataform,IdEstablecimiento:{value:itemFound?.IdEstablecimiento,label:itemFound?.Establecimiento}})
+      reset({
+        ...dataform,
+        IdEstablecimiento: {
+          value: itemFound?.IdEstablecimiento,
+          label: itemFound?.Establecimiento
+        }
+      })
     }
-  }, [reset, dataform, dataEstablecimientos,loading])
+  }, [reset, dataform, dataEstablecimientos, loading])
   const inputsTest = [
     {
       name: `Evento`,
@@ -47,22 +53,13 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
       error: errors?.FechaProbableInicio,
       readOnly: onlyView
     },
+
     {
       name: `FechaProbableFinal`,
       control: control,
       label: 'Fecha Probable Final',
       type: 'datetime-local',
       error: errors?.FechaProbableFinal,
-      readOnly: onlyView
-    },
-    {
-      name: `Votacion`,
-      control: control,
-      label: '¿Votacion?',
-      type: 'select',
-      error: errors?.Votacion,
-      estilos: 'col-12',
-      options: VotacionOptions,
       readOnly: onlyView
     },
     {
@@ -77,13 +74,53 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
         label: item.Establecimiento
       })),
       readOnly: onlyView
+    },
+    {
+      name: `Votacion`,
+      control: control,
+      label: '¿Votacion?',
+      type: 'select',
+      error: errors?.Votacion,
+      estilos: 'col-12',
+      options: VotacionOptions,
+      readOnly: onlyView
+    },
+    {
+      name: `TitularCuenta`,
+      control: control,
+      label: 'Titular de la cuenta',
+      type: 'text',
+      error: errors?.TitularCuenta,
+      readOnly: onlyView
+    },
+    {
+      name: `Alias`,
+      control: control,
+      label: 'Alias',
+      type: 'text',
+      error: errors?.Alias,
+      readOnly: onlyView
+    },
+    {
+      name: `CBU`,
+      control: control,
+      label: 'CBU',
+      type: 'text',
+      error: errors?.CBU,
+      readOnly: onlyView
     }
   ]
 
   function onSubmit (data) {
     ;(modificar
-      ? updateEventoApi({...data,IdEstablecimiento:data.IdEstablecimiento.value}, dataform.IdEvento)
-      : storeEventoApi({...data,IdEstablecimiento:data.IdEstablecimiento.value})
+      ? updateEventoApi(
+          { ...data, IdEstablecimiento: data.IdEstablecimiento.value },
+          dataform.IdEvento
+        )
+      : storeEventoApi({
+          ...data,
+          IdEstablecimiento: data.IdEstablecimiento.value
+        })
     )
       .then(response => {
         console.log(data)

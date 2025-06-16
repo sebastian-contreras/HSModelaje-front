@@ -87,7 +87,7 @@ function InputForm ({
               inputValue={inputValue}
               onInputChange={value => {
                 setInputValue(value)
-                onFilterChange(value) // Enviar el texto de filtro al padre
+                if(onFilterChange) onFilterChange(value)
               }}
             />
           ) : type == 'file' ? (

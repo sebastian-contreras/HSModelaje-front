@@ -226,9 +226,8 @@ export const NacionalidadesOptions = [
 //USUARIOS
 
 export const ROLES_CHOICES = [
-  { value: 'A', label: 'Administrador' },
+  { value: 'A', label: 'Organizador' },
   { value: 'G', label: 'Portero' },
-  { value: 'O', label: 'Organizador' },
   { value: 'M', label: 'Moderador' },
 ]
 

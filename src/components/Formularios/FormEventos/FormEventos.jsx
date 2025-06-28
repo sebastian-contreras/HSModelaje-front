@@ -1,155 +1,158 @@
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { API_URL } from '../../../Fixes/API_URL'
-import { SiONoOptions, VotacionOptions } from '../../../Fixes/fixes'
-import { MENSAJE_DEFAULT } from '../../../Fixes/messages'
-import { Alerta } from '../../../functions/alerts'
-import { useFetch } from '../../../hooks/useFetch'
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { API_URL } from "../../../Fixes/API_URL";
+import { SiONoOptions, VotacionOptions } from "../../../Fixes/fixes";
+import { MENSAJE_DEFAULT } from "../../../Fixes/messages";
+import { Alerta } from "../../../functions/alerts";
+import { useFetch } from "../../../hooks/useFetch";
 import {
   storeEventoApi,
-  updateEventoApi
-} from '../../../services/EventosService'
-import Button from '../../Button/Button'
-import GenerateInputs from '../../GenerateInputs/GenerateInputs'
+  updateEventoApi,
+} from "../../../services/EventosService";
+import Button from "../../Button/Button";
+import GenerateInputs from "../../GenerateInputs/GenerateInputs";
 
-function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
-  const { control, errors, reset, handleSubmit } = useForm()
+function FormEventos({ dataform, onlyView, modificar, closeModal, refresh }) {
+  const { control, errors, reset, handleSubmit } = useForm();
   const {
     data: dataEstablecimientos,
     loading,
-    error
-  } = useFetch(`${API_URL}/api/establecimientos/`, 'get', {
-    pIncluyeBajas: dataform ? 'S' : 'N'
-  })
+    error,
+  } = useFetch(`${API_URL}/api/establecimientos/`, "get", {
+    pIncluyeBajas: dataform ? "S" : "N",
+  });
 
   useEffect(() => {
     if (dataform && !loading) {
       const itemFound = dataEstablecimientos?.find(
-        item => item.IdEstablecimiento == dataform.IdEstablecimiento
-      )
+        (item) => item.IdEstablecimiento == dataform.IdEstablecimiento
+      );
       reset({
         ...dataform,
         IdEstablecimiento: {
           value: itemFound?.IdEstablecimiento,
-          label: itemFound?.Establecimiento
-        }
-      })
+          label: itemFound?.Establecimiento,
+        },
+      });
     }
-  }, [reset, dataform, dataEstablecimientos, loading])
+  }, [reset, dataform, dataEstablecimientos, loading]);
   const inputsTest = [
     {
       name: `Evento`,
       control: control,
-      label: 'Evento',
-      type: 'text',
+      label: "Evento",
+      type: "text",
       error: errors?.Evento,
-      readOnly: onlyView
+      readOnly: onlyView,
     },
     {
       name: `FechaProbableInicio`,
       control: control,
-      label: 'Fecha Probable Inicio',
-      type: 'datetime-local',
+      label: "Fecha Probable Inicio",
+      type: "datetime-local",
       error: errors?.FechaProbableInicio,
-      readOnly: onlyView
+      readOnly: onlyView,
     },
 
     {
       name: `FechaProbableFinal`,
       control: control,
-      label: 'Fecha Probable Final',
-      type: 'datetime-local',
+      label: "Fecha Probable Final",
+      type: "datetime-local",
       error: errors?.FechaProbableFinal,
-      readOnly: onlyView
+      readOnly: onlyView,
     },
     {
       name: `IdEstablecimiento`,
       control: control,
-      label: 'Establecimiento',
-      type: 'select-autocomplete',
+      label: "Establecimiento",
+      type: "select-autocomplete",
       error: errors?.IdEstablecimiento,
-      estilos: 'col-12',
-      options: dataEstablecimientos?.map(item => ({
+      estilos: "col-12",
+      options: dataEstablecimientos?.map((item) => ({
         value: item.IdEstablecimiento,
-        label: item.Establecimiento
+        label: item.Establecimiento,
       })),
-      readOnly: onlyView
+      readOnly: onlyView,
     },
     {
       name: `Votacion`,
       control: control,
-      label: '¿Votacion?',
-      type: 'select',
+      label: "¿Votacion?",
+      type: "select",
       error: errors?.Votacion,
-      estilos: 'col-12',
-      options: VotacionOptions,
-      readOnly: onlyView
+      estilos: "col-12",
+      options:
+        onlyView || modificar
+          ? VotacionOptions
+          : [VotacionOptions[0], VotacionOptions[1]],
+      readOnly: onlyView,
     },
     {
       name: `TitularCuenta`,
       control: control,
-      label: 'Titular de la cuenta',
-      type: 'text',
+      label: "Titular de la cuenta",
+      type: "text",
       error: errors?.TitularCuenta,
-      readOnly: onlyView
+      readOnly: onlyView,
     },
     {
       name: `Alias`,
       control: control,
-      label: 'Alias',
-      type: 'text',
+      label: "Alias",
+      type: "text",
       error: errors?.Alias,
-      readOnly: onlyView
+      readOnly: onlyView,
     },
     {
       name: `CBU`,
       control: control,
-      label: 'CBU',
-      type: 'text',
+      label: "CBU",
+      type: "text",
       error: errors?.CBU,
-      readOnly: onlyView
-    }
-  ]
+      readOnly: onlyView,
+    },
+  ];
 
-  function onSubmit (data) {
-    ;(modificar
+  function onSubmit(data) {
+    (modificar
       ? updateEventoApi(
           { ...data, IdEstablecimiento: data.IdEstablecimiento.value },
           dataform.IdEvento
         )
       : storeEventoApi({
           ...data,
-          IdEstablecimiento: data.IdEstablecimiento.value
+          IdEstablecimiento: data.IdEstablecimiento.value,
         })
     )
-      .then(response => {
-        console.log(data)
-        if (closeModal) closeModal()
-        if (refresh) refresh()
+      .then((response) => {
+        console.log(data);
+        if (closeModal) closeModal();
+        if (refresh) refresh();
         Alerta()
           .withMini(true)
-          .withTipo('success')
+          .withTipo("success")
           .withTitulo(
-            response.message ? response.message : 'Evento creado correctamente.'
+            response.message ? response.message : "Evento creado correctamente."
           )
-          .build()
+          .build();
       })
-      .catch(error => {
-        console.log(error)
+      .catch((error) => {
+        console.log(error);
         Alerta()
           .withMini(true)
-          .withTipo('error')
+          .withTipo("error")
           .withTitulo(`No se pudo crear el evento.`)
           .withMensaje(
             error.response.data.message
               ? error.response.data.message
               : MENSAJE_DEFAULT
           )
-          .build()
-      })
+          .build();
+      });
   }
-  if (loading) return '...Cargando'
-  if (error) return 'Error al cargar los datos, Contacte con el administrador'
+  if (loading) return "...Cargando";
+  if (error) return "Error al cargar los datos, Contacte con el administrador";
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <GenerateInputs
@@ -158,20 +161,20 @@ function FormEventos ({ dataform, onlyView, modificar, closeModal, refresh }) {
         errors={errors}
         onlyView={onlyView}
       />
-      <div className='d-flex justify-content-end gap-3'>
+      <div className="d-flex justify-content-end gap-3">
         {closeModal && (
-          <Button estilo='secondary' onClick={closeModal}>
+          <Button estilo="secondary" onClick={closeModal}>
             Cerrar
           </Button>
         )}
         {!onlyView && (
-          <Button estilo='primary' type='submit'>
+          <Button estilo="primary" type="submit">
             Guardar
           </Button>
         )}
       </div>
     </form>
-  )
+  );
 }
 
-export default FormEventos
+export default FormEventos;

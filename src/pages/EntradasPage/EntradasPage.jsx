@@ -119,7 +119,7 @@ function EntradasPage () {
         accessorKey: 'IdZona',
         header: 'Zona',
         Cell: ({ row }) =>
-          dataZona?.data?.find(item => item.IdZona == row.original.IdZona).Zona
+          dataZona?.data?.find(item => item?.IdZona == row?.original?.IdZona)?.Zona 
       },
       { accessorKey: 'Cantidad', header: 'Cantidad' },
       { accessorKey: 'ApelName', header: 'Apellido, Nombre' },

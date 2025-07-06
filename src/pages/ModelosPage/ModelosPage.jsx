@@ -283,7 +283,7 @@ function ModelosPage () {
           title='Modelos'
           items={[{ name: 'modelos', link: '/modelos' }]}
         />
-        <SectionPage header={'Listado de modelos registradas'}>
+        <SectionPage header={'Listado de modelos registrados'}>
           <div className='d-flex justify-content-start'>
             <Button
               lg

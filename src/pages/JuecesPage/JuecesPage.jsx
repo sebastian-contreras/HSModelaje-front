@@ -261,7 +261,7 @@ function JuecesPage () {
           title='Jueces'
           items={[{ name: 'jueces', link: '/jueces' }]}
         />
-        <SectionPage header={'Listado de jueces registradas'}>
+        <SectionPage header={'Listado de jueces registrados'}>
           <div className='d-flex justify-content-start'>
             <Button
               lg

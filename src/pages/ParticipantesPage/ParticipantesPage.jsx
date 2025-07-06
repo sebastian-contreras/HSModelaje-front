@@ -188,7 +188,7 @@ function ParticipantesPage () {
           title='Participantes'
           items={[{ name: 'participantes', link: '/participantes' }]}
         />
-        <SectionPage header={'Listado de participantes registradas'}>
+        <SectionPage header={'Listado de participantes registrados'}>
           <div className='d-flex justify-content-start'>
             <Button
               lg

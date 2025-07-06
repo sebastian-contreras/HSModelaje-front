@@ -62,7 +62,7 @@ export const useFetch = (
   }, [endpoint, method, body, params, pagination.pageIndex,pagination.pageSize, columnFilters, sorting]);
 
   const handleFilterParams = (filter) => {
-    setParams((old) => ({ ...filter, pagina: 1, cantidad: old.cantidad }));
+    setParams((old) => ({ ...filter, cantidad: old.cantidad }));
   };
 
   const handleBody = (filter) => {

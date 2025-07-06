@@ -165,7 +165,7 @@ function GastosPage () {
         title='Gastos'
         items={[{ name: 'gastos', link: '/gastos' }]}
       />
-      <SectionPage header={'Listado de gastos registradas'}>
+      <SectionPage header={'Listado de gastos registrados'}>
         <div className='d-flex justify-content-start'>
           <Button
             lg

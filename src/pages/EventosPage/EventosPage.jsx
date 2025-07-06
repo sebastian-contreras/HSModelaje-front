@@ -91,7 +91,6 @@ function EventosPage () {
     pCantidad: 10,
     pPagina: 1
   })
-  console.log(pagination)
   function closeForm () {
     setSeleccionado(null)
     setModal(false)
@@ -305,7 +304,7 @@ function EventosPage () {
           title='Eventos'
           items={[{ name: 'eventos', link: '/eventos' }]}
         />
-        <SectionPage header={'Listado de eventos registradas'}>
+        <SectionPage header={'Listado de eventos registrados'}>
           <div className='d-flex justify-content-start'>
             <Button
               lg

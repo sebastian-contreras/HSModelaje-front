@@ -254,7 +254,7 @@ function EstablecimientosPage () {
             pPagina: 1,
             pIncluyeBajas: pIncluyeBajascheck
         });
-    } else {
+    } else if(value.length === 0) {
         handleFilterParams({
             pCadena: null, // Si hay 3 o menos caracteres, enviar cadena vacía
             pCantidad: pagination?.pageSize,
@@ -270,7 +270,7 @@ function EstablecimientosPage () {
           title='Establecimientos'
           items={[{ name: 'establecimientos', link: '/establecimientos' }]}
         />
-        <SectionPage header={'Listado de establecimientos registradas'}>
+        <SectionPage header={'Listado de establecimientos registrados'}>
           <div className='d-flex justify-content-start'>
             <Button
               lg

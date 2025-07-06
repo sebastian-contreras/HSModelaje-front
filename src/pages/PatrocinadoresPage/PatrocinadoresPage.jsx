@@ -171,7 +171,7 @@ function PatrocinadoresPage () {
         title='Patrocinadores'
         items={[{ name: 'patrocinadores', link: '/patrocinadores' }]}
       />
-      <SectionPage header={'Listado de patrocinadores registradas'}>
+      <SectionPage header={'Listado de patrocinadores registrados'}>
         <div className='d-flex justify-content-start'>
           <Button
             lg

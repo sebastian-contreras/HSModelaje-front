@@ -1,58 +1,58 @@
-import { useMemo, useState } from 'react'
-import { ButtonGroup, Dropdown, Form } from 'react-bootstrap'
-import { useForm } from 'react-hook-form'
-import Button from '../../components/Button/Button'
-import GenerateForms from '../../components/GenerateForms/GenerateForms'
-import GenerateInputs from '../../components/GenerateInputs/GenerateInputs'
-import HeaderPageComponent from '../../components/HeaderPageComponent/HeaderPageComponent'
-import ModalModificado from '../../components/Modal/ModalModificado'
-import SectionPage from '../../components/SectionPage/SectionPage'
-import TablaMaterial from '../../components/TablaMaterial/TablaMaterial'
-import { API_URL } from '../../Fixes/API_URL'
-import {
-  EstadosMetricasOptions,
-  getLabelByValue,
-} from '../../Fixes/fixes'
-import { doubleConfirmationAlert } from '../../functions/alerts'
-import { useFetch } from '../../hooks/useFetch'
+import { useMemo, useState } from "react";
+import { ButtonGroup, Dropdown, Form } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import Button from "../../components/Button/Button";
+import GenerateForms from "../../components/GenerateForms/GenerateForms";
+import GenerateInputs from "../../components/GenerateInputs/GenerateInputs";
+import HeaderPageComponent from "../../components/HeaderPageComponent/HeaderPageComponent";
+import ModalModificado from "../../components/Modal/ModalModificado";
+import SectionPage from "../../components/SectionPage/SectionPage";
+import TablaMaterial from "../../components/TablaMaterial/TablaMaterial";
+import { API_URL } from "../../Fixes/API_URL";
+import { EstadosMetricasOptions, getLabelByValue } from "../../Fixes/fixes";
+import { doubleConfirmationAlert } from "../../functions/alerts";
+import { useFetch } from "../../hooks/useFetch";
 import {
   activarMetricaApi,
   darBajaMetricaApi,
   deleteMetricaApi,
   storeMetricaApi,
-  updateMetricaApi
-} from '../../services/MetricasService'
-import { useEvento } from '../../context/SidebarContext/EventoContext'
+  updateMetricaApi,
+} from "../../services/MetricasService";
+import { useEvento } from "../../context/SidebarContext/EventoContext";
 
-function MetricasPage () {
-  const { evento } = useEvento() // Usa el contexto
-  const { control, errors, reset, handleSubmit } = useForm()
+function MetricasPage() {
+  const { evento } = useEvento(); // Usa el contexto
+  const { control, errors, reset, handleSubmit } = useForm();
   const inputsTest = [
     {
       name: `pMetrica`,
       control: control,
-      label: 'Metrica',
-      type: 'text',
+      label: "Metrica",
+      type: "text",
       error: errors?.pMetrica,
-      readOnly: false
+      readOnly: false,
     },
     {
       name: `pEstado`,
       control: control,
-      label: 'Estado',
-      type: 'select',
+      label: "Estado",
+      type: "select",
       error: errors?.pEstado,
       options: EstadosMetricasOptions,
-      readOnly: false
-    }
-  ]
+      readOnly: false,
+    },
+  ];
 
-  const [Modal, setModal] = useState(false)
-  const [Seleccionado, setSeleccionado] = useState(null)
-  const [Busqueda, setBusqueda] = useState('')
+  const [Modal, setModal] = useState(false);
+  const [Seleccionado, setSeleccionado] = useState(null);
+  const [Busqueda, setBusqueda] = useState("");
+
+  const [pIncluyeBajascheck, setpIncluyeBajascheck] = useState("N");
   const {
     data,
     loading,
+    params,
     error,
     pagination,
     handleFilterParams,
@@ -61,49 +61,51 @@ function MetricasPage () {
     refresh,
     setColumnFilters,
     sorting,
-    setSorting
-  } = useFetch(`${API_URL}/api/metricas/busqueda`, 'get', {
+    setSorting,
+  } = useFetch(`${API_URL}/api/metricas/busqueda`, "get", {
     pIdEvento: evento?.IdEvento,
+    pIncluyeInactivos: pIncluyeBajascheck,
     pCantidad: 10,
-    pPagina: 1
-  })
-  function closeForm () {
-    setSeleccionado(null)
-    setModal(false)
+    pPagina: 1,
+  });
+  function closeForm() {
+    setSeleccionado(null);
+    setModal(false);
   }
 
-  function openForm (
+  function openForm(
     e = null,
-    { soloVer = false, modificar = false, titulo = 'No hay titulo' }
+    { soloVer = false, modificar = false, titulo = "No hay titulo" }
   ) {
-    console.log(e?.original)
-    setSeleccionado(e?.original)
-    setModal({ soloVer, modificar, titulo })
+    console.log(e?.original);
+    setSeleccionado(e?.original);
+    setModal({ soloVer, modificar, titulo });
   }
 
   const columns = useMemo(
     () => [
-      { accessorKey: 'IdMetrica', header: '#' },
-      { accessorKey: 'Metrica', header: 'Metrica' },
-      { accessorKey: 'EstadoMetrica', header: 'Estado',
-        Cell: ({ cell }) => getLabelByValue(EstadosMetricasOptions, cell.getValue())
-       },
+      { accessorKey: "IdMetrica", header: "#" },
+      { accessorKey: "Metrica", header: "Metrica" },
       {
-        accessorKey: 'acciones',
-        header: 'Acciones',
+        accessorKey: "EstadoMetrica",
+        header: "Estado",
+        Cell: ({ cell }) =>
+          getLabelByValue(EstadosMetricasOptions, cell.getValue()),
+      },
+      {
+        accessorKey: "acciones",
+        header: "Acciones",
         enableSorting: false,
         enableHiding: false,
         enableGlobalFilter: false,
         Cell: ({ row, table }) => (
-          <ButtonGroup
-            style={{ display: 'flex', justifyContent: 'flex-end' }}
-          >
+          <ButtonGroup style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button
-              estilo='primary'
+              estilo="primary"
               onClick={() =>
                 openForm(row, {
                   soloVer: true,
-                  titulo: `Metrica ${row.original.Metrica}`
+                  titulo: `Metrica ${row.original.Metrica}`,
                 })
               }
             >
@@ -111,11 +113,11 @@ function MetricasPage () {
             </Button>
 
             <Button
-              estilo='secondary'
+              estilo="secondary"
               onClick={() =>
                 openForm(row, {
                   modificar: true,
-                  titulo: `Modificar a ${row.original.Metrica}`
+                  titulo: `Modificar a ${row.original.Metrica}`,
                 })
               }
             >
@@ -123,102 +125,131 @@ function MetricasPage () {
             </Button>
 
             <Button
-              estilo='danger'
+              estilo="danger"
               onClick={() => {
                 doubleConfirmationAlert({
                   textoConfirmacion: `¿Estas seguro de eliminar la metrica ${row.original.Metrica}?`,
-                  textoSuccess: 'Se elimino la metrica correctamente',
-                  textoError: 'No se elimino la metrica.',
+                  textoSuccess: "Se elimino la metrica correctamente",
+                  textoError: "No se elimino la metrica.",
                   funcion: () => deleteMetricaApi(row.original.IdMetrica),
-                  refresh: refresh
-                })
+                  refresh: refresh,
+                });
               }}
             >
               Borrar
             </Button>
-            {row.original.EstadoMetrica == 'A' ? (
+            {row.original.EstadoMetrica == "A" ? (
               <Button
-                estilo='warning'
+                estilo="warning"
                 onClick={() => {
                   doubleConfirmationAlert({
                     textoConfirmacion: `¿Estas seguro de dar de baja la metrica ${row.original.Metrica}?`,
-                    textoSuccess: 'Se dio de baja la metrica correctamente',
-                    textoError: 'No se dio de baja la metrica.',
+                    textoSuccess: "Se dio de baja la metrica correctamente",
+                    textoError: "No se dio de baja la metrica.",
                     funcion: () => darBajaMetricaApi(row.original.IdMetrica),
-                    refresh: refresh
-                  })
+                    refresh: refresh,
+                  });
                 }}
-                disabled={row.original.EstadoMetrica == 'B'}
+                disabled={row.original.EstadoMetrica == "B"}
               >
                 Dar Baja
               </Button>
             ) : (
-              ''
+              ""
             )}
-            {row.original.EstadoMetrica == 'B' ? (
+            {row.original.EstadoMetrica == "B" ? (
               <Button
-                estilo='success'
+                estilo="success"
                 onClick={() => {
                   doubleConfirmationAlert({
                     textoConfirmacion: `¿Estas seguro de activar la metrica ${row.original.Metrica}?`,
-                    textoSuccess: 'Se activo la metrica correctamente',
-                    textoError: 'No se activo la metrica.',
+                    textoSuccess: "Se activo la metrica correctamente",
+                    textoError: "No se activo la metrica.",
                     funcion: () => activarMetricaApi(row.original.IdMetrica),
-                    refresh: refresh
-                  })
+                    refresh: refresh,
+                  });
                 }}
-                disabled={row.original.EstadoMetrica == 'A'}
+                disabled={row.original.EstadoMetrica == "A"}
               >
                 Activar
               </Button>
             ) : (
-              ''
+              ""
             )}
           </ButtonGroup>
-        )
-      }
+        ),
+      },
     ],
     [refresh]
-  )
+  );
 
-  const onSubmit = data => {
-    console.log(data)
-    handleFilterParams({ ...data, pCantidad: 10, pPagina: 1, pIdEvento:evento.IdEvento })
+  const onSubmit = (data) => {
+    console.log(data);
+    handleFilterParams({
+      ...data,
+      pCantidad: 10,
+      pPagina: 1,
+      pIdEvento: evento.IdEvento,
+    });
     // Aquí puedes manejar los datos del formulario
-  }
+  };
 
-  function fastSearch (e) {
-    setBusqueda(e.target.value)
-    handleFilterParams({ pMetrica: e.target.value,pIdEvento:evento.IdEvento })
+  function fastSearch(e) {
+    setBusqueda(e.target.value);
+    handleFilterParams({
+      pIdEvento: evento?.IdEvento,
+      pMetrica: e.target.value,
+    });
   }
 
   const inputsFormulario = [
-
     {
-      name: 'Metrica',
-      label: 'Metrica',
-      type: 'text',
-      estilos: 'col-12',
-      options: []
+      name: "Metrica",
+      label: "Metrica",
+      type: "text",
+      estilos: "col-12",
+      options: [],
     },
-  ]
+  ];
+  const searchFilter = (event) => {
+    const value = event.target.value; // Obtener el valor de entrada
+    setBusqueda(value); // Actualizar el estado de búsqueda
 
+    // Filtrar según la longitud de la cadena
+    if (value.length > 3) {
+      handleFilterParams({
+        pIdEvento: evento?.IdEvento,
+        pMetrica: value, // Si hay 3 o menos caracteres, enviar cadena vacía
+        pCantidad: pagination?.pageSize,
+        pPagina: 1,
+        pEstado: pIncluyeBajascheck,
+      });
+    } else if (value.length === 0) {
+      handleFilterParams({
+        pIdEvento: evento?.IdEvento,
+        pMetrica: null, // Si hay 3 o menos caracteres, enviar cadena vacía
+        pCantidad: pagination?.pageSize,
+        pPagina: 1,
+        pEstado: pIncluyeBajascheck,
+      });
+    }
+  };
   return (
     <>
       <div>
         <HeaderPageComponent
-          title='Metricas'
-          items={[{ name: 'metricas', link: '/metricas' }]}
+          title="Metricas"
+          items={[{ name: "metricas", link: "/metricas" }]}
         />
-        <SectionPage header={'Listado de metricas registradas'}>
-          <div className='d-flex justify-content-start'>
+        <SectionPage header={"Listado de metricas registradas"}>
+          <div className="d-flex justify-content-start">
             <Button
               lg
               onClick={() =>
                 openForm(null, {
                   soloVer: false,
                   modificar: false,
-                  titulo: 'Registrar metrica'
+                  titulo: "Registrar metrica",
                 })
               }
             >
@@ -226,47 +257,37 @@ function MetricasPage () {
             </Button>
           </div>
 
-          <div className='input-group mb-0 mt-5'>
-            <Dropdown className='me-3' style={{ width: '20rem' }}>
-              <Dropdown.Toggle
-                variant='primary'
-                className='w-100'
-                id='dropdown-basic'
-              >
-                Filtros Avanzado
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className='w-100'>
-                <Form
-                  onSubmit={handleSubmit(onSubmit)}
-                  style={{ padding: '10px' }}
-                >
-                  <GenerateInputs
-                    inputs={inputsTest}
-                    control={control}
-                    errors={errors}
-                    onlyView={false}
-                  />
-                  <Button estilo='primary' type='submit'>
-                    Enviar Filtros
-                  </Button>
-                </Form>
-              </Dropdown.Menu>
-            </Dropdown>
-            <span className='input-group-text'>
-              <i className='fas fa-search'></i>
-            </span>
+          <div className="form-check form-check-reverse mb-0 pb-0 mt-3 fs-5">
+            <label className="form-check-label fw-bold fs-5">
+              ¿Incluye bajas?
+            </label>
             <input
-              type='text'
-              value={Busqueda}
-              className='form-control'
-              onChange={fastSearch}
-              placeholder='Busqueda de metrica'
+              type="checkbox"
+              className="form-check-input"
+              checked={pIncluyeBajascheck == "S"} // El checkbox está marcado si el estado es "S"
+              onChange={(event) => {
+                setpIncluyeBajascheck(event.target.checked ? "S" : "N");
+                handleFilterParams({
+                  ...params,
+                  pIncluyeInactivos: event.target.checked ? "S" : "N",
+                });
+              }} // Llama a handleChange cuando cambia
             />
           </div>
-
+          <div className="input-group mb-0">
+            <span className="input-group-text">
+              <i className="fas fa-search"></i>
+            </span>
+            <input
+              type="text"
+              value={Busqueda}
+              onChange={searchFilter}
+              className="form-control"
+              placeholder="Busqueda de metricas"
+            />
+          </div>
           {error ? (
-            'Ocurrio un error, contacte con el administrador.'
+            "Ocurrio un error, contacte con el administrador."
           ) : (
             <TablaMaterial
               columnFilters={columnFilters}
@@ -296,16 +317,16 @@ function MetricasPage () {
           dataform={Seleccionado}
           refresh={refresh}
           inputs={inputsFormulario}
-          id={'IdMetrica'}
-          functionCreate={e =>
+          id={"IdMetrica"}
+          functionCreate={(e) =>
             storeMetricaApi({ IdEvento: evento.IdEvento, ...e })
           }
           functionUpdate={updateMetricaApi}
-          elemento={'Metrica'}
+          elemento={"Metrica"}
         />
       </ModalModificado>
     </>
-  )
+  );
 }
 
-export default MetricasPage
+export default MetricasPage;

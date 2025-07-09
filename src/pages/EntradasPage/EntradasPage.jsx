@@ -68,7 +68,7 @@ function EntradasPage () {
     {
       name: `pCadena`,
       control: control,
-      label: 'Correo, DNI, Apellido, Nombre',
+      label: 'Correo, Apellido, Nombre',
       type: 'text',
       error: errors?.pCadena,
       readOnly: false

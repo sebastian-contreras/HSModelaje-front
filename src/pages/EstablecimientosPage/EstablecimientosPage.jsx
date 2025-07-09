@@ -311,7 +311,7 @@ function EstablecimientosPage () {
               value={Busqueda}
               onChange={searchFilter}
               className='form-control'
-              placeholder='Busqueda de establecimientos'
+              placeholder='Ingrese nombre para buscar'
             />
           </div>
           {error ? (

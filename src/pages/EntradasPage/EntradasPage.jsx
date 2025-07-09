@@ -125,7 +125,7 @@ function EntradasPage () {
       { accessorKey: 'ApelName', header: 'Apellido, Nombre' },
       { accessorKey: 'DNI', header: 'DNI' },
       { accessorKey: 'Correo', header: 'Correo' },
-      { accessorKey: 'Telefono', header: 'Telefono' },
+      { accessorKey: 'Telefono', header: 'Teléfono' },
       { accessorKey: 'FechaAlta', header: 'Fecha Alta',
         Cell: ({ cell }) => formatearFechayHora(cell.getValue())
        },
@@ -396,7 +396,7 @@ function EntradasPage () {
               value={Busqueda}
               className='form-control'
               onChange={fastSearch}
-              placeholder='Busqueda de entradas'
+              placeholder='Ingrese nombre, apellido, DNI o correo electrónico para buscar'
             />
           </div>
 

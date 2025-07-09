@@ -283,7 +283,7 @@ function MetricasPage() {
               value={Busqueda}
               onChange={searchFilter}
               className="form-control"
-              placeholder="Busqueda de metricas"
+              placeholder="Ingrese nombre para buscar"
             />
           </div>
           {error ? (

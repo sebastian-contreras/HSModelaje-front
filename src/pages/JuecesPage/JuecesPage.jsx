@@ -312,7 +312,7 @@ function JuecesPage () {
               value={Busqueda}
               className='form-control'
               onChange={fastSearch}
-              placeholder='Busqueda de jueces por apellido y nombre'
+              placeholder='Ingrese nombre o apellido para buscar'
             />
           </div>
 

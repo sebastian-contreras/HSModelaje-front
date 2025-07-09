@@ -196,7 +196,7 @@ function PatrocinadoresPage () {
             value={Busqueda}
             className='form-control'
             onChange={fastSearch}
-            placeholder='Busqueda de patrocinadores'
+            placeholder='Ingrese nombre para buscar'
           />
         </div>
 

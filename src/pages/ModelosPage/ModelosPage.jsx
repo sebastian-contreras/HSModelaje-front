@@ -334,7 +334,7 @@ function ModelosPage () {
               value={Busqueda}
               className='form-control'
               onChange={fastSearch}
-              placeholder='Busqueda de modelos por apellido y nombre'
+              placeholder='Ingrese nombre, apellido para buscar'
             />
           </div>
 

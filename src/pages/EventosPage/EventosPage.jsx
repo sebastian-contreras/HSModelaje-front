@@ -355,7 +355,7 @@ function EventosPage () {
               value={Busqueda}
               onChange={fastSearch}
               className='form-control'
-              placeholder='Busqueda de eventos por nombre'
+              placeholder='Ingrese nombre para buscar'
             />
           </div>
 

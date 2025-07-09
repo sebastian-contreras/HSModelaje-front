@@ -355,7 +355,7 @@ function UsuariosPage() {
             />
           </div>
           <div className="input-group mb-0 ">
-            <Dropdown className="me-3" style={{ width: "20rem" }}>
+            {/* <Dropdown className="me-3" style={{ width: "20rem" }}>
               <Dropdown.Toggle
                 variant="primary"
                 className="w-100"
@@ -380,16 +380,16 @@ function UsuariosPage() {
                   </Button>
                 </Form>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */
             <span className="input-group-text">
               <i className="fas fa-search"></i>
-            </span>
+            </span>}
             <input
               type="text"
               value={Busqueda}
               onChange={fastSearch}
               className="form-control"
-              placeholder="Busqueda de eventos por nombre"
+              placeholder="Búsqueda de usuarios"
             />
           </div>
 

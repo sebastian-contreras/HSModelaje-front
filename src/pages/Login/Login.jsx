@@ -112,7 +112,7 @@ function Login () {
                     >
                       {badCredentials}
                     </Alert>
-                    <div className='text-center pt-1 mb-3 pb-1'>
+                    <div className='text-center pt-5 mb-3 pb-1'>
                       <Button
                         lg
                         type='submit'
@@ -123,10 +123,7 @@ function Login () {
                       </Button>
                     </div>
                   </form>
-                  <div className='text-center'>
-                    <p className='btn-text mt-3 mb-2'>¿Olvidaste tu contraseña?</p>
-                    <p className='btn-text'>¿Olvidaste tu usuario?</p>
-                  </div>
+               
                 </div>
               </div>
             </div>

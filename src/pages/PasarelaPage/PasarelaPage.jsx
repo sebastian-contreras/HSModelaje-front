@@ -339,9 +339,8 @@ function PasarelaPage () {
                 </p>
               </div>
             )}
-          </div>
-
-          <div className='card-footer bg-transparent border-0'>
+            
+          <div className='bg-transparent border-1 mt-4 mb-10'>
             <div className='d-flex justify-content-center gap-3 flex-wrap'>
               {pasoActual > 1 && pasoActual !== totalPasos && (
                 <Button
@@ -388,6 +387,8 @@ function PasarelaPage () {
               )}
             </div>
           </div>
+          </div>
+
         </div>
       </div>
     </div>

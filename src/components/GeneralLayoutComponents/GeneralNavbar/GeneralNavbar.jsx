@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { useHandlerSidebar } from '../../../context/SidebarContext/SidebarContext'
 import { useAuth } from '../../../context/Auth/AuthContext'
+import ModalModificado from '../../Modal/ModalModificado'
+import CambioContrasena from '../../CambioContrasena/CambioContrasena'
 
 function GeneralNavbar () {
   const [usuario, setUsuario] = useState('Sebastian Contreras')
   const { token,  user, logout } = useAuth()
   console.log(user)
   const  {toggle} = useHandlerSidebar()
+  const [ChangePassword, setChangePassword] = useState(false)
+
   return (
     
     <div className='main-header'>
@@ -107,6 +111,9 @@ function GeneralNavbar () {
                         <div className="dropdown-divider"></div>
                         <a className="dropdown-item" href="#">Account Setting</a>
                         <div className="dropdown-divider"></div> */}
+                           <a className='dropdown-item' onClick={()=>setChangePassword(true)}>
+                      Cambio de contraseña
+                    </a>
                     <a className='dropdown-item' onClick={logout}>
                       Cerrar sesion
                     </a>
@@ -117,6 +124,14 @@ function GeneralNavbar () {
           </ul>
         </div>
       </nav>
+      <ModalModificado
+        show={ChangePassword}
+        handleClose={()=>setChangePassword(false)}
+        size={50}
+        title={'Cambio de contraseña'}
+      >
+        <CambioContrasena closeModal={()=>setChangePassword(false)}/>
+      </ModalModificado>
     </div>
   )
 }

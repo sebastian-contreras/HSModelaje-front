@@ -4,8 +4,7 @@ import { API_URL } from '../Fixes/API_URL.js'
 export async function listarUsuarioApi (pIncluyeBajas = true) {
   const response = await axios.get(`${API_URL}/api/usuarios`, {
     params: { pIncluyeBajas: pIncluyeBajas }
-  }
-)
+  })
   console.log(response)
   return response.data
 }
@@ -33,12 +32,18 @@ export async function deleteUsuarioApi (id) {
   return response.data
 }
 
-
 export async function darBajaUsuarioApi (id) {
   const response = await axios.post(`${API_URL}/api/usuarios/darbaja/` + id)
   return response.data
 }
 export async function activarUsuarioApi (id) {
   const response = await axios.post(`${API_URL}/api/usuarios/activar/` + id)
+  return response.data
+}
+export async function cambioContrasenaApi (data) {
+  const response = await axios.post(
+    `${API_URL}/api/usuarios/modifica-contrasena/`,
+    data
+  )
   return response.data
 }

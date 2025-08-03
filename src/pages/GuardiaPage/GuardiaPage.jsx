@@ -1,4 +1,5 @@
 import {
+  faArrowLeft,
   faCamera,
   faCheck,
   faClock,
@@ -29,8 +30,10 @@ import {
 import { Alerta } from '../../functions/alerts'
 import { MENSAJE_DEFAULT } from '../../Fixes/messages'
 import { EstadosEntradasOptions, getLabelByValue } from '../../Fixes/fixes'
+import { useNavigate } from 'react-router-dom'
 
 export default function GuardiaPage () {
+     const navigate = useNavigate();
   const [scanner, setScanner] = useState(null)
   const [isStarted, setIsStarted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -168,16 +171,30 @@ export default function GuardiaPage () {
             <strong className='d-block'>{user?.name}</strong>
           </div>
         </div>
+        <div className='d-flex gap-2'>
+          {user.role == 'A' &&
+          
+        <Button
+          estilo='primary'
+          sm
+          className='d-flex align-items-center'
+          onClick={()=> navigate('/eventos')}
+          size='sm'
+        >
+          <FontAwesomeIcon icon={faArrowLeft} className='me-1' />
+          <span className='d-sm-inline'>Volver</span>
+        </Button>
+          }
         <Button
           estilo='danger'
           sm
-          className='d-block '
           onClick={logout}
           size='sm'
         >
           <FontAwesomeIcon icon={faSignOutAlt} className='me-1' />
           <span className='d-sm-inline'>Cerrar</span>
         </Button>
+        </div>
       </div>
 
       {/* Escáner o resultado */}

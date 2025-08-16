@@ -43,7 +43,7 @@ function Login () {
         console.log(response)
       })
       .catch(error => {
-        setBadCredentials('Credenciales invalidas')
+        setBadCredentials('Credenciales inválidas')
       })
       .finally(() => {
         setLoading(false)
@@ -56,7 +56,12 @@ function Login () {
         <div className="container py-3 py-md-5">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-              <div className="card rounded-3 text-black">
+              <div className="card rounded-3 text-black"
+             style={{
+              backgroundColor: '#f4f3fd',
+               overflow: 'hidden' // 👈 esto fuerza que el contenido respete los bordes redondeados
+            }}
+              >
                 <div className="card-body p-3 p-md-4 p-lg-5 mx-md-4">
                   <div className="text-center">
                     <img
@@ -65,7 +70,7 @@ function Login () {
                       style={{ maxWidth: '250px', height: 'auto' }}
                       className='img-fluid mb-3'
                     />
-                    <h4 className='mb-3'>Inicio de sesion</h4>
+                    <h4 className='mb-3'>Inicio de sesión</h4>
                     <h5 className='mb-4 mb-md-5 pb-1 fw-light'>
                       Ingrese sus credenciales para iniciar sesión
                     </h5>
@@ -74,7 +79,7 @@ function Login () {
                   <form onSubmit={handleSubmit}>
                     <div className='form-outline mb-3'>
                       <label className='form-label fw-semibold mt-1 ms-1'>
-                        Direccion de email
+                        Dirección de email
                       </label>
                       <Form.Control
                         type='email'

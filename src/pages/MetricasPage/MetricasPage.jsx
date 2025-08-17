@@ -48,7 +48,7 @@ function MetricasPage() {
   const [Seleccionado, setSeleccionado] = useState(null);
   const [Busqueda, setBusqueda] = useState("");
 
-  const [pIncluyeBajascheck, setpIncluyeBajascheck] = useState("N");
+  const [pIncluyeBajascheck, setpIncluyeBajascheck] = useState("A");
   const {
     data,
     loading,
@@ -64,7 +64,7 @@ function MetricasPage() {
     setSorting,
   } = useFetch(`${API_URL}/api/metricas/busqueda`, "get", {
     pIdEvento: evento?.IdEvento,
-    pIncluyeInactivos: pIncluyeBajascheck,
+    pIncluyeInactivos: 'A',
     pCantidad: 10,
     pPagina: 1,
   });
@@ -264,12 +264,12 @@ function MetricasPage() {
             <input
               type="checkbox"
               className="form-check-input"
-              checked={pIncluyeBajascheck == "S"} // El checkbox está marcado si el estado es "S"
+              checked={pIncluyeBajascheck == null} // El checkbox está marcado si el estado es "S"
               onChange={(event) => {
-                setpIncluyeBajascheck(event.target.checked ? "S" : "N");
+                setpIncluyeBajascheck(event.target.checked ? null : "A");
                 handleFilterParams({
                   ...params,
-                  pIncluyeInactivos: event.target.checked ? "S" : "N",
+                  pIncluyeInactivos: event.target.checked ? null : 'A',
                 });
               }} // Llama a handleChange cuando cambia
             />

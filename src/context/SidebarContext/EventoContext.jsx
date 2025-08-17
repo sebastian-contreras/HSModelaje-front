@@ -11,19 +11,18 @@ export const EventoProvider = ({ children }) => {
   const refresh = ()=>{
     dameEventoApi(evento.IdEvento)
         .then(res => {
-          if (!res.data.length) {
-            console.log('entra')
+          console.log(res)
+          if (!res.data) {
             Alerta()
               .withTipo('error')
               .withTitulo('Error al obtener el evento')
               .withMensaje('El evento no existe.')
               .withMini(true)
               .build()
-            return
+            // return
           } else {
-            console.log('fuarda evento')
             document.title = res.data[0].Evento + " - HSModelaje";
-            setEvento(res.data[0]) // Guarda la información en el contexto
+            setEvento(res.data) // Guarda la información en el contexto
           }
         })
         .catch(err => {

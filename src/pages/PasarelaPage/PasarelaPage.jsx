@@ -30,7 +30,7 @@ function PasarelaPage () {
 
     dameEventoApi(id)
       .then(res => {
-        if (!res.data.length) {
+        if (!res.data) {
           Alerta()
             .withTipo('error')
             .withTitulo('Error al obtener el evento')
@@ -39,8 +39,8 @@ function PasarelaPage () {
             .build()
           return
         } else {
-          setEvento(res.data[0])
-          document.title = res.data[0].Evento + ' - Ventas de entradas'
+          setEvento(res.data)
+          document.title = res.data.Evento + ' - Ventas de entradas'
         }
       })
       .catch(err => {

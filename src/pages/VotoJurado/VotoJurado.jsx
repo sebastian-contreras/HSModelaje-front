@@ -128,7 +128,7 @@ export default function VotoJurado () {
         ])
 
         setMetricaData(metricRes.data)
-        const evento = eventRes.data?.[0]
+        const evento = eventRes.data
         setEventoData(evento)
 
         if (evento?.IdEstablecimiento) {

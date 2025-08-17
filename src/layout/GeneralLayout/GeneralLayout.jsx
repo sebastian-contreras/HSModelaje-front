@@ -27,8 +27,7 @@ function GeneralLayout ({ tipo = 'ADMIN' }) {
       setLoading(true)
       dameEventoApi(id)
         .then(res => {
-          if (!res.data.length) {
-            console.log('entra')
+          if (!res.data) {
             navigate('/')
             Alerta()
               .withTipo('error')
@@ -39,8 +38,8 @@ function GeneralLayout ({ tipo = 'ADMIN' }) {
             return
           } else {
             console.log('fuarda evento')
-            document.title = res.data[0].Evento + " - HSModelaje";
-            setEvento(res.data[0]) // Guarda la información en el contexto
+            document.title = res.data.Evento + " - HSModelaje";
+            setEvento(res.data) // Guarda la información en el contexto
           }
         })
         .catch(err => {

@@ -15,6 +15,7 @@ function EventoSidebar () {
   const [Establecimiento, setEstablecimiento] = useState({})
   const location = useLocation()
   const { evento } = useEvento()
+  console.log(evento)
   const BASE_URL = '/eventos/' + evento?.IdEvento
   const rutas = useMemo(
     () => [

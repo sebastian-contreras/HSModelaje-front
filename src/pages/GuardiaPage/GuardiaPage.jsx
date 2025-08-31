@@ -265,6 +265,12 @@ export default function GuardiaPage () {
               style={{ wordBreak: 'break-word' }}
             >
               {/* {result} */}
+                    <p className='fs-5 my-0 text-dark'>
+                <span className='fw-bold'>Evento:</span> {result?.Evento}
+              </p>
+                    <p className='fs-5 my-0 text-dark'>
+                <span className='fw-bold'>Zona:</span> {result?.Zona}
+              </p>
               <p className='fs-5 my-0 text-dark'>
                 <span className='fw-bold'>DNI:</span> {result?.DNI}
               </p>

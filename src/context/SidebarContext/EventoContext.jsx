@@ -21,7 +21,7 @@ export const EventoProvider = ({ children }) => {
               .build()
             // return
           } else {
-            document.title = res.data[0].Evento + " - HSModelaje";
+            document.title = res.data.Evento + " - HSModelaje";
             setEvento(res.data) // Guarda la información en el contexto
           }
         })
